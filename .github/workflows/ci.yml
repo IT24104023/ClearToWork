@@ -1,0 +1,66 @@
+﻿name: ClearToWork AI - Continuous Integration
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  backend-build-test:
+    name: Backend Build & Automated Tests
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: cleartowork_test
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: testpassword123
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Setup .NET 8 SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Restore Dependencies
+      run: dotnet restore backend/ClearToWork.sln
+
+    - name: Build Solution
+      run: dotnet build backend/ClearToWork.sln --no-restore --configuration Release
+
+    - name: Run Unit & Rule Engine Tests
+      run: dotnet test backend/tests/ClearToWork.UnitTests/ClearToWork.UnitTests.csproj --no-build --configuration Release --verbosity normal
+
+  agent-lint-test:
+    name: Agent Service Validation
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v4
+
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11'
+
+    - name: Install Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        if [ -f agents/requirements.txt ]; then pip install -r agents/requirements.txt; fi
+
+    - name: Run Agent Unit / Schema Tests
+      run: |
+        if [ -d agents/tests ]; then pytest agents/tests; fi
