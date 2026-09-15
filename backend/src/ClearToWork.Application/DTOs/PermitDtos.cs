@@ -56,7 +56,7 @@ public record AgentWorkflowRunDto(
     long DurationMs,
     string ModelUsed,
     string ExecutionTraceJson,
-    string RecommendedFixJson,
+    string? RecommendedFixJson,
     DateTime CreatedAt
 );
 

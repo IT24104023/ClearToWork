@@ -62,7 +62,9 @@ export const PermitDetailPage: React.FC = () => {
   }
 
   const isSafetyOfficer = currentUser?.role === 'SafetyOfficer';
-  const canDecide = isSafetyOfficer && (permit.status === 'PendingApproval' || permit.status === 'Refused');
+  const isAdmin = currentUser?.role === 'Administrator';
+  // Only allow human sign-off once AI has cleared the permit to PendingApproval
+  const canDecide = (isSafetyOfficer || isAdmin) && permit.status === 'PendingApproval';
 
   const handleDecisionSubmit = async () => {
     try {
@@ -207,6 +209,22 @@ export const PermitDetailPage: React.FC = () => {
             <div className="mt-2 p-2 bg-slate-950/40 rounded border border-current/20 leading-relaxed font-sans">
               <strong>Official Notes:</strong> {permit.approval.decisionNotes}
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Refused/Safe Failure Remediation Banner */}
+      {permit.status === 'Refused' && permit.workflowRun && (
+        <div className="p-4 rounded-xl border border-amber-500/40 bg-amber-950/20 text-amber-200 flex items-start gap-3 text-xs">
+          <RotateCcw className="w-5 h-5 shrink-0 mt-0.5 text-amber-400" />
+          <div>
+            <div className="font-bold text-sm text-amber-300">
+              Permit Refused — AI Safe Failure. Action Required.
+            </div>
+            <p className="mt-1 opacity-80">
+              This permit was refused by the multi-agent engine. To proceed, create a new permit draft incorporating
+              the recommended remediation fixes shown in the AI Execution Trace below, then re-submit for AI review.
+            </p>
           </div>
         </div>
       )}

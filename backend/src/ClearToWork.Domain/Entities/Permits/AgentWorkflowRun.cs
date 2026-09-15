@@ -11,5 +11,5 @@ public class AgentWorkflowRun : BaseAuditableEntity
     public long DurationMs { get; set; }
     public string ModelUsed { get; set; } = "mistral:7b";
     public string ExecutionTraceJson { get; set; } = "{}";
-    public string RecommendedFixJson { get; set; } = "{}";
+    public string? RecommendedFixJson { get; set; }
 }

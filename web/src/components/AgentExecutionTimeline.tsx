@@ -62,7 +62,8 @@ export const AgentExecutionTimeline: React.FC<AgentExecutionTimelineProps> = ({
         <div className="mt-6 space-y-4 relative before:absolute before:inset-0 before:left-3.5 before:w-0.5 before:bg-slate-800">
           {steps.map((step: any, idx: number) => {
             const hasFailure = step.findings && step.findings.some((f: string) => f.toLowerCase().includes('expired') || f.toLowerCase().includes('clash') || f.toLowerCase().includes('overdue') || f.toLowerCase().includes('exceed'));
-            const isValidator = step.agent?.includes('Validation');
+            const isValidator = step.agent?.includes('Validation') || step.agent_name?.includes('Validation');
+            const toolName = step.tool || (step.tools_called && step.tools_called[0]?.tool_name);
 
             return (
               <div key={idx} className="relative flex items-start space-x-4 pl-1">
@@ -91,9 +92,9 @@ export const AgentExecutionTimeline: React.FC<AgentExecutionTimelineProps> = ({
                       </span>
                     </div>
                     <div className="flex items-center gap-3 text-xs text-slate-400">
-                      {step.tool && (
+                      {toolName && (
                         <span className="font-mono text-amber-300 bg-amber-950/40 border border-amber-900/50 px-2 py-0.5 rounded">
-                          tool: {step.tool}
+                          tool: {toolName}
                         </span>
                       )}
                       <span className="flex items-center gap-1 font-mono text-slate-400">
@@ -141,33 +142,39 @@ export const AgentExecutionTimeline: React.FC<AgentExecutionTimelineProps> = ({
         <div className="bg-amber-950/20 border border-amber-500/40 rounded-xl p-5">
           <div className="flex items-center gap-2 text-amber-400 font-bold text-sm mb-3">
             <Cpu className="w-4 h-4" />
-            <span>Agent Recommended Safe Mitigation & Substitution</span>
+            <span>Agent Recommended Safe Mitigation &amp; Substitution</span>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs mb-3">
-            {proposedFix.suggestedWorkerBadge && (
+            {(proposedFix.suggestedWorkerBadge || proposedFix.SuggestedWorkerBadge) && (
               <div className="bg-slate-900/80 p-2.5 rounded border border-slate-800">
                 <div className="text-slate-400 font-semibold mb-0.5">Certified Worker Replacement</div>
-                <div className="text-emerald-400 font-mono font-bold">{proposedFix.suggestedWorkerBadge}</div>
+                <div className="text-emerald-400 font-mono font-bold">
+                  {proposedFix.suggestedWorkerBadge || proposedFix.SuggestedWorkerBadge}
+                </div>
               </div>
             )}
-            {proposedFix.suggestedAssetTag && (
+            {(proposedFix.suggestedAssetTag || proposedFix.SuggestedAssetTag) && (
               <div className="bg-slate-900/80 p-2.5 rounded border border-slate-800">
                 <div className="text-slate-400 font-semibold mb-0.5">In-Date Equipment Substitute</div>
-                <div className="text-emerald-400 font-mono font-bold">{proposedFix.suggestedAssetTag}</div>
+                <div className="text-emerald-400 font-mono font-bold">
+                  {proposedFix.suggestedAssetTag || proposedFix.SuggestedAssetTag}
+                </div>
               </div>
             )}
-            {proposedFix.suggestedTimeWindow && (
+            {(proposedFix.suggestedTimeWindow || proposedFix.SuggestedTimeWindow) && (
               <div className="bg-slate-900/80 p-2.5 rounded border border-slate-800">
                 <div className="text-slate-400 font-semibold mb-0.5">Cleared SIMOPS Window</div>
-                <div className="text-emerald-400 font-mono font-bold">{proposedFix.suggestedTimeWindow}</div>
+                <div className="text-emerald-400 font-mono font-bold">
+                  {proposedFix.suggestedTimeWindow || proposedFix.SuggestedTimeWindow}
+                </div>
               </div>
             )}
           </div>
 
-          {proposedFix.summaryExplanation && (
+          {(proposedFix.summaryExplanation || proposedFix.SummaryExplanation) && (
             <p className="text-slate-300 text-xs leading-relaxed bg-slate-900/50 p-3 rounded border border-slate-800">
-              {proposedFix.summaryExplanation}
+              {proposedFix.summaryExplanation || proposedFix.SummaryExplanation}
             </p>
           )}
         </div>

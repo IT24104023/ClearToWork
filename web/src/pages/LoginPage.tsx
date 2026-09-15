@@ -97,6 +97,21 @@ export const LoginPage: React.FC = () => {
 
               <button
                 type="button"
+                onClick={() => setDemoUser('areasup@cleartowork.com')}
+                className="flex items-center justify-between px-3 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-left text-xs border border-slate-700 transition"
+              >
+                <div className="flex items-center gap-2">
+                  <ShieldCheck className="w-4 h-4 text-sky-400" />
+                  <div>
+                    <div className="font-semibold text-slate-200">James Whitfield (Area Supervisor)</div>
+                    <div className="text-slate-400 text-[10px]">Zone Spatial Control & SIMOPS Monitoring</div>
+                  </div>
+                </div>
+                <span className="text-[10px] bg-sky-950 text-sky-400 px-2 py-0.5 rounded font-mono">Area</span>
+              </button>
+
+              <button
+                type="button"
                 onClick={() => setDemoUser('admin@cleartowork.com')}
                 className="flex items-center justify-between px-3 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-left text-xs border border-slate-700 transition"
               >

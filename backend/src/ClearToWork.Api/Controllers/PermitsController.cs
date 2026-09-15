@@ -1,8 +1,10 @@
 using System.Security.Claims;
 using ClearToWork.Application.DTOs;
 using ClearToWork.Application.Interfaces;
+using ClearToWork.Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace ClearToWork.Api.Controllers;
 
@@ -12,10 +14,22 @@ namespace ClearToWork.Api.Controllers;
 public class PermitsController : ControllerBase
 {
     private readonly IPermitLifecycleService _permitService;
+    private readonly AppDbContext _context;
 
-    public PermitsController(IPermitLifecycleService permitService)
+    public PermitsController(IPermitLifecycleService permitService, AppDbContext context)
     {
         _permitService = permitService;
+        _context = context;
+    }
+
+    /// <summary>Returns all permit types (Id, Code, Name) for the New Permit form selector.</summary>
+    [HttpGet("types")]
+    public async Task<IActionResult> GetPermitTypes()
+    {
+        var types = await _context.PermitTypes
+            .Select(pt => new { pt.Id, pt.Code, pt.Name, pt.MaxDurationHours, pt.RequiresFireWatch, pt.RequiresGasTesting })
+            .ToListAsync();
+        return Ok(types);
     }
 
     [HttpGet]

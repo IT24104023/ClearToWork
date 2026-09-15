@@ -67,6 +67,18 @@ def find_eligible_workers(trade: str, hazard_code: str) -> List[Dict[str, Any]]:
 
 def check_equipment_readiness(asset_tags: List[str]) -> Dict[str, Any]:
     """Student 2 Tool: Checks calibration and inspection statuses."""
+    try:
+        with httpx.Client(timeout=3.0) as client:
+            resp = client.post(
+                f"{API_BASE_URL}/internal/check-equipment-tags",
+                json={"assetTags": asset_tags},
+                headers=_get_headers()
+            )
+            if resp.status_code == 200:
+                return resp.json()
+    except Exception:
+        pass
+
     results = []
     has_unready = False
     for tag in asset_tags:
@@ -92,12 +104,50 @@ def check_equipment_readiness(asset_tags: List[str]) -> Dict[str, Any]:
 
 def get_isolation_points(zone_id: str) -> List[Dict[str, Any]]:
     """Student 2 Tool: Checks required Lock-Out / Tag-Out points."""
+    try:
+        with httpx.Client(timeout=3.0) as client:
+            resp = client.get(
+                f"{API_BASE_URL}/internal/isolation-points/{zone_id}",
+                headers=_get_headers()
+            )
+            if resp.status_code == 200:
+                data = resp.json()
+                if data and isinstance(data, list):
+                    return [
+                        {
+                            "tag": item.get("tagIdentifier", item.get("tag", "ISO-PT")),
+                            "description": item.get("description", "Isolation Point"),
+                            "status": item.get("state", "LOCKED")
+                        }
+                        for item in data
+                    ]
+    except Exception:
+        pass
+
     return [
-        {"tag": "ISO-B3-VALVE-01", "description": "Solvent supply isolation manifold", "status": "LOCKED"}
+        {"tag": "ISO-B3-VALVE-01", "description": "Solvent supply isolation manifold", "status": "LOCKED"},
+        {"tag": "ISO-B3-ELEC-04", "description": "415V Main busbar isolator switch", "status": "TAGGED"}
     ]
 
 def get_zone_conflicts(zone_code: str, hazard_code: str, start_time: str, end_time: str) -> Dict[str, Any]:
     """Student 4 Tool: Evaluates spatial-temporal SIMOPS clashes in adjacent zones."""
+    try:
+        with httpx.Client(timeout=3.0) as client:
+            resp = client.post(
+                f"{API_BASE_URL}/internal/check-zone-conflicts-by-code",
+                json={
+                    "zoneCode": zone_code,
+                    "hazardCode": hazard_code,
+                    "startTime": start_time,
+                    "endTime": end_time
+                },
+                headers=_get_headers()
+            )
+            if resp.status_code == 200:
+                return resp.json()
+    except Exception:
+        pass
+
     # Hot work scheduled during morning clashes with active solvent painting in Zone B4
     if "09:00" in start_time or "10:00" in start_time or "11:00" in start_time:
         return {
@@ -118,22 +168,27 @@ def get_zone_conflicts(zone_code: str, hazard_code: str, start_time: str, end_ti
     }
 
 def get_weather_forecast(lat: float, lon: float, target_time: str) -> Dict[str, Any]:
-    """Student 4 Tool: Queries Open-Meteo for wind speed, gusts, and rain."""
+    """Student 4 Tool: Queries Open-Meteo for wind speed, gusts, and rain via the internal agent endpoint."""
     try:
         with httpx.Client(timeout=3.0) as client:
-            resp = client.get(f"{API_BASE_URL}/hazardzone/weather/forecast?latitude={lat}&longitude={lon}", headers=_get_headers())
+            # Use the internal agent-authenticated endpoint (requires X-Agent-Secret header)
+            resp = client.get(
+                f"{API_BASE_URL}/internal/weather-forecast?latitude={lat}&longitude={lon}",
+                headers=_get_headers()
+            )
             if resp.status_code == 200:
                 return resp.json()
     except Exception:
         pass
 
-    # Scenario: After 13:00, wind gusts reach 44 km/h
+    # Scenario: After 13:00, wind gusts reach 44 km/h (exceeds 35 km/h HOT_WORK limit)
     is_afternoon = "13:00" in target_time or "14:00" in target_time or "15:00" in target_time
     gusts = 44.0 if is_afternoon else 18.0
     return {
         "temperatureC": 27.5,
         "windSpeedKmh": 18.0,
         "windGustsKmh": gusts,
+        "isRainExpected": False,
         "isSafeForHotWork": gusts <= 35.0,
         "summary": f"Wind gusts {gusts} km/h."
     }

@@ -2,97 +2,180 @@ import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import type { RootState } from '../store';
+import { useTranslation } from '../context/I18nContext';
 import {
   FileCheck2,
   Users2,
   Wrench,
   AlertTriangle,
   BarChart3,
-  Sliders,
+  Bot,
+  Database,
+  UserCheck,
+  BookOpen,
+  Sliders
 } from 'lucide-react';
 
 export const Sidebar: React.FC = () => {
   const user = useSelector((state: RootState) => state.auth.user);
+  const { t } = useTranslation();
+
   const isSafetyOfficer = user?.role === 'SafetyOfficer';
   const isAdmin = user?.role === 'Administrator';
+  const isAreaSupervisor = user?.role === 'AreaSupervisor';
 
-  const navItems = [
+  // Per RBAC matrix (security_and_auth.md):
+  // Analytics: Admin ✅, SafetyOfficer ✅, AreaSupervisor ✅, ContractorSupervisor ❌
+  // QChat/Agent Telemetry: Admin ✅, SafetyOfficer ✅, AreaSupervisor ❌, ContractorSupervisor ❌
+  // Database Admin: Admin ✅ only
+
+  const operationsItems = [
     {
       to: '/',
-      label: 'Permits & Clearance',
+      label: t('nav_permits'),
       icon: FileCheck2,
-      desc: 'Active reviews & submissions',
+      desc: 'Reviews, draft & submissions',
     },
     {
       to: '/analytics',
-      label: 'Safety Analytics',
+      label: t('nav_analytics'),
       icon: BarChart3,
-      desc: 'Refusal causes & metrics',
-      restricted: !isSafetyOfficer && !isAdmin,
+      desc: 'Safe failures & causes',
+      restricted: !isSafetyOfficer && !isAdmin && !isAreaSupervisor,
     },
     {
       to: '/workforce',
-      label: 'Workforce Competency',
+      label: t('nav_workforce'),
       icon: Users2,
-      desc: 'Certifications & 30-day expiry',
+      desc: 'Competencies & certs',
     },
     {
       to: '/equipment',
-      label: 'Equipment Readiness',
+      label: t('nav_equipment'),
       icon: Wrench,
-      desc: 'Inspections & gas calibration',
+      desc: 'Readiness & isolations',
     },
     {
       to: '/hazard-rules',
-      label: 'Hazard Rulebook',
+      label: t('nav_hazard_rules'),
       icon: AlertTriangle,
-      desc: 'SIMOPS matrix & weather limits',
+      desc: 'SIMOPS & weather limits',
+    },
+  ];
+
+  const adminItems = [
+    {
+      to: '/admin/agents',
+      label: t('nav_agent_command'),
+      icon: Bot,
+      desc: '5-Agent monitor & QChat',
+      restricted: !isAdmin && !isSafetyOfficer,
+    },
+    {
+      to: '/admin/database',
+      label: t('nav_database_admin'),
+      icon: Database,
+      desc: 'Tables, seed & reset',
+      restricted: !isAdmin,
+    },
+    {
+      to: '/profile',
+      label: t('nav_profile'),
+      icon: UserCheck,
+      desc: 'Avatar & RBAC claims',
+    },
+    {
+      to: '/docs',
+      label: t('nav_documentation'),
+      icon: BookOpen,
+      desc: 'Architecture & ADR specs',
     },
   ];
 
   return (
-    <aside className="w-64 bg-slate-900 border-r border-slate-800 flex flex-col shrink-0 min-h-[calc(100vh-4rem)]">
-      <div className="p-4 space-y-1">
-        <div className="px-3 py-2 text-xs font-bold text-slate-500 uppercase tracking-wider">
-          Safety Operations
+    <aside className="w-64 bg-slate-900 dark:bg-slate-950 border-r border-slate-800 dark:border-slate-800/80 flex flex-col shrink-0 min-h-[calc(100vh-4rem)] transition-colors">
+      <div className="p-4 space-y-4">
+        {/* Section 1: Operations */}
+        <div>
+          <div className="px-3 py-1.5 text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
+            Safety Operations
+          </div>
+          <div className="space-y-1 mt-1">
+            {operationsItems
+              .filter((item) => !item.restricted)
+              .map((item) => {
+                const Icon = item.icon;
+                return (
+                  <NavLink
+                    key={item.to}
+                    to={item.to}
+                    end={item.to === '/'}
+                    className={({ isActive }) =>
+                      `flex items-start space-x-3 px-3 py-2.5 rounded-xl text-sm transition-all ${
+                        isActive
+                          ? 'bg-amber-500/15 text-amber-400 border border-amber-500/30 font-semibold shadow-sm'
+                          : 'text-slate-300 dark:text-slate-400 hover:text-white hover:bg-slate-800 dark:hover:bg-slate-900/60'
+                      }`
+                    }
+                  >
+                    <Icon className="w-4 h-4 shrink-0 mt-0.5 text-amber-400/90" />
+                    <div className="truncate">
+                      <div className="leading-tight">{item.label}</div>
+                      <div className="text-[11px] text-slate-400 dark:text-slate-500 font-normal leading-tight mt-0.5">
+                        {item.desc}
+                      </div>
+                    </div>
+                  </NavLink>
+                );
+              })}
+          </div>
         </div>
-        {navItems
-          .filter((item) => !item.restricted)
-          .map((item) => {
-            const Icon = item.icon;
-            return (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                end={item.to === '/'}
-                className={({ isActive }) =>
-                  `flex items-start space-x-3 px-3 py-2.5 rounded-lg text-sm transition-colors ${
-                    isActive
-                      ? 'bg-amber-500/15 text-amber-400 border border-amber-500/30 font-semibold'
-                      : 'text-slate-400 hover:text-slate-200 hover:bg-slate-800'
-                  }`
-                }
-              >
-                <Icon className="w-5 h-5 shrink-0 mt-0.5" />
-                <div className="truncate">
-                  <div className="leading-tight">{item.label}</div>
-                  <div className="text-[11px] text-slate-500 font-normal leading-tight mt-0.5">
-                    {item.desc}
-                  </div>
-                </div>
-              </NavLink>
-            );
-          })}
+
+        {/* Section 2: Administration & System */}
+        <div>
+          <div className="px-3 py-1.5 text-[11px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider">
+            System & Command
+          </div>
+          <div className="space-y-1 mt-1">
+            {adminItems
+              .filter((item) => !item.restricted)
+              .map((item) => {
+                const Icon = item.icon;
+                return (
+                  <NavLink
+                    key={item.to}
+                    to={item.to}
+                    className={({ isActive }) =>
+                      `flex items-start space-x-3 px-3 py-2.5 rounded-xl text-sm transition-all ${
+                        isActive
+                          ? 'bg-sky-500/15 text-sky-400 border border-sky-500/30 font-semibold shadow-sm'
+                          : 'text-slate-300 dark:text-slate-400 hover:text-white hover:bg-slate-800 dark:hover:bg-slate-900/60'
+                      }`
+                    }
+                  >
+                    <Icon className="w-4 h-4 shrink-0 mt-0.5 text-sky-400/90" />
+                    <div className="truncate">
+                      <div className="leading-tight">{item.label}</div>
+                      <div className="text-[11px] text-slate-400 dark:text-slate-500 font-normal leading-tight mt-0.5">
+                        {item.desc}
+                      </div>
+                    </div>
+                  </NavLink>
+                );
+              })}
+          </div>
+        </div>
       </div>
 
-      <div className="mt-auto p-4 border-t border-slate-800/80">
-        <div className="bg-slate-950 p-3 rounded-lg border border-slate-800 text-xs">
+      {/* Footer Info */}
+      <div className="mt-auto p-4 border-t border-slate-800 dark:border-slate-800/80">
+        <div className="bg-slate-800/60 dark:bg-slate-900/70 p-3 rounded-xl border border-slate-700/60 dark:border-slate-800 text-xs">
           <div className="flex items-center gap-1.5 text-amber-400 font-semibold mb-1">
             <Sliders className="w-3.5 h-3.5" />
-            <span>Agentic Clearance Engine</span>
+            <span>Multi-Agent Engine</span>
           </div>
-          <p className="text-slate-400 text-[11px] leading-relaxed">
-            Multi-Agent StateGraph active. Deterministic safety verification enforced prior to human HSE sign-off.
+          <p className="text-slate-300 dark:text-slate-400 text-[11px] leading-relaxed">
+            LangGraph StateGraph active. Strict fail-closed clearance enforced.
           </p>
         </div>
       </div>

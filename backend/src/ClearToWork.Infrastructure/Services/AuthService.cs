@@ -37,7 +37,8 @@ public class AuthService : IAuthService
             user.FullName,
             user.Email,
             user.Role.ToString(),
-            user.ContractorId
+            user.ContractorId,
+            user.AvatarUrl
         );
     }
 
@@ -70,7 +71,8 @@ public class AuthService : IAuthService
             user.FullName,
             user.Email,
             user.Role.ToString(),
-            user.ContractorId
+            user.ContractorId,
+            user.AvatarUrl
         );
     }
 

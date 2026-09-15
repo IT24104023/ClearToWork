@@ -1,3 +1,4 @@
+import React from 'react';
 import type { PermitStatus } from '../types';
 
 interface StatusBadgeProps {
@@ -7,31 +8,49 @@ interface StatusBadgeProps {
 export const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
   const getBadgeStyle = () => {
     switch (status) {
-      case 'Approved':
-        return 'bg-emerald-100 text-emerald-800 border-emerald-300';
-      case 'PendingApproval':
-        return 'bg-amber-100 text-amber-800 border-amber-300';
+      case 'Draft':
+        return 'bg-slate-800 text-slate-300 border-slate-600';
+      case 'Submitted':
+        return 'bg-sky-950 text-sky-300 border-sky-700';
       case 'AiReview':
-        return 'bg-purple-100 text-purple-800 border-purple-300 animate-pulse';
-      case 'Refused':
-        return 'bg-rose-100 text-rose-800 border-rose-300';
+        return 'bg-purple-950 text-purple-300 border-purple-700 animate-pulse';
+      case 'PendingApproval':
+        return 'bg-amber-950 text-amber-300 border-amber-700';
+      case 'Approved':
+        return 'bg-emerald-950 text-emerald-300 border-emerald-700';
       case 'Active':
-        return 'bg-blue-100 text-blue-800 border-blue-300';
+        return 'bg-blue-950 text-blue-300 border-blue-700';
       case 'Closed':
-        return 'bg-slate-100 text-slate-700 border-slate-300';
+        return 'bg-slate-900 text-slate-500 border-slate-700';
+      case 'Refused':
+        return 'bg-rose-950 text-rose-300 border-rose-700';
+      case 'Expired':
+        return 'bg-orange-950 text-orange-300 border-orange-700';
       default:
-        return 'bg-gray-100 text-gray-700 border-gray-300';
+        return 'bg-slate-800 text-slate-400 border-slate-600';
     }
   };
 
   const getLabel = () => {
     switch (status) {
-      case 'PendingApproval':
-        return 'Pending HSE Sign-Off';
+      case 'Draft':
+        return 'Draft';
+      case 'Submitted':
+        return 'Submitted';
       case 'AiReview':
         return 'AI Agents Reviewing';
+      case 'PendingApproval':
+        return 'Pending HSE Sign-Off';
+      case 'Approved':
+        return 'Approved';
+      case 'Active':
+        return 'Active on Site';
+      case 'Closed':
+        return 'Closed';
       case 'Refused':
         return 'Refused (Safe Failure)';
+      case 'Expired':
+        return 'Expired';
       default:
         return status;
     }

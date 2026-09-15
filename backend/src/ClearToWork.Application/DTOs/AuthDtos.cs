@@ -10,7 +10,8 @@ public record LoginResponse(
     string FullName,
     string Email,
     string Role,
-    Guid? ContractorId
+    Guid? ContractorId,
+    string? AvatarUrl = null
 );
 
 public record RegisterRequest(
@@ -20,3 +21,25 @@ public record RegisterRequest(
     UserRole Role,
     Guid? ContractorId
 );
+
+public record UserProfileDto(
+    Guid Id,
+    string FullName,
+    string Email,
+    string Role,
+    Guid? ContractorId,
+    string? AvatarUrl,
+    string? PhoneNumber,
+    string? Department,
+    string? Bio,
+    List<string> Permissions
+);
+
+public record UpdateProfileRequest(
+    string FullName,
+    string? AvatarUrl,
+    string? PhoneNumber,
+    string? Department,
+    string? Bio
+);
+

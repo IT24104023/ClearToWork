@@ -102,7 +102,9 @@ public static class DbInitializer
             Name = "Hot Work Operational Permit",
             Description = "Required for open flame, spark-producing tools, welding, or cutting.",
             MaxDurationHours = 8,
-            RequiresFireWatch = true
+            RequiresFireWatch = true,
+            RequiresGasTesting = true,
+            MandatoryControlsJson = """["Dry powder extinguisher (9kg) within 5m","Continuous LEL/O2 gas monitoring","Fire-resistant welding blanket erected","Fire watch posted for 30 minutes post-completion","Hot work area barriered with hazard tape"]"""
         };
 
         var paintingPermitType = new PermitType
@@ -112,7 +114,9 @@ public static class DbInitializer
             Name = "Solvent Application Permit",
             Description = "Required for industrial painting or solvent coating operations.",
             MaxDurationHours = 6,
-            RequiresFireWatch = false
+            RequiresFireWatch = false,
+            RequiresGasTesting = true,
+            MandatoryControlsJson = """["LEL gas monitoring active throughout","No ignition sources within 10m","Adequate forced ventilation confirmed","PPE: respirator (OV/P100), chemical-resistant gloves, face shield","Spill containment trays under all containers"]"""
         };
         context.PermitTypes.AddRange(hotWorkPermitType, paintingPermitType);
 
@@ -259,11 +263,14 @@ public static class DbInitializer
             Id = Guid.NewGuid(),
             FullName = "David Miller (Contractor Supervisor)",
             Email = "supervisor@contractor.com",
-            // BCrypt hash of "Password123!" or simple secure hash
             PasswordHash = BCrypt.Net.BCrypt.HashPassword("Password123!"),
             Role = UserRole.ContractorSupervisor,
             ContractorId = contractor.Id,
-            IsActive = true
+            IsActive = true,
+            AvatarUrl = "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80",
+            PhoneNumber = "+94 77 123 4567",
+            Department = "Apex Structural Fabrication & Welding",
+            Bio = "Lead Contractor Field Supervisor with 12+ years experience in high-risk petrochem facilities."
         };
 
         var safetyOfficer = new User
@@ -273,7 +280,11 @@ public static class DbInitializer
             Email = "safety@cleartowork.com",
             PasswordHash = BCrypt.Net.BCrypt.HashPassword("Password123!"),
             Role = UserRole.SafetyOfficer,
-            IsActive = true
+            IsActive = true,
+            AvatarUrl = "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80",
+            PhoneNumber = "+94 71 987 6543",
+            Department = "Corporate Health, Safety & Environment (HSE)",
+            Bio = "Senior HSE Compliance Officer managing SIMOPS permits and hazardous atmosphere safety envelopes."
         };
 
         var admin = new User
@@ -283,11 +294,57 @@ public static class DbInitializer
             Email = "admin@cleartowork.com",
             PasswordHash = BCrypt.Net.BCrypt.HashPassword("Password123!"),
             Role = UserRole.Administrator,
-            IsActive = true
+            IsActive = true,
+            AvatarUrl = "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
+            PhoneNumber = "+94 11 234 5678",
+            Department = "Operations & AI Systems Engineering",
+            Bio = "ClearToWork AI Platform Administrator and LangGraph Orchestration Overseer."
         };
         context.Users.AddRange(supervisor, safetyOfficer, admin);
 
-        // 7. Seed Active Conflicting Permit in adjacent Zone B4 (PTW-2026-0403)
+        // AreaSupervisor: Plant Area Supervisor (4th role per RBAC documentation)
+        var areaSupervisor = new User
+        {
+            Id = Guid.NewGuid(),
+            FullName = "James Whitfield (Area Supervisor)",
+            Email = "areasup@cleartowork.com",
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword("Password123!"),
+            Role = UserRole.AreaSupervisor,
+            IsActive = true,
+            AvatarUrl = "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&auto=format&fit=crop&q=80",
+            PhoneNumber = "+94 77 456 7890",
+            Department = "Plant Operations — Mezzanine Block B",
+            Bio = "Area Supervisor responsible for Zone B3 and B4 spatial isolation, SIMOPS monitoring, and site access control."
+        };
+        context.Users.Add(areaSupervisor);
+
+        // 8. Seed Isolation Points for Zone B3 (referenced by agent get_isolation_points tool & Equipment page)
+        context.IsolationPoints.AddRange(
+            new IsolationPoint
+            {
+                Id = Guid.NewGuid(),
+                ZoneId = zoneB3.Id,
+                TagIdentifier = "ISO-B3-VALVE-01",
+                Description = "Solvent supply isolation manifold — Lock-Out / Tag-Out point",
+                Type = IsolationType.Valve,
+                State = IsolationState.LockedOut,
+                LockedByUserId = areaSupervisor.Id.ToString(),
+                LockedAt = DateTime.UtcNow.AddHours(-2)
+            },
+            new IsolationPoint
+            {
+                Id = Guid.NewGuid(),
+                ZoneId = zoneB3.Id,
+                TagIdentifier = "ISO-B3-ELEC-04",
+                Description = "415V Main busbar isolator switch — Tag-Out point",
+                Type = IsolationType.Electrical,
+                State = IsolationState.TaggedOut,
+                LockedByUserId = areaSupervisor.Id.ToString(),
+                LockedAt = DateTime.UtcNow.AddHours(-1)
+            }
+        );
+
+        await context.SaveChangesAsync();
         var conflictingPermit = new PermitRequest
         {
             Id = Guid.NewGuid(),

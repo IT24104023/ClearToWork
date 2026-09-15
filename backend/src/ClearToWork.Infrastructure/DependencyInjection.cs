@@ -31,7 +31,8 @@ public static class DependencyInjection
         // 2. Memory Cache for Weather and Metadata
         services.AddMemoryCache();
 
-        // 3. Resilient HTTP Client for Open-Meteo
+        // 3. Resilient HTTP Clients (Open-Meteo & Agent Microservice)
+        services.AddHttpClient();
         services.AddHttpClient<IWeatherService, OpenMeteoWeatherService>();
 
         // 4. Register Services for DI

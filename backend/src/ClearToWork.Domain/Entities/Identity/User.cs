@@ -11,4 +11,8 @@ public class User : BaseAuditableEntity
     public UserRole Role { get; set; }
     public Guid? ContractorId { get; set; }
     public bool IsActive { get; set; } = true;
+    public string? AvatarUrl { get; set; }
+    public string? PhoneNumber { get; set; }
+    public string? Department { get; set; }
+    public string? Bio { get; set; }
 }
