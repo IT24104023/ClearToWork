@@ -202,6 +202,89 @@ export interface Translations {
   docs_tab_agents: string;
   docs_tab_security: string;
   docs_tab_database: string;
+
+  // Workforce Domain (Student 1)
+  workforce_title: string;
+  workforce_subtitle: string;
+  workforce_forecast_title: string;
+  workforce_forecast_desc: string;
+  workforce_forecast_valid_all: string;
+  workforce_search_placeholder: string;
+  workforce_th_name: string;
+  workforce_th_badge: string;
+  workforce_th_cert: string;
+  workforce_th_expiry: string;
+  workforce_th_remaining: string;
+  workforce_th_status: string;
+  workforce_accredited_certs: string;
+  workforce_no_certs: string;
+  workforce_status_valid: string;
+  workforce_status_expired: string;
+  workforce_status_expiring: string;
+
+  // Equipment & LOTO Domain (Student 2)
+  equipment_title: string;
+  equipment_subtitle: string;
+  equipment_loto_title: string;
+  equipment_loto_desc: string;
+  equipment_search_placeholder: string;
+  equipment_th_tag: string;
+  equipment_th_name: string;
+  equipment_th_category: string;
+  equipment_th_inspection: string;
+  equipment_th_calibration: string;
+  equipment_th_readiness: string;
+  equipment_status_cleared: string;
+  equipment_status_restricted: string;
+  equipment_status_indate: string;
+  equipment_status_overdue: string;
+  equipment_status_certified: string;
+
+  // Hazard Rules & SIMOPS Domain (Student 4)
+  hazard_title: string;
+  hazard_subtitle: string;
+  hazard_simops_title: string;
+  hazard_simops_desc: string;
+  hazard_primary: string;
+  hazard_conflicting: string;
+  hazard_weather_title: string;
+  hazard_zones_title: string;
+  hazard_adjacent_transfer: string;
+
+  // Safety Analytics & Refusal Audit
+  analytics_title: string;
+  analytics_subtitle: string;
+  analytics_kpi_approved: string;
+  analytics_kpi_approved_sub: string;
+  analytics_kpi_refused: string;
+  analytics_kpi_refused_sub: string;
+  analytics_kpi_active: string;
+  analytics_kpi_active_sub: string;
+  analytics_kpi_mtta: string;
+  analytics_kpi_mtta_sub: string;
+  analytics_causes_title: string;
+  analytics_causes_subtitle: string;
+  analytics_zone_dist_title: string;
+  analytics_zone_dist_subtitle: string;
+
+  // Permit Dossier & Detail
+  permit_list_title: string;
+  permit_list_subtitle: string;
+  permit_new_btn: string;
+  permit_filter_all: string;
+  permit_filter_pending: string;
+  permit_filter_approved: string;
+  permit_filter_refused: string;
+  permit_detail_back: string;
+  permit_detail_run_ai: string;
+  permit_detail_signoff: string;
+  permit_assigned_personnel: string;
+  permit_assigned_equipment: string;
+  permit_no_workers: string;
+  permit_no_equipment: string;
+  permit_timeline_title: string;
+  permit_timeline_latency: string;
+  permit_remediation_title: string;
 }
 
 export const translations: Record<Language, Translations> = {
@@ -399,7 +482,90 @@ export const translations: Record<Language, Translations> = {
     docs_tab_architecture: 'System Architecture',
     docs_tab_agents: 'Agentic Workflow (LangGraph)',
     docs_tab_security: 'Security & Auth Matrix',
-    docs_tab_database: 'Database Schema & ERD'
+    docs_tab_database: 'Database Schema & ERD',
+
+    // Workforce Domain (Student 1)
+    workforce_title: 'Workforce Competency & Certification Register',
+    workforce_subtitle: 'Active trade qualifications, compliance tracking, and 30-day proactive expiry forecasting.',
+    workforce_forecast_title: '30-Day Proactive Certification Expiry Forecast (§5 Non-CRUD Operation)',
+    workforce_forecast_desc: 'Automated foresight identifies certificates expiring or lapsed within 30 days to prevent job site clearance stoppages.',
+    workforce_forecast_valid_all: 'All active personnel certificates are valid beyond 30 days.',
+    workforce_search_placeholder: 'Search workers by name, badge, trade, or contractor...',
+    workforce_th_name: 'Worker Name',
+    workforce_th_badge: 'Badge #',
+    workforce_th_cert: 'Certificate',
+    workforce_th_expiry: 'Expiry Date',
+    workforce_th_remaining: 'Days Remaining',
+    workforce_th_status: 'Status',
+    workforce_accredited_certs: 'Accredited Certifications',
+    workforce_no_certs: 'No certifications registered.',
+    workforce_status_valid: 'Valid',
+    workforce_status_expired: 'Expired',
+    workforce_status_expiring: 'Expiring Soon',
+
+    // Equipment & LOTO Domain (Student 2)
+    equipment_title: 'Equipment, Isolation & Asset Readiness Register',
+    equipment_subtitle: 'Gas monitor calibration, fire extinguisher inspection records, and zone isolation points.',
+    equipment_loto_title: 'Zone B3 Mezzanine — Active Lock-Out / Tag-Out (LOTO) Points',
+    equipment_loto_desc: 'Prior to permit clearance, physical isolation manifolds are verified in safe state.',
+    equipment_search_placeholder: 'Search equipment by tag, name, or category...',
+    equipment_th_tag: 'Asset Tag',
+    equipment_th_name: 'Equipment Name',
+    equipment_th_category: 'Category',
+    equipment_th_inspection: 'Inspection Status',
+    equipment_th_calibration: 'Gas Calibration',
+    equipment_th_readiness: 'Readiness Status',
+    equipment_status_cleared: 'CLEARED',
+    equipment_status_restricted: 'RESTRICTED',
+    equipment_status_indate: 'In-Date',
+    equipment_status_overdue: 'OVERDUE',
+    equipment_status_certified: 'Certified',
+
+    // Hazard Rules & SIMOPS Domain (Student 4)
+    hazard_title: 'Hazard Rulebook & SIMOPS Incompatibility Matrix',
+    hazard_subtitle: 'Atmospheric collision rules, simultaneous operations (SIMOPS), and weather envelope constraints.',
+    hazard_simops_title: 'SIMOPS Incompatibility Rule HR-07 (High Explosive Risk)',
+    hazard_simops_desc: 'Hot work (welding, grinding, open sparks) is strictly forbidden in any zone immediately adjacent to volatile solvent spray operations or solvent storage.',
+    hazard_primary: 'Primary Hazard',
+    hazard_conflicting: 'Conflicting Hazard',
+    hazard_weather_title: 'Environmental Operational Limits (Open-Meteo Integration)',
+    hazard_zones_title: 'Industrial Site Zones & Spatial Adjacency Graph',
+    hazard_adjacent_transfer: 'Adjacent Risk Transfer Zones:',
+
+    // Safety Analytics & Refusal Audit
+    analytics_title: 'HSE Plant Safety Analytics & Refusal Audit',
+    analytics_subtitle: 'Historical trends, root-cause refusal rankings, and Mean Time to Approval (MTTA).',
+    analytics_kpi_approved: 'Permits Approved',
+    analytics_kpi_approved_sub: 'Passed deterministic checks',
+    analytics_kpi_refused: 'Safe Failures / Refused',
+    analytics_kpi_refused_sub: 'Incidents prevented before site entry',
+    analytics_kpi_active: 'Active Hot Work',
+    analytics_kpi_active_sub: 'Currently undergoing execution on-site',
+    analytics_kpi_mtta: 'Mean Time to Approval',
+    analytics_kpi_mtta_sub: 'Sub-2h turnaround with AI assist',
+    analytics_causes_title: 'Root-Cause Safe Failure Ranking (Incident Prevention)',
+    analytics_causes_subtitle: 'Categorization of unsafe conditions caught by LangGraph agents & deterministic rules before permit sign-off.',
+    analytics_zone_dist_title: 'Permit Workload Distribution by Plant Zone',
+    analytics_zone_dist_subtitle: 'Active operational intensity across industrial sectors.',
+
+    // Permit Dossier & Detail
+    permit_list_title: 'Safety Permits Register',
+    permit_list_subtitle: 'Real-time multi-agent safety permit clearance and risk validation dashboard.',
+    permit_new_btn: 'Draft New Permit',
+    permit_filter_all: 'All Permits',
+    permit_filter_pending: 'Pending AI Review',
+    permit_filter_approved: 'HSE Approved',
+    permit_filter_refused: 'Refused (Safe Failure)',
+    permit_detail_back: 'Back to Permit Register',
+    permit_detail_run_ai: 'Run Agentic AI Clearance',
+    permit_detail_signoff: 'Sign-Off Safety Clearance',
+    permit_assigned_personnel: 'Assigned Personnel',
+    permit_assigned_equipment: 'Safety Equipment',
+    permit_no_workers: 'No workers assigned yet.',
+    permit_no_equipment: 'No equipment assigned.',
+    permit_timeline_title: 'Multi-Agent Workflow Execution Trace',
+    permit_timeline_latency: 'Total Latency:',
+    permit_remediation_title: 'Agent Recommended Safe Mitigation & Substitution',
   },
   si: {
     nav_home: 'මුල් පිටුව',
@@ -595,7 +761,90 @@ export const translations: Record<Language, Translations> = {
     docs_tab_architecture: 'පද්ධති ගෘහ නිර්මාණ ශිල්පය',
     docs_tab_agents: 'නියෝජිත ක්‍රියාවලිය (LangGraph)',
     docs_tab_security: 'ආරක්ෂාව සහ අවසර',
-    docs_tab_database: 'දත්ත සමුදා ER සටහන'
+    docs_tab_database: 'දත්ත සමුදා ER සටහන',
+
+    // Workforce Domain (Student 1)
+    workforce_title: 'සේවක නිපුණතා සහ සහතික කිරීමේ ලේඛනය',
+    workforce_subtitle: 'ක්‍රියාකාරී වෘත්තීය සුදුසුකම්, අනුකූලතා ලුහුබැඳීම සහ දින 30ක පූර්ව කල් ඉකුත්වීම් පුරෝකථනය.',
+    workforce_forecast_title: 'දින 30 කල් ඉකුත්වීම් පූර්ව අනතුරු ඇඟවීම (§5 Non-CRUD ක්‍රියාවලිය)',
+    workforce_forecast_desc: 'වැඩබිම් නිෂ්කාශන බාධා වැළැක්වීම සඳහා දින 30ක් ඇතුළත කල් ඉකුත් වන සහතික ස්වයංක්‍රීයව හඳුනා ගනී.',
+    workforce_forecast_valid_all: 'සියලුම සක්‍රීය සේවක සහතික දින 30කට වඩා වලංගු වේ.',
+    workforce_search_placeholder: 'නම, බැජ් අංකය, වෘත්තිය හෝ කොන්ත්‍රාත්කරු අනුව සොයන්න...',
+    workforce_th_name: 'සේවකයාගේ නම',
+    workforce_th_badge: 'බැජ් #',
+    workforce_th_cert: 'සහතිකය',
+    workforce_th_expiry: 'කල් ඉකුත් වන දිනය',
+    workforce_th_remaining: 'ඉතිරි දින ගණන',
+    workforce_th_status: 'තත්ත්වය',
+    workforce_accredited_certs: 'පිළිගත් සහතිකපත්',
+    workforce_no_certs: 'ලියාපදිංචි සහතික නොමැත.',
+    workforce_status_valid: 'වලංගුයි',
+    workforce_status_expired: 'කල් ඉකුත් වී ඇත',
+    workforce_status_expiring: 'ළඟදීම කල් ඉකුත් වේ',
+
+    // Equipment & LOTO Domain (Student 2)
+    equipment_title: 'ආරක්ෂිත උපකරණ, LOTO සහ වත්කම් සූදානම',
+    equipment_subtitle: 'ගෑස් මොනිටර් ක්‍රමාංකනය, ගිනි නිවන උපකරණ පරීක්ෂණ සහ කලාප හුදකලා ස්ථාන.',
+    equipment_loto_title: 'Zone B3 මෙසානින් — සක්‍රීය LOTO අගුලු දැමීමේ ස්ථාන',
+    equipment_loto_desc: 'බලපත්‍ර නිෂ්කාශනයට පෙර භෞතික හුදකලා කපාට ආරක්ෂිත තත්ත්වයේ පවතින බව තහවුරු කරයි.',
+    equipment_search_placeholder: 'ටැගය, නම හෝ කාණ්ඩය අනුව සොයන්න...',
+    equipment_th_tag: 'වත්කම් ටැගය',
+    equipment_th_name: 'උපකරණයේ නම',
+    equipment_th_category: 'කාණ්ඩය',
+    equipment_th_inspection: 'පරීක්ෂණ තත්ත්වය',
+    equipment_th_calibration: 'ගෑස් ක්‍රමාංකනය',
+    equipment_th_readiness: 'සූදානම තත්ත්වය',
+    equipment_status_cleared: 'අවසර ලත්',
+    equipment_status_restricted: 'සීමා කර ඇත',
+    equipment_status_indate: 'වලංගුයි',
+    equipment_status_overdue: 'කල් ඉකුත් වී ඇත',
+    equipment_status_certified: 'සහතික කළ',
+
+    // Hazard Rules & SIMOPS Domain (Student 4)
+    hazard_title: 'අන්තරායකාරී නීති සංග්‍රහය සහ SIMOPS ගැටුම් න්‍යාසය',
+    hazard_subtitle: 'වායුගෝලීය ඝට්ටන නීති, සමගාමී මෙහෙයුම් (SIMOPS) සහ කාලගුණ සීමා.',
+    hazard_simops_title: 'SIMOPS ගැටුම් නීතිය HR-07 (ඉහළ පුපුරන සුළු අවදානම)',
+    hazard_simops_desc: 'ද්‍රාවක ස්ප්‍රේ මෙහෙයුම් හෝ ද්‍රාවක ගබඩා ආසන්න කලාපවල උණුසුම් වැඩ (වෙල්ඩින්, ග්‍රයින්ඩින්) සපුරා තහනම්ය.',
+    hazard_primary: 'ප්‍රාථමික අන්තරාය',
+    hazard_conflicting: 'ගැටෙන අන්තරාය',
+    hazard_weather_title: 'පාරිසරික මෙහෙයුම් සීමාවන් (Open-Meteo ඒකාබද්ධතාවය)',
+    hazard_zones_title: 'කාර්මික අඩවි කලාප සහ අවකාශීය සිතියම',
+    hazard_adjacent_transfer: 'යාබද අවදානම් මාරු කලාප:',
+
+    // Safety Analytics & Refusal Audit
+    analytics_title: 'HSE කාර්මික ආරක්ෂණ විශ්ලේෂණ සහ ප්‍රතික්ෂේප කිරීම් විගණනය',
+    analytics_subtitle: 'ඓතිහාසික ප්‍රවණතා, ප්‍රතික්ෂේප කිරීම් වර්ගීකරණය සහ අනුමත කිරීමට ගතවන සාමාන්‍ය කාලය (MTTA).',
+    analytics_kpi_approved: 'අනුමත කළ බලපත්‍ර',
+    analytics_kpi_approved_sub: 'නිරවද්‍යතා පරීක්ෂණ සමත් විය',
+    analytics_kpi_refused: 'ආරක්ෂිතව වැළැක්වූ / ප්‍රතික්ෂේපිත',
+    analytics_kpi_refused_sub: 'වැඩබිමට ඇතුළුවීමට පෙර අනතුරු වළක්වන ලදී',
+    analytics_kpi_active: 'සක්‍රීය උණුසුම් වැඩ',
+    analytics_kpi_active_sub: 'දැනට වැඩබිමෙහි ක්‍රියාත්මක වේ',
+    analytics_kpi_mtta: 'සාමාන්‍ය අනුමත කාලය',
+    analytics_kpi_mtta_sub: 'AI සහාය ඇතිව පැය 2කට අඩු කාලයකින්',
+    analytics_causes_title: 'මූලික හේතු වර්ගීකරණය (අනතුරු වැළැක්වීම)',
+    analytics_causes_subtitle: 'LangGraph නියෝජිතයින් විසින් හසුකරගත් අනාරක්ෂිත තත්ත්වයන්.',
+    analytics_zone_dist_title: 'කලාපය අනුව බලපත්‍ර ව්‍යාප්තිය',
+    analytics_zone_dist_subtitle: 'කාර්මික අංශ හරහා සක්‍රීය මෙහෙයුම් තීව්‍රතාව.',
+
+    // Permit Dossier & Detail
+    permit_list_title: 'ආරක්ෂිත බලපත්‍ර ලේඛනය',
+    permit_list_subtitle: 'තථ්‍ය කාලීන බහු-නියෝජිත ආරක්ෂිත වැඩ බලපත්‍ර නිෂ්කාශනය සහ අවදානම් පාලන පුවරුව.',
+    permit_new_btn: 'නව බලපත්‍රයක් කෙටුම්පත් කරන්න',
+    permit_filter_all: 'සියලු බලපත්‍ර',
+    permit_filter_pending: 'AI සමාලෝචනය අපේක්ෂිත',
+    permit_filter_approved: 'HSE අනුමත',
+    permit_filter_refused: 'ප්‍රතික්ෂේපිත (ආරක්ෂිත වැළැක්වීම)',
+    permit_detail_back: 'නැවත බලපත්‍ර ලේඛනයට',
+    permit_detail_run_ai: 'නියෝජිත AI නිෂ්කාශනය ක්‍රියාත්මක කරන්න',
+    permit_detail_signoff: 'ආරක්ෂණ අනුමැතිය සහතික කරන්න',
+    permit_assigned_personnel: 'යොදවා ඇති සේවකයින්',
+    permit_assigned_equipment: 'ආරක්ෂිත උපකරණ',
+    permit_no_workers: 'සේවකයින් තවම පවරා නොමැත.',
+    permit_no_equipment: 'උපකරණ පවරා නොමැත.',
+    permit_timeline_title: 'බහු-නියෝජිත ක්‍රියාකාරී විගණන ලොගය',
+    permit_timeline_latency: 'මුළු කාල ප්‍රමාදය:',
+    permit_remediation_title: 'නියෝජිතයන් විසින් නිර්දේශිත ආරක්ෂිත විකල්ප සහ විසඳුම්',
   },
   ta: {
     nav_home: 'முகப்பு',
@@ -791,6 +1040,89 @@ export const translations: Record<Language, Translations> = {
     docs_tab_architecture: 'கணினி கட்டமைப்பு',
     docs_tab_agents: 'முகவர் பணிப்பாய்வு (LangGraph)',
     docs_tab_security: 'பாதுகாப்பு & அங்கீகாரம்',
-    docs_tab_database: 'தரவுத்தள ER வரைபடம்'
+    docs_tab_database: 'தரவுத்தள ER வரைபடம்',
+
+    // Workforce Domain (Student 1)
+    workforce_title: 'பணியாளர் தகுதி மற்றும் சான்றிதழ் பதிவு',
+    workforce_subtitle: 'செயலில் உள்ள தொழில் தகுதிகள், இணக்க கண்காணிப்பு மற்றும் 30 நாள் முன்கூட்டியே காலாவதி கணிப்பு.',
+    workforce_forecast_title: '30-நாள் முன்கூட்டியே சான்றிதழ் காலாவதி கணிப்பு (§5 Non-CRUD செயல்பாடு)',
+    workforce_forecast_desc: 'வேலை தள அனுமதி தாமதங்களை தடுக்க 30 நாட்களுக்குள் காலாவதியாகும் சான்றிதழ்களை தானாகவே கண்டறிகிறது.',
+    workforce_forecast_valid_all: 'அனைத்து செயலில் உள்ள பணியாளர் சான்றிதழ்களும் 30 நாட்களுக்கு மேல் செல்லுபடியாகும்.',
+    workforce_search_placeholder: 'பெயர், பேட்ஜ் எண், தொழில் அல்லது ஒப்பந்ததாரர் மூலம் தேடுங்கள்...',
+    workforce_th_name: 'பணியாளர் பெயர்',
+    workforce_th_badge: 'பேட்ஜ் #',
+    workforce_th_cert: 'சான்றிதழ்',
+    workforce_th_expiry: 'காலாவதி தேதி',
+    workforce_th_remaining: 'மீதமுள்ள நாட்கள்',
+    workforce_th_status: 'நிலை',
+    workforce_accredited_certs: 'அங்கீகரிக்கப்பட்ட சான்றிதழ்கள்',
+    workforce_no_certs: 'பதிவுசெய்யப்பட்ட சான்றிதழ்கள் எதுவும் இல்லை.',
+    workforce_status_valid: 'செல்லுபடியாகும்',
+    workforce_status_expired: 'காலாவதியானது',
+    workforce_status_expiring: 'விரைவில் காலாவதியாகிறது',
+
+    // Equipment & LOTO Domain (Student 2)
+    equipment_title: 'பாதுகாப்பு உபகரணங்கள், LOTO மற்றும் தயார்நிலை பதிவு',
+    equipment_subtitle: 'வாயு மானிட்டர் அளவீடு, தீயணைப்பு ஆய்வு பதிவுகள் மற்றும் மண்டல தனிமைப்படுத்தல் புள்ளிகள்.',
+    equipment_loto_title: 'மண்டலம் B3 மெஸ்ஸானைன் — செயலில் உள்ள LOTO தனிமைப்படுத்தல் புள்ளிகள்',
+    equipment_loto_desc: 'அனுமதி வழங்கப்படுவதற்கு முன், இயற்பியல் தனிமைப்படுத்தல் வால்வுகள் பாதுகாப்பான நிலையில் இருப்பது உறுதி செய்யப்படுகிறது.',
+    equipment_search_placeholder: 'குறிச்சொல், பெயர் அல்லது வகை மூலம் தேடுங்கள்...',
+    equipment_th_tag: 'சொத்து குறிச்சொல்',
+    equipment_th_name: 'உபகரண பெயர்',
+    equipment_th_category: 'வகை',
+    equipment_th_inspection: 'ஆய்வு நிலை',
+    equipment_th_calibration: 'வாயு அளவீடு',
+    equipment_th_readiness: 'தயார்நிலை',
+    equipment_status_cleared: 'அனுமதிக்கப்பட்டது',
+    equipment_status_restricted: 'கட்டுப்படுத்தப்பட்டது',
+    equipment_status_indate: 'செல்லுபடியாகும்',
+    equipment_status_overdue: 'காலாவதியானது',
+    equipment_status_certified: 'சான்றளிக்கப்பட்டது',
+
+    // Hazard Rules & SIMOPS Domain (Student 4)
+    hazard_title: 'ஆபத்து விதிகள் மற்றும் SIMOPS பொருந்தாமை அணி',
+    hazard_subtitle: 'வளிமண்டல மோதல் விதிகள், ஒரே நேரத்தில் நிகழும் செயல்பாடுகள் (SIMOPS) மற்றும் வானிலை கட்டுப்பாடுகள்.',
+    hazard_simops_title: 'SIMOPS பொருந்தாமை விதி HR-07 (அதிக வெடிப்பு ஆபத்து)',
+    hazard_simops_desc: 'கரைப்பான் தெளிப்பு செயல்பாடுகள் அல்லது கரைப்பான் சேமிப்பிற்கு அருகிலுள்ள எந்தவொரு மண்டலத்திலும் வெப்ப வேலை (வெல்டிங், அரைத்தல்) கண்டிப்பாக தடைசெய்யப்பட்டுள்ளது.',
+    hazard_primary: 'முதன்மை ஆபத்து',
+    hazard_conflicting: 'முரண்பட்ட ஆபத்து',
+    hazard_weather_title: 'சுற்றுச்சூழல் செயல்பாட்டு வரம்புகள் (Open-Meteo ஒருங்கிணைப்பு)',
+    hazard_zones_title: 'தொழில்துறை தள மண்டலங்கள் & இடஞ்சார்ந்த வரைபடம்',
+    hazard_adjacent_transfer: 'அருகிலுள்ள இடர் பரிமாற்ற மண்டலங்கள்:',
+
+    // Safety Analytics & Refusal Audit
+    analytics_title: 'HSE ஆலை பாதுகாப்பு பகுப்பாய்வு மற்றும் மறுப்பு தணிக்கை',
+    analytics_subtitle: 'வரலாற்று போக்குகள், மூல காரண மறுப்பு தரவரிசைகள் மற்றும் ஒப்புதலுக்கான சராசரி நேரம் (MTTA).',
+    analytics_kpi_approved: 'அனுமதிகள் அங்கீகரிக்கப்பட்டன',
+    analytics_kpi_approved_sub: 'பாதுகாப்பு சோதனைகளில் தேர்ச்சி பெற்றது',
+    analytics_kpi_refused: 'பாதுகாப்பான தோல்விகள் / மறுக்கப்பட்டவை',
+    analytics_kpi_refused_sub: 'தள நுழைவுக்கு முன் விபத்துக்கள் தடுக்கப்பட்டன',
+    analytics_kpi_active: 'செயலில் உள்ள வெப்ப வேலை',
+    analytics_kpi_active_sub: 'தற்போது தளத்தில் செயல்படுத்தப்படுகிறது',
+    analytics_kpi_mtta: 'ஒப்புதலுக்கான சராசரி நேரம்',
+    analytics_kpi_mtta_sub: 'AI உதவியுடன் 2 மணி நேரத்திற்குள்',
+    analytics_causes_title: 'மூல காரண பாதுகாப்பான தோல்வி தரவரிசை (விபத்து தடுப்பு)',
+    analytics_causes_subtitle: 'அனுமதி கையொப்பத்திற்கு முன் LangGraph முகவர்கள் மற்றும் விதிகளால் பிடிக்கப்பட்ட பாதுகாப்பற்ற நிலைமைகள்.',
+    analytics_zone_dist_title: 'மண்டலம் வாரியாக அனுமதி பணிச்சுமை பகிர்வு',
+    analytics_zone_dist_subtitle: 'தொழில்துறை பிரிவுகளில் செயலில் உள்ள செயல்பாட்டு தீவிரம்.',
+
+    // Permit Dossier & Detail
+    permit_list_title: 'பாதுகாப்பு அனுமதிகள் பதிவு',
+    permit_list_subtitle: 'நிகழ்நேர பல முகவர் பாதுகாப்பு பணி அனுமதி அனுமதி மற்றும் இடர் சரிபார்ப்பு டாஷ்போர்டு.',
+    permit_new_btn: 'புதிய அனுமதியை உருவாக்கு',
+    permit_filter_all: 'அனைத்து அனுமதிகள்',
+    permit_filter_pending: 'AI மதிப்பாய்வு நிலுவையில் உள்ளது',
+    permit_filter_approved: 'HSE அங்கீகரிக்கப்பட்டது',
+    permit_filter_refused: 'மறுக்கப்பட்டது (பாதுகாப்பான தோல்வி)',
+    permit_detail_back: 'அனுமதி பதிவேட்டிற்கு திரும்பவும்',
+    permit_detail_run_ai: 'முகவர் AI அனுமதியை இயக்கவும்',
+    permit_detail_signoff: 'பாதுகாப்பு அனுமதியை கையொப்பமிடுங்கள்',
+    permit_assigned_personnel: 'ஒதுக்கப்பட்ட பணியாளர்கள்',
+    permit_assigned_equipment: 'பாதுகாப்பு உபகரணங்கள்',
+    permit_no_workers: 'பணியாளர்கள் இன்னும் ஒதுக்கப்படவில்லை.',
+    permit_no_equipment: 'உபகரணங்கள் ஒதுக்கப்படவில்லை.',
+    permit_timeline_title: 'பல முகவர் பணிப்பாய்வு தணிக்கை தடம்',
+    permit_timeline_latency: 'மொத்த மறுமொழி நேரம்:',
+    permit_remediation_title: 'முகவர் பரிந்துரைத்த பாதுகாப்பான தீர்வு மற்றும் மாற்றீடு',
   }
 };

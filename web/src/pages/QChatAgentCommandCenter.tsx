@@ -238,75 +238,75 @@ export const QChatAgentCommandCenter: React.FC = () => {
   return (
     <div className="p-6 space-y-6 max-w-7xl mx-auto">
       {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-slate-800 pb-4">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 border-b border-slate-200 dark:border-slate-800 pb-4">
         <div>
           <div className="flex items-center space-x-2.5">
-            <div className="bg-sky-500/20 text-sky-400 p-2 rounded-xl border border-sky-500/30">
+            <div className="bg-sky-500/10 dark:bg-sky-500/20 text-sky-600 dark:text-sky-400 p-2 rounded-xl border border-sky-500/30">
               <Bot className="w-6 h-6" />
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-white tracking-tight">
+              <h1 className="text-2xl font-bold text-slate-900 dark:text-white tracking-tight">
                 {t('agent_center_title')}
               </h1>
-              <p className="text-xs text-slate-400 mt-0.5">
+              <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
                 {t('agent_center_subtitle')}
               </p>
             </div>
           </div>
         </div>
 
-        <div className="flex items-center space-x-2 bg-slate-900 px-3 py-1.5 rounded-xl border border-slate-800 text-xs">
+        <div className="flex items-center space-x-2 bg-white dark:bg-slate-900 px-3.5 py-2 rounded-xl border border-slate-200 dark:border-slate-800 text-xs shadow-sm">
           <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-          <span className="font-semibold text-slate-300">LangGraph Pipeline:</span>
-          <span className="font-mono text-emerald-400 font-bold">5/5 AGENTS ACTIVE</span>
+          <span className="font-semibold text-slate-700 dark:text-slate-300">LangGraph Pipeline:</span>
+          <span className="font-mono text-emerald-600 dark:text-emerald-400 font-bold">5/5 AGENTS ACTIVE</span>
         </div>
       </div>
 
       {/* KPI Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div className="bg-slate-900 dark:bg-slate-900/80 p-4 rounded-xl border border-slate-800 shadow-sm">
-          <div className="flex items-center justify-between text-slate-400 text-xs mb-1">
+        <div className="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 text-xs mb-1">
             <span>{t('agent_kpi_total_runs')}</span>
-            <Activity className="w-4 h-4 text-sky-400" />
+            <Activity className="w-4 h-4 text-sky-500 dark:text-sky-400" />
           </div>
-          <div className="text-2xl font-extrabold text-white font-mono">{metrics.totalRuns}</div>
+          <div className="text-2xl font-extrabold text-slate-900 dark:text-white font-mono">{metrics.totalRuns}</div>
           <div className="text-[11px] text-slate-500 mt-1">Autonomous verifications</div>
         </div>
 
-        <div className="bg-slate-900 dark:bg-slate-900/80 p-4 rounded-xl border border-slate-800 shadow-sm">
-          <div className="flex items-center justify-between text-slate-400 text-xs mb-1">
+        <div className="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 text-xs mb-1">
             <span>{t('agent_kpi_safe_failures')}</span>
-            <ShieldAlert className="w-4 h-4 text-rose-400" />
+            <ShieldAlert className="w-4 h-4 text-rose-500 dark:text-rose-400" />
           </div>
-          <div className="text-2xl font-extrabold text-rose-400 font-mono">{metrics.safeFailures}</div>
-          <div className="text-[11px] text-rose-400/80 mt-1">Fail-Closed guardrail triggered</div>
+          <div className="text-2xl font-extrabold text-rose-600 dark:text-rose-400 font-mono">{metrics.safeFailures}</div>
+          <div className="text-[11px] text-rose-600 dark:text-rose-400/80 mt-1">Fail-Closed guardrail triggered</div>
         </div>
 
-        <div className="bg-slate-900 dark:bg-slate-900/80 p-4 rounded-xl border border-slate-800 shadow-sm">
-          <div className="flex items-center justify-between text-slate-400 text-xs mb-1">
+        <div className="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 text-xs mb-1">
             <span>{t('agent_kpi_clear_permits')}</span>
-            <ShieldCheck className="w-4 h-4 text-emerald-400" />
+            <ShieldCheck className="w-4 h-4 text-emerald-500 dark:text-emerald-400" />
           </div>
-          <div className="text-2xl font-extrabold text-emerald-400 font-mono">{metrics.clearRuns}</div>
-          <div className="text-[11px] text-emerald-400/80 mt-1">Ready for human sign-off</div>
+          <div className="text-2xl font-extrabold text-emerald-600 dark:text-emerald-400 font-mono">{metrics.clearRuns}</div>
+          <div className="text-[11px] text-emerald-600 dark:text-emerald-400/80 mt-1">Ready for human sign-off</div>
         </div>
 
-        <div className="bg-slate-900 dark:bg-slate-900/80 p-4 rounded-xl border border-slate-800 shadow-sm">
-          <div className="flex items-center justify-between text-slate-400 text-xs mb-1">
+        <div className="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm">
+          <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 text-xs mb-1">
             <span>{t('agent_kpi_avg_latency')}</span>
-            <Clock className="w-4 h-4 text-amber-400" />
+            <Clock className="w-4 h-4 text-amber-500 dark:text-amber-400" />
           </div>
-          <div className="text-2xl font-extrabold text-amber-400 font-mono">{metrics.avgLatency} ms</div>
+          <div className="text-2xl font-extrabold text-amber-600 dark:text-amber-400 font-mono">{metrics.avgLatency} ms</div>
           <div className="text-[11px] text-slate-500 mt-1">End-to-end 5-node graph</div>
         </div>
       </div>
 
       {/* Live Pipeline Stepper */}
-      <div className="bg-slate-900 dark:bg-slate-900/80 p-5 rounded-2xl border border-slate-800 shadow-md">
+      <div className="bg-white dark:bg-slate-900 p-5 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm">
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center gap-2">
-            <Layers className="w-5 h-5 text-sky-400" />
-            <h2 className="font-bold text-white text-sm">{t('agent_active_pipeline')}</h2>
+            <Layers className="w-5 h-5 text-sky-500 dark:text-sky-400" />
+            <h2 className="font-bold text-slate-900 dark:text-white text-sm">{t('agent_active_pipeline')}</h2>
           </div>
           <span className="text-xs text-slate-400 font-mono">DAG Execution Engine</span>
         </div>
@@ -317,21 +317,21 @@ export const QChatAgentCommandCenter: React.FC = () => {
             return (
               <div
                 key={agent.id}
-                className={`p-3.5 rounded-xl border transition-all duration-300 ${
+                className={`p-3.5 rounded-2xl border transition-all duration-300 ${
                   isActive
-                    ? 'bg-sky-500/20 border-sky-400 shadow-lg scale-105'
-                    : 'bg-slate-950/60 border-slate-800/80'
+                    ? 'bg-sky-50 dark:bg-sky-500/20 border-sky-400 shadow-lg scale-105'
+                    : 'bg-slate-50 dark:bg-slate-950/60 border-slate-200 dark:border-slate-800/80'
                 }`}
               >
                 <div className="flex items-center justify-between mb-1.5">
-                  <span className="text-[10px] font-mono text-sky-400 font-bold">Node 0{index + 1}</span>
-                  <span className="w-2 h-2 rounded-full bg-emerald-400" />
+                  <span className="text-[10px] font-mono text-sky-600 dark:text-sky-400 font-bold">Node 0{index + 1}</span>
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 dark:bg-emerald-400" />
                 </div>
-                <div className="font-semibold text-xs text-white leading-tight mb-1">{agent.name}</div>
-                <div className="text-[10px] text-slate-400 mb-2">{agent.owner}</div>
-                <div className="flex items-center justify-between pt-2 border-t border-slate-800 text-[10px] text-slate-400">
+                <div className="font-semibold text-xs text-slate-900 dark:text-white leading-tight mb-1">{agent.name}</div>
+                <div className="text-[10px] text-slate-500 dark:text-slate-400 mb-2">{agent.owner}</div>
+                <div className="flex items-center justify-between pt-2 border-t border-slate-200 dark:border-slate-800 text-[10px] text-slate-500 dark:text-slate-400">
                   <span>Latency:</span>
-                  <span className="font-mono text-amber-400">{agent.avgLatencyMs} ms</span>
+                  <span className="font-mono text-amber-600 dark:text-amber-400 font-bold">{agent.avgLatencyMs} ms</span>
                 </div>
               </div>
             );
@@ -342,14 +342,14 @@ export const QChatAgentCommandCenter: React.FC = () => {
       {/* QChat Interactive Terminal & Agent Inspector */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
         {/* Left: QChat Console (7 cols) */}
-        <div className="lg:col-span-7 bg-slate-900 dark:bg-slate-900/80 rounded-2xl border border-slate-800 flex flex-col h-[580px] shadow-md overflow-hidden">
+        <div className="lg:col-span-7 bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 flex flex-col h-[580px] shadow-sm overflow-hidden">
           {/* Terminal Header */}
-          <div className="px-4 py-3 bg-slate-950 border-b border-slate-800 flex items-center justify-between">
+          <div className="px-4 py-3 bg-slate-50 dark:bg-slate-950 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <Terminal className="w-4 h-4 text-amber-400" />
-              <span className="text-xs font-bold text-slate-200">{t('qchat_title')}</span>
+              <Terminal className="w-4 h-4 text-amber-500 dark:text-amber-400" />
+              <span className="text-xs font-bold text-slate-800 dark:text-slate-200">{t('qchat_title')}</span>
             </div>
-            <span className="text-[11px] font-mono text-slate-500">Port 8000 · FastAPI</span>
+            <span className="text-[11px] font-mono text-slate-400">Port 8000 · FastAPI</span>
           </div>
 
           {/* Messages Log */}
@@ -357,20 +357,20 @@ export const QChatAgentCommandCenter: React.FC = () => {
             {chatMessages.map((msg, idx) => (
               <div
                 key={idx}
-                className={`p-3.5 rounded-xl border ${
+                className={`p-3.5 rounded-2xl border ${
                   msg.sender === 'user'
-                    ? 'bg-sky-950/40 border-sky-800 text-sky-200 ml-6'
+                    ? 'bg-sky-50 dark:bg-sky-950/40 border-sky-200 dark:border-sky-800 text-sky-900 dark:text-sky-200 ml-6'
                     : msg.isSafeFailure
-                    ? 'bg-rose-950/20 border-rose-900/60 text-slate-200 mr-4'
-                    : 'bg-slate-950 border-slate-800 text-slate-200 mr-4'
+                    ? 'bg-rose-50 dark:bg-rose-950/20 border-rose-200 dark:border-rose-900/60 text-slate-800 dark:text-slate-200 mr-4'
+                    : 'bg-slate-50 dark:bg-slate-950 border-slate-200 dark:border-slate-800 text-slate-800 dark:text-slate-200 mr-4'
                 }`}
               >
                 <div className="flex items-center justify-between mb-1.5">
-                  <span className={`text-[10px] font-bold uppercase ${msg.sender === 'user' ? 'text-sky-400' : 'text-amber-400'}`}>
+                  <span className={`text-[10px] font-bold uppercase ${msg.sender === 'user' ? 'text-sky-600 dark:text-sky-400' : 'text-amber-600 dark:text-amber-400'}`}>
                     {msg.sender === 'user' ? 'Safety Officer / Admin' : 'ClearToWork AI Agent Cluster'}
                   </span>
                   {msg.durationMs && (
-                    <span className="text-[10px] text-slate-500">⏱ {msg.durationMs} ms</span>
+                    <span className="text-[10px] text-slate-400">⏱ {msg.durationMs} ms</span>
                   )}
                 </div>
 
@@ -378,8 +378,8 @@ export const QChatAgentCommandCenter: React.FC = () => {
 
                 {/* Hard Failure Badge & Fix */}
                 {msg.hardFailures && msg.hardFailures.length > 0 && (
-                  <div className="mt-3 pt-2.5 border-t border-rose-900/40">
-                    <div className="flex items-center gap-1.5 text-rose-400 font-bold text-[11px] mb-1">
+                  <div className="mt-3 pt-2.5 border-t border-rose-200 dark:border-rose-900/40">
+                    <div className="flex items-center gap-1.5 text-rose-600 dark:text-rose-400 font-bold text-[11px] mb-1">
                       <AlertOctagon className="w-3.5 h-3.5" />
                       <span>{msg.hardFailures.length} Hard Safety Violations Detected</span>
                     </div>
@@ -387,9 +387,9 @@ export const QChatAgentCommandCenter: React.FC = () => {
                 )}
 
                 {msg.fix && (
-                  <div className="mt-2.5 p-2 bg-emerald-950/30 border border-emerald-800/40 rounded-lg text-emerald-300 text-[11px]">
+                  <div className="mt-2.5 p-2.5 bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800/40 rounded-xl text-emerald-800 dark:text-emerald-300 text-[11px]">
                     <div className="font-bold flex items-center gap-1 mb-1">
-                      <Sparkles className="w-3 h-3 text-emerald-400" />
+                      <Sparkles className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
                       <span>Automated Remediation Fix:</span>
                     </div>
                     {msg.fix.suggestedWorkerBadge && (
@@ -407,22 +407,22 @@ export const QChatAgentCommandCenter: React.FC = () => {
             ))}
 
             {loading && (
-              <div className="p-3 bg-slate-950 border border-sky-800/50 rounded-xl text-sky-400 flex items-center gap-2 animate-pulse">
-                <Cpu className="w-4 h-4 animate-spin text-sky-400" />
+              <div className="p-3 bg-sky-50 dark:bg-slate-950 border border-sky-300 dark:border-sky-800/50 rounded-xl text-sky-700 dark:text-sky-400 flex items-center gap-2 animate-pulse">
+                <Cpu className="w-4 h-4 animate-spin text-sky-600 dark:text-sky-400" />
                 <span>Executing LangGraph nodes: Planning ➔ Competency ➔ Equipment ➔ Hazard ➔ Validation...</span>
               </div>
             )}
           </div>
 
           {/* Input Controls */}
-          <div className="p-3 bg-slate-950 border-t border-slate-800 space-y-2">
+          <div className="p-3 bg-slate-50 dark:bg-slate-950 border-t border-slate-200 dark:border-slate-800 space-y-2">
             <div className="grid grid-cols-4 gap-2 text-[11px]">
               <div>
-                <label className="text-slate-400 block mb-0.5">Hazard</label>
+                <label className="text-slate-500 dark:text-slate-400 block mb-0.5">Hazard</label>
                 <select
                   value={selectedHazard}
                   onChange={e => setSelectedHazard(e.target.value)}
-                  className="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-slate-200"
+                  className="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-2 py-1 text-slate-800 dark:text-slate-200"
                 >
                   <option value="HOT_WORK">HOT_WORK</option>
                   <option value="CONFINED_SPACE">CONFINED_SPACE</option>
@@ -432,11 +432,11 @@ export const QChatAgentCommandCenter: React.FC = () => {
               </div>
 
               <div>
-                <label className="text-slate-400 block mb-0.5">Zone</label>
+                <label className="text-slate-500 dark:text-slate-400 block mb-0.5">Zone</label>
                 <select
                   value={selectedZone}
                   onChange={e => setSelectedZone(e.target.value)}
-                  className="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-slate-200"
+                  className="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-2 py-1 text-slate-800 dark:text-slate-200"
                 >
                   <option value="ZONE_B3">ZONE_B3 (Mezzanine)</option>
                   <option value="ZONE_B4">ZONE_B4 (Paint Store)</option>
@@ -445,24 +445,24 @@ export const QChatAgentCommandCenter: React.FC = () => {
               </div>
 
               <div>
-                <label className="text-slate-400 block mb-0.5">Worker Badge</label>
+                <label className="text-slate-500 dark:text-slate-400 block mb-0.5">Worker Badge</label>
                 <input
                   type="text"
                   value={workerId}
                   onChange={e => setWorkerId(e.target.value)}
                   placeholder="e.g. worker-1182"
-                  className="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-slate-200"
+                  className="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-2 py-1 text-slate-800 dark:text-slate-200"
                 />
               </div>
 
               <div>
-                <label className="text-slate-400 block mb-0.5">Asset Tag</label>
+                <label className="text-slate-500 dark:text-slate-400 block mb-0.5">Asset Tag</label>
                 <input
                   type="text"
                   value={assetTag}
                   onChange={e => setAssetTag(e.target.value)}
                   placeholder="e.g. EX-22"
-                  className="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-slate-200"
+                  className="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-2 py-1 text-slate-800 dark:text-slate-200"
                 />
               </div>
             </div>
@@ -474,7 +474,7 @@ export const QChatAgentCommandCenter: React.FC = () => {
                 onChange={e => setQueryInput(e.target.value)}
                 onKeyDown={e => e.key === 'Enter' && handleSimulate()}
                 placeholder={t('qchat_placeholder')}
-                className="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-400"
+                className="flex-1 bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3.5 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-amber-500"
               />
               <button
                 onClick={handleSimulate}
@@ -490,30 +490,30 @@ export const QChatAgentCommandCenter: React.FC = () => {
 
         {/* Right: Agent Node Inspector (5 cols) */}
         <div className="lg:col-span-5 space-y-3">
-          <div className="bg-slate-900 dark:bg-slate-900/80 p-4 rounded-2xl border border-slate-800 shadow-md">
-            <h3 className="text-sm font-bold text-white mb-1 flex items-center gap-2">
-              <Zap className="w-4 h-4 text-amber-400" />
+          <div className="bg-white dark:bg-slate-900 p-5 rounded-3xl border border-slate-200 dark:border-slate-800 shadow-sm">
+            <h3 className="text-sm font-bold text-slate-900 dark:text-white mb-1 flex items-center gap-2">
+              <Zap className="w-4 h-4 text-amber-500 dark:text-amber-400" />
               <span>Multi-Agent Responsibilities & Tool Matrix</span>
             </h3>
-            <p className="text-[11px] text-slate-400 mb-3">
+            <p className="text-[11px] text-slate-500 dark:text-slate-400 mb-3">
               Each student owns a discrete agent with dedicated tool allow-lists.
             </p>
 
             <div className="space-y-2.5">
               {agents.map((agent) => (
-                <div key={agent.id} className="p-3 bg-slate-950/70 border border-slate-800 rounded-xl text-xs">
+                <div key={agent.id} className="p-3.5 bg-slate-50 dark:bg-slate-950/70 border border-slate-200 dark:border-slate-800 rounded-2xl text-xs">
                   <div className="flex items-center justify-between mb-1">
-                    <span className="font-bold text-white text-xs">{agent.name}</span>
-                    <span className="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-mono text-[10px] font-bold">
+                    <span className="font-bold text-slate-900 dark:text-white text-xs">{agent.name}</span>
+                    <span className="px-2 py-0.5 rounded-md bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400 font-mono text-[10px] font-bold">
                       {agent.status}
                     </span>
                   </div>
-                  <div className="text-[11px] text-slate-400 mb-1.5">{agent.responsibilities}</div>
+                  <div className="text-[11px] text-slate-600 dark:text-slate-400 mb-1.5">{agent.responsibilities}</div>
                   <div className="flex flex-wrap gap-1 mt-1">
                     {agent.allowedTools.map((tool) => (
                       <span
                         key={tool}
-                        className="px-2 py-0.5 rounded bg-sky-950 text-sky-400 border border-sky-800/60 font-mono text-[10px]"
+                        className="px-2 py-0.5 rounded bg-sky-100 dark:bg-sky-950 text-sky-800 dark:text-sky-400 border border-sky-300 dark:border-sky-800/60 font-mono text-[10px]"
                       >
                         {tool}()
                       </span>

@@ -11,9 +11,10 @@ import {
   useGetEquipmentQuery,
 } from '../store/apiSlice';
 import { StatusBadge } from '../components/StatusBadge';
+import { useTranslation } from '../context/I18nContext';
 import {
   Search, Filter, Cpu, ArrowUpRight, AlertCircle, RefreshCw,
-  FileText, Plus, X, Calendar, Clock,
+  FileText, Plus, X,
 } from 'lucide-react';
 import type { PermitStatus } from '../types';
 
@@ -108,23 +109,23 @@ const NewPermitModal: React.FC<NewPermitModalProps> = ({ onClose, onCreated }) =
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
-      <div className="bg-slate-900 border border-slate-700 rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-3xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
         {/* Modal Header */}
-        <div className="flex items-center justify-between p-5 border-b border-slate-800">
+        <div className="flex items-center justify-between p-5 border-b border-slate-200 dark:border-slate-800">
           <div>
-            <h2 className="text-base font-black text-white">New Permit-to-Work Draft</h2>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <h2 className="text-base font-black text-slate-900 dark:text-white">New Permit-to-Work Draft</h2>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
               Draft will be saved for AI Clearance review before HSE sign-off.
             </p>
           </div>
-          <button onClick={onClose} className="text-slate-400 hover:text-white transition">
+          <button onClick={onClose} className="text-slate-400 hover:text-slate-600 dark:hover:text-white transition">
             <X className="w-5 h-5" />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="p-5 space-y-5">
           {error && (
-            <div className="p-3 bg-rose-950/50 border border-rose-700 rounded-lg text-rose-300 text-xs flex items-center gap-2">
+            <div className="p-3 bg-rose-50 dark:bg-rose-950/50 border border-rose-300 dark:border-rose-700 rounded-xl text-rose-700 dark:text-rose-300 text-xs flex items-center gap-2">
               <AlertCircle className="w-4 h-4 shrink-0" />
               <span>{error}</span>
             </div>
@@ -133,13 +134,13 @@ const NewPermitModal: React.FC<NewPermitModalProps> = ({ onClose, onCreated }) =
           {/* Permit Type */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="text-xs font-semibold text-slate-300 block mb-1.5">
-                Permit Type <span className="text-rose-400">*</span>
+              <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1.5">
+                Permit Type <span className="text-rose-500">*</span>
               </label>
               <select
                 value={permitTypeCode}
                 onChange={(e) => setPermitTypeCode(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-500"
+                className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-amber-500"
               >
                 {PERMIT_TYPES.map((pt) => (
                   <option key={pt.code} value={pt.code}>
@@ -150,103 +151,101 @@ const NewPermitModal: React.FC<NewPermitModalProps> = ({ onClose, onCreated }) =
             </div>
 
             <div>
-              <label className="text-xs font-semibold text-slate-300 block mb-1.5">
-                Work Zone <span className="text-rose-400">*</span>
+              <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1.5">
+                Plant Zone Location <span className="text-rose-500">*</span>
               </label>
               <select
                 value={zoneId}
                 onChange={(e) => setZoneId(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-500"
+                required
+                className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-amber-500"
               >
-                <option value="">— Select zone —</option>
+                <option value="">Select a zone...</option>
                 {zones.map((z) => (
                   <option key={z.id} value={z.id}>
-                    {z.code} — {z.name}
+                    {z.name} ({z.code})
                   </option>
                 ))}
               </select>
             </div>
           </div>
 
-          {/* Objective */}
+          {/* Objective Description */}
           <div>
-            <label className="text-xs font-semibold text-slate-300 block mb-1.5">
-              Work Objective / Scope <span className="text-rose-400">*</span>
+            <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1.5">
+              Work Objective &amp; Hazard Scope <span className="text-rose-500">*</span>
             </label>
             <textarea
+              rows={2}
+              required
               value={objective}
               onChange={(e) => setObjective(e.target.value)}
-              rows={3}
-              placeholder="e.g. Repair and weld cracked bracket on elevated mezzanine frame — Section B3-Grid-12..."
-              className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-500 leading-relaxed resize-none"
-              required
+              placeholder="e.g. Hot work cutting steel beam next to solvent line..."
+              className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-amber-500"
             />
           </div>
 
           {/* Schedule */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <div>
-              <label className="text-xs font-semibold text-slate-300 block mb-1.5 flex items-center gap-1">
-                <Calendar className="w-3.5 h-3.5" /> Work Date <span className="text-rose-400">*</span>
+              <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1.5">
+                Date <span className="text-rose-500">*</span>
               </label>
               <input
                 type="date"
+                required
                 value={startDate}
                 onChange={(e) => setStartDate(e.target.value)}
-                min={new Date().toISOString().split('T')[0]}
-                className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-500"
-                required
+                className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-amber-500"
               />
             </div>
             <div>
-              <label className="text-xs font-semibold text-slate-300 block mb-1.5 flex items-center gap-1">
-                <Clock className="w-3.5 h-3.5" /> Start Time
+              <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1.5">
+                Start Time
               </label>
               <input
                 type="time"
                 value={startTime}
                 onChange={(e) => setStartTime(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-500"
+                className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-amber-500"
               />
             </div>
             <div>
-              <label className="text-xs font-semibold text-slate-300 block mb-1.5 flex items-center gap-1">
-                <Clock className="w-3.5 h-3.5" /> End Time
+              <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1.5">
+                End Time
               </label>
               <input
                 type="time"
                 value={endTime}
                 onChange={(e) => setEndTime(e.target.value)}
-                className="w-full bg-slate-950 border border-slate-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-500"
+                className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-amber-500"
               />
             </div>
           </div>
 
           {/* Workers */}
           <div>
-            <label className="text-xs font-semibold text-slate-300 block mb-1.5">
-              Assign Workers
+            <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1.5">
+              Assign Certified Workforce
             </label>
-            <div className="bg-slate-950 border border-slate-700 rounded-lg p-2 max-h-36 overflow-y-auto space-y-1">
+            <div className="bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl p-2 max-h-36 overflow-y-auto space-y-1">
               {workers.length === 0 ? (
-                <div className="text-xs text-slate-500 text-center py-2">No workers loaded</div>
+                <div className="text-xs text-slate-400 dark:text-slate-500 text-center py-2">No workers loaded</div>
               ) : (
                 workers.map((w) => (
                   <label
                     key={w.id}
-                    className="flex items-center gap-2.5 px-2 py-1.5 hover:bg-slate-800 rounded cursor-pointer"
+                    className="flex items-center gap-2.5 px-2 py-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg cursor-pointer"
                   >
                     <input
                       type="checkbox"
                       checked={selectedWorkerIds.includes(w.id)}
                       onChange={() => toggleWorker(w.id)}
-                      className="accent-amber-400"
+                      className="accent-amber-500"
                     />
-                    <span className="text-xs text-slate-200 font-mono">{w.badgeNumber}</span>
-                    <span className="text-xs text-slate-300">
-                      {w.firstName} {w.lastName}
-                    </span>
-                    <span className="text-[10px] text-slate-500 ml-auto">{w.trade}</span>
+                    <span className="text-xs text-slate-900 dark:text-slate-200 font-semibold">{w.firstName} {w.lastName}</span>
+                    <span className="text-[10px] text-slate-500 font-mono">({w.badgeNumber})</span>
+                    <span className="text-[10px] text-slate-400 ml-auto">{w.trade}</span>
                   </label>
                 ))
               )}
@@ -255,27 +254,27 @@ const NewPermitModal: React.FC<NewPermitModalProps> = ({ onClose, onCreated }) =
 
           {/* Equipment */}
           <div>
-            <label className="text-xs font-semibold text-slate-300 block mb-1.5">
+            <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1.5">
               Assign Safety Equipment
             </label>
-            <div className="bg-slate-950 border border-slate-700 rounded-lg p-2 max-h-36 overflow-y-auto space-y-1">
+            <div className="bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl p-2 max-h-36 overflow-y-auto space-y-1">
               {equipment.length === 0 ? (
-                <div className="text-xs text-slate-500 text-center py-2">No equipment loaded</div>
+                <div className="text-xs text-slate-400 dark:text-slate-500 text-center py-2">No equipment loaded</div>
               ) : (
                 equipment.map((a) => (
                   <label
                     key={a.id}
-                    className="flex items-center gap-2.5 px-2 py-1.5 hover:bg-slate-800 rounded cursor-pointer"
+                    className="flex items-center gap-2.5 px-2 py-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg cursor-pointer"
                   >
                     <input
                       type="checkbox"
                       checked={selectedAssetIds.includes(a.id)}
                       onChange={() => toggleAsset(a.id)}
-                      className="accent-amber-400"
+                      className="accent-amber-500"
                     />
-                    <span className="text-xs text-slate-200 font-mono">{a.assetTag}</span>
-                    <span className="text-xs text-slate-300">{a.name}</span>
-                    <span className="text-[10px] text-slate-500 ml-auto">{a.category}</span>
+                    <span className="text-xs text-slate-900 dark:text-slate-200 font-mono font-semibold">{a.assetTag}</span>
+                    <span className="text-xs text-slate-700 dark:text-slate-300">{a.name}</span>
+                    <span className="text-[10px] text-slate-400 ml-auto">{a.category}</span>
                   </label>
                 ))
               )}
@@ -283,18 +282,18 @@ const NewPermitModal: React.FC<NewPermitModalProps> = ({ onClose, onCreated }) =
           </div>
 
           {/* Actions */}
-          <div className="flex justify-end gap-3 pt-2 border-t border-slate-800">
+          <div className="flex justify-end gap-3 pt-2 border-t border-slate-200 dark:border-slate-800">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-lg text-xs font-semibold transition"
+              className="px-4 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 rounded-xl text-xs font-semibold transition"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isLoading}
-              className="flex items-center gap-1.5 px-4 py-2 bg-amber-500 hover:bg-amber-400 disabled:opacity-50 text-slate-950 rounded-lg text-xs font-bold transition"
+              className="flex items-center gap-1.5 px-4 py-2 bg-amber-500 hover:bg-amber-400 disabled:opacity-50 text-slate-950 rounded-xl text-xs font-bold transition shadow-sm"
             >
               <Plus className="w-3.5 h-3.5" />
               {isLoading ? 'Creating…' : 'Create Draft Permit'}
@@ -309,6 +308,7 @@ const NewPermitModal: React.FC<NewPermitModalProps> = ({ onClose, onCreated }) =
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
 export const PermitsListPage: React.FC = () => {
+  const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
   const [showNewPermit, setShowNewPermit] = useState(false);
@@ -359,18 +359,18 @@ export const PermitsListPage: React.FC = () => {
       {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black text-slate-100 tracking-tight">
-            Permits-to-Work &amp; Clearance Roster
+          <h1 className="text-2xl font-black text-slate-900 dark:text-slate-100 tracking-tight">
+            {t('permit_list_title')}
           </h1>
-          <p className="text-xs text-slate-400 mt-1">
-            Authoritative site register. Multi-agent evaluation and deterministic safety validation.
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+            {t('permit_list_subtitle')}
           </p>
         </div>
 
         <div className="flex items-center gap-3">
           <button
             onClick={() => refetch()}
-            className="flex items-center gap-1.5 px-3 py-2 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded-lg text-xs border border-slate-700 transition"
+            className="flex items-center gap-1.5 px-3.5 py-2 bg-white dark:bg-slate-900 hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-xl text-xs border border-slate-200 dark:border-slate-800 transition shadow-sm"
           >
             <RefreshCw className="w-3.5 h-3.5" />
             <span>Refresh</span>
@@ -379,45 +379,45 @@ export const PermitsListPage: React.FC = () => {
           {canCreatePermit && (
             <button
               onClick={() => setShowNewPermit(true)}
-              className="flex items-center gap-1.5 px-3 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 rounded-lg text-xs font-bold transition shadow-sm"
+              className="flex items-center gap-1.5 px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 rounded-xl text-xs font-bold transition shadow-sm"
             >
               <Plus className="w-3.5 h-3.5" />
-              <span>New Permit</span>
+              <span>{t('permit_new_btn')}</span>
             </button>
           )}
         </div>
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="bg-slate-900 p-4 rounded-xl border border-slate-800 flex flex-wrap gap-4 items-center justify-between">
+      <div className="bg-white dark:bg-slate-900 p-4 rounded-2xl border border-slate-200 dark:border-slate-800 flex flex-wrap gap-4 items-center justify-between shadow-sm">
         <div className="flex-1 min-w-[280px] relative">
-          <Search className="w-4 h-4 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-slate-400 dark:text-slate-500 absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             placeholder="Search by Permit #, Zone, Objective, or Supervisor..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 bg-slate-950 border border-slate-700 rounded-lg text-xs text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
+            className="w-full pl-9 pr-4 py-2.5 bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-amber-500"
           />
         </div>
 
         <div className="flex items-center gap-2 overflow-x-auto pb-1 sm:pb-0">
-          <Filter className="w-4 h-4 text-slate-500 shrink-0 mr-1" />
+          <Filter className="w-4 h-4 text-slate-400 dark:text-slate-500 shrink-0 mr-1" />
           {[
-            { id: 'ALL', label: 'All Permits' },
-            { id: 'Draft', label: 'Draft' },
-            { id: 'PENDING', label: 'Pending HSE Review' },
-            { id: 'Approved', label: 'Approved' },
-            { id: 'Active', label: 'Active on Site' },
-            { id: 'Refused', label: 'Refused / Safe Failure' },
+            { id: 'ALL', label: t('permit_filter_all') },
+            { id: 'Draft', label: t('status_draft') },
+            { id: 'PENDING', label: t('permit_filter_pending') },
+            { id: 'Approved', label: t('permit_filter_approved') },
+            { id: 'Active', label: t('status_active') },
+            { id: 'Refused', label: t('permit_filter_refused') },
           ].map((tab) => (
             <button
               key={tab.id}
               onClick={() => setStatusFilter(tab.id)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium whitespace-nowrap transition ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-semibold whitespace-nowrap transition ${
                 statusFilter === tab.id
-                  ? 'bg-amber-500 text-slate-950 font-bold'
-                  : 'bg-slate-800 text-slate-400 hover:text-slate-200'
+                  ? 'bg-amber-500 text-slate-950 font-bold shadow-sm'
+                  : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
               }`}
             >
               {tab.label}
@@ -427,27 +427,27 @@ export const PermitsListPage: React.FC = () => {
       </div>
 
       {/* Permits Table */}
-      <div className="bg-slate-900 rounded-xl border border-slate-800 overflow-hidden shadow-sm">
+      <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
         {isLoading ? (
           <div className="p-12 text-center text-slate-400 flex flex-col items-center gap-3">
-            <RefreshCw className="w-6 h-6 animate-spin text-amber-400" />
+            <RefreshCw className="w-6 h-6 animate-spin text-amber-500" />
             <span className="text-sm">Loading permit register...</span>
           </div>
         ) : error ? (
-          <div className="p-8 text-center text-rose-400 flex flex-col items-center gap-2">
+          <div className="p-8 text-center text-rose-500 flex flex-col items-center gap-2">
             <AlertCircle className="w-6 h-6" />
             <span className="text-sm font-semibold">Failed to connect to ClearToWork Backend API.</span>
-            <span className="text-xs text-slate-500">Ensure the ASP.NET Core service is active on port 5000.</span>
+            <span className="text-xs text-slate-400">Ensure the ASP.NET Core service is active on port 5000.</span>
           </div>
         ) : filteredPermits.length === 0 ? (
-          <div className="p-12 text-center text-slate-400 flex flex-col items-center gap-2">
-            <FileText className="w-8 h-8 text-slate-600 mb-1" />
-            <span className="text-sm font-semibold text-slate-300">No permits found matching current filters.</span>
-            <span className="text-xs text-slate-500">Adjust your search keyword or selected status tab.</span>
+          <div className="p-12 text-center text-slate-500 dark:text-slate-400 flex flex-col items-center gap-2">
+            <FileText className="w-8 h-8 text-slate-400 dark:text-slate-600 mb-1" />
+            <span className="text-sm font-semibold text-slate-700 dark:text-slate-300">No permits found matching current filters.</span>
+            <span className="text-xs text-slate-400 dark:text-slate-500">Adjust your search keyword or selected status tab.</span>
             {canCreatePermit && (
               <button
                 onClick={() => setShowNewPermit(true)}
-                className="mt-3 flex items-center gap-1.5 px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 rounded-lg text-xs font-bold transition"
+                className="mt-3 flex items-center gap-1.5 px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 rounded-xl text-xs font-bold transition shadow-sm"
               >
                 <Plus className="w-3.5 h-3.5" />
                 Create First Permit
@@ -458,7 +458,7 @@ export const PermitsListPage: React.FC = () => {
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs border-collapse">
               <thead>
-                <tr className="bg-slate-950/80 border-b border-slate-800 text-slate-400 uppercase tracking-wider text-[11px] font-semibold">
+                <tr className="bg-slate-50 dark:bg-slate-950/80 border-b border-slate-200 dark:border-slate-800 text-slate-500 dark:text-slate-400 uppercase tracking-wider text-[11px] font-semibold">
                   <th className="py-3.5 px-4">Permit #</th>
                   <th className="py-3.5 px-4">Hazard / Type</th>
                   <th className="py-3.5 px-4">Location Zone</th>
@@ -468,35 +468,35 @@ export const PermitsListPage: React.FC = () => {
                   <th className="py-3.5 px-4 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/60">
+              <tbody className="divide-y divide-slate-200 dark:divide-slate-800/60">
                 {filteredPermits.map((permit) => (
                   <tr
                     key={permit.id}
                     onClick={() => navigate(`/permits/${permit.id}`)}
-                    className="hover:bg-slate-800/50 cursor-pointer transition-colors"
+                    className="hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer transition-colors"
                   >
-                    <td className="py-3.5 px-4 font-mono font-bold text-amber-400">
+                    <td className="py-3.5 px-4 font-mono font-bold text-amber-600 dark:text-amber-400">
                       {permit.permitNumber}
                     </td>
                     <td className="py-3.5 px-4">
-                      <div className="font-semibold text-slate-200">{permit.permitTypeName}</div>
-                      <div className="text-[11px] text-slate-400 truncate max-w-xs">{permit.objectiveDescription}</div>
+                      <div className="font-semibold text-slate-800 dark:text-slate-200">{permit.permitTypeName}</div>
+                      <div className="text-[11px] text-slate-500 dark:text-slate-400 truncate max-w-xs">{permit.objectiveDescription}</div>
                     </td>
                     <td className="py-3.5 px-4">
-                      <span className="font-mono bg-slate-800 px-2 py-0.5 rounded border border-slate-700 text-slate-300">
+                      <span className="font-mono bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300">
                         {permit.zoneCode}
                       </span>
-                      <div className="text-[11px] text-slate-400 mt-0.5">{permit.zoneName}</div>
+                      <div className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">{permit.zoneName}</div>
                     </td>
-                    <td className="py-3.5 px-4 font-mono text-slate-300">
+                    <td className="py-3.5 px-4 font-mono text-slate-700 dark:text-slate-300">
                       <div>{new Date(permit.scheduledStartTime).toLocaleDateString()}</div>
-                      <div className="text-[11px] text-slate-400">
+                      <div className="text-[11px] text-slate-500 dark:text-slate-400">
                         {new Date(permit.scheduledStartTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         {' – '}
                         {new Date(permit.scheduledEndTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                       </div>
                     </td>
-                    <td className="py-3.5 px-4 text-slate-300">
+                    <td className="py-3.5 px-4 text-slate-700 dark:text-slate-300">
                       {permit.supervisorName}
                     </td>
                     <td className="py-3.5 px-4">
@@ -507,13 +507,13 @@ export const PermitsListPage: React.FC = () => {
                         <button
                           onClick={(e) => handleTriggerAiReview(e, permit.id)}
                           disabled={isSubmitting}
-                          className="inline-flex items-center gap-1 px-2.5 py-1 bg-purple-900/60 hover:bg-purple-800 text-purple-300 border border-purple-700 rounded text-[11px] font-semibold transition"
+                          className="inline-flex items-center gap-1 px-2.5 py-1 bg-purple-100 dark:bg-purple-900/60 hover:bg-purple-200 dark:hover:bg-purple-800 text-purple-800 dark:text-purple-300 border border-purple-300 dark:border-purple-700 rounded-lg text-[11px] font-semibold transition"
                         >
                           <Cpu className="w-3 h-3" />
                           <span>Trigger AI Review</span>
                         </button>
                       )}
-                      <span className="inline-flex items-center gap-1 text-slate-400 hover:text-amber-400 font-semibold text-xs">
+                      <span className="inline-flex items-center gap-1 text-slate-400 dark:text-slate-400 hover:text-amber-600 dark:hover:text-amber-400 font-semibold text-xs">
                         <span>Details</span>
                         <ArrowUpRight className="w-3.5 h-3.5" />
                       </span>

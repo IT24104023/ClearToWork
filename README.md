@@ -179,6 +179,62 @@ The system is pre-seeded with authoritative demo personas for evaluation and liv
 
 ---
 
+## 🗄️ Database Architecture, Persistence & Access Guide
+
+ClearToWork AI uses **Entity Framework Core 8** with SQLite (locally) and PostgreSQL (in production). Every operational, security, user, and agent trace is permanently persisted with referential integrity.
+
+### 📌 What Information Is Stored in the Database?
+
+| Data Category | Relational Entity / Table | Persisted Information |
+| :--- | :--- | :--- |
+| **User Accounts & Authentication** | `Users` | BCrypt password hashes, full names, email addresses, roles, contact numbers, department, bio, preset avatar URLs, permissions matrix, and registration timestamps. |
+| **Audit Logs & Security Trails** | `AuditEntries` | Immutable chronological logs of all logins, permit submissions, agent clearance runs, approvals, and administrator schema resets with UTC timestamps and user IDs. |
+| **Permit Applications & Approvals** | `PermitRequests`, `PermitWorkers`, `PermitAssets`, `Approvals` | Complete permit dossiers, requested time windows, assigned workers, allocated equipment, clearance decisions (`Approved` / `RefusedSafeFailure`), and safety officer digital sign-offs. |
+| **Photos & Evidence Media** | `EvidencePhotos` | Pre-work photo URLs, hot work containment snapshots, LOTO tag verification photos, calibration certificate images, and photo capture timestamps. |
+| **Multi-Agent Evaluation Runs** | `AgentWorkflowRuns` | Step-by-step LangGraph node execution records, tool call latencies, intermediate payloads, identified violations, and AI-synthesized remediation actions. |
+| **Workforce & Competencies** | `Contractors`, `Workers`, `WorkerCertificates`, `CertificateTypes` | Contractor entities, worker profiles, trade certifications, license issue/expiry dates, and digital badge numbers. |
+| **Equipment & Calibration** | `Assets`, `InspectionRecords`, `CalibrationRecords`, `IsolationPoints` | Safety equipment serials, 90-day multi-gas calibration records, monthly fire extinguisher inspections, and mechanical/electrical LOTO isolation points. |
+| **Hazard Spatial Mapping** | `Sites`, `Zones`, `ZoneAdjacencies`, `HazardTypes`, `HazardRules` | Plant layout zones, GIS coordinates, adjacent zone matrices, SIMOPS clash rules, and environmental threshold limits (wind/gusts). |
+
+---
+
+### 🔍 How to Access and Inspect the Database
+
+You can inspect, query, and manage the database using three methods:
+
+#### Method 1: Web Admin Portal GUI (Built-in)
+1. Log in to the frontend as the **System Administrator** (`admin@cleartowork.com` / `Password123!`).
+2. Navigate to **Database Admin** in the sidebar or go directly to `http://localhost:5173/admin/database`.
+3. View real-time record counts across all relational tables, database file size, and execute **One-Click Re-Seed** or **Schema Recreate**.
+
+#### Method 2: Interactive Swagger OpenAPI Explorer
+1. Launch the backend API.
+2. Open your browser and navigate to:
+   - **Local**: [http://localhost:5000/swagger](http://localhost:5000/swagger)
+   - **Production**: [https://cleartowork-backend.onrender.com/swagger](https://cleartowork-backend.onrender.com/swagger)
+3. Authenticate with your JWT token via the `Authorize` button.
+4. Directly execute queries against `Users`, `Permits`, `Workforce`, `Equipment`, `HazardRules`, `Admin`, and `QChat` endpoints.
+
+#### Method 3: Direct SQLite File Access (Local Development)
+The SQLite database is located at:
+```
+backend/src/ClearToWork.Api/cleartowork.db
+```
+To query the database directly:
+- **GUI**: Open `cleartowork.db` in [DB Browser for SQLite](https://sqlitebrowser.org/) or the **SQLite Viewer** extension in VS Code.
+- **CLI**:
+  ```bash
+  sqlite3 backend/src/ClearToWork.Api/cleartowork.db
+  # View all tables:
+  .tables
+  # Inspect user accounts:
+  SELECT Id, Email, FullName, Role, CreatedAt FROM Users;
+  # Inspect audit logs:
+  SELECT Id, Action, EntityName, Timestamp FROM AuditEntries ORDER BY Timestamp DESC LIMIT 10;
+  ```
+
+---
+
 ## 🚀 Quick Start Guide (Local Setup)
 
 ### Prerequisites
