@@ -3,10 +3,10 @@ import { Link } from 'react-router-dom';
 import { CardNav } from '../components/animations/CardNav';
 import { TiltCard } from '../components/animations/TiltCard';
 import {
-  Image as ImageIcon,
   ArrowRight,
   Sparkles,
 } from 'lucide-react';
+
 
 
 export const AboutUsPage: React.FC = () => {
@@ -29,28 +29,46 @@ export const AboutUsPage: React.FC = () => {
           </p>
         </div>
 
-        {/* Team Photo / Facility Picture Container Slot */}
-        <div className="mt-12 max-w-5xl mx-auto">
-          <div className="relative rounded-3xl overflow-hidden border-2 border-dashed border-slate-700 hover:border-amber-500/60 bg-gradient-to-br from-slate-900 via-slate-900/90 to-slate-950 transition-all p-8 sm:p-12 text-center group shadow-2xl">
-            <div className="max-w-md mx-auto space-y-4">
-              <div className="w-20 h-20 mx-auto rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 group-hover:scale-105 transition-transform shadow-lg shadow-amber-500/10">
-                <ImageIcon className="w-10 h-10" />
-              </div>
-              <h3 className="text-xl font-bold text-slate-100">
-                Engineering Team & Operations Facility
-              </h3>
-              <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
-                ClearToWork AI Project Development Team & Petrochemical Safety Operations Hub. Drop in your team or facility photo here.
-              </p>
-              <div className="inline-flex items-center space-x-2 text-xs text-amber-400 font-mono bg-amber-500/10 px-3 py-1.5 rounded-lg border border-amber-500/20">
-                <span>Asset Ready: Upload image anytime to display here</span>
+        {/* Team Photo Container */}
+        <div className="mt-12 max-w-4xl mx-auto">
+          <div className="relative rounded-3xl overflow-hidden border border-slate-700/80 bg-slate-900 shadow-2xl group">
+            {/* Team Image */}
+            <div className="relative aspect-[4/3] sm:aspect-[16/10] w-full overflow-hidden">
+              <img
+                src="/team-photo.jpg"
+                alt="ClearToWork AI Development Team"
+                className="w-full h-full object-cover object-center group-hover:scale-[1.02] transition-transform duration-700 ease-out"
+              />
+              {/* Subtle Gradient Vignette */}
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent" />
+
+              {/* Overlay Badge & Caption */}
+              <div className="absolute bottom-6 left-6 right-6 flex flex-col sm:flex-row items-start sm:items-end justify-between gap-4">
+                <div className="space-y-1">
+                  <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-amber-500/90 text-slate-950 text-xs font-black uppercase tracking-wider shadow-lg">
+                    <Sparkles className="w-3.5 h-3.5" />
+                    <span>ClearToWork AI Core Engineering Team</span>
+                  </div>
+                  <h3 className="text-xl sm:text-2xl font-black text-slate-100 drop-shadow-md">
+                    Integrated Full-Stack & Agentic AI Team
+                  </h3>
+                  <p className="text-xs sm:text-sm text-slate-300 drop-shadow max-w-xl">
+                    Engineering next-generation deterministic industrial safety clearance, SIMOPS spatial conflict engines, and fail-closed multi-agent consensus.
+                  </p>
+                </div>
+
+                <div className="shrink-0 flex items-center space-x-2 bg-slate-900/80 backdrop-blur-md px-3.5 py-2 rounded-xl border border-slate-700/80 text-xs font-mono text-amber-400">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span>4 Engineers · 5 Agents</span>
+                </div>
               </div>
             </div>
 
-            {/* Background Glow */}
-            <div className="absolute -inset-1 bg-gradient-to-r from-amber-500/10 to-orange-500/10 blur-xl opacity-50 -z-10" />
+            {/* Ambient Lighting */}
+            <div className="absolute -inset-1 bg-gradient-to-r from-amber-500/20 via-orange-500/10 to-sky-500/20 blur-xl opacity-60 -z-10" />
           </div>
         </div>
+
       </section>
 
       {/* Mission & Problem Statement */}
