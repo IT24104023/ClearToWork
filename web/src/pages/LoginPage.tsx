@@ -32,7 +32,7 @@ export const LoginPage: React.FC = () => {
           },
         })
       );
-      navigate('/');
+      navigate('/permits');
     } catch (err: any) {
       setErrorMsg(err.data?.message || 'Authentication failed. Please check credentials.');
     }
@@ -46,6 +46,14 @@ export const LoginPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-slate-950 flex flex-col justify-center py-12 sm:px-6 lg:px-8 text-slate-100">
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center">
+        <div className="mb-4">
+          <button
+            onClick={() => navigate('/')}
+            className="inline-flex items-center space-x-1.5 text-xs text-amber-400 hover:text-amber-300 font-semibold transition"
+          >
+            <span>← Back to Homepage</span>
+          </button>
+        </div>
         <div className="inline-flex items-center justify-center bg-amber-500 text-slate-950 p-3 rounded-2xl shadow-xl shadow-amber-500/10 mb-4">
           <ShieldAlert className="w-10 h-10 text-slate-950" />
         </div>
@@ -56,6 +64,7 @@ export const LoginPage: React.FC = () => {
           Agentic Permit-to-Work & Industrial Safety Clearance Platform
         </p>
       </div>
+
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-slate-900 py-8 px-6 shadow-2xl rounded-2xl border border-slate-800 sm:px-10">
@@ -181,8 +190,19 @@ export const LoginPage: React.FC = () => {
               )}
             </button>
           </form>
+
+          <div className="mt-4 pt-4 border-t border-slate-800 text-center text-xs text-slate-400">
+            Need a contractor account?{' '}
+            <button
+              onClick={() => navigate('/register')}
+              className="text-amber-400 font-bold hover:underline"
+            >
+              Register here →
+            </button>
+          </div>
         </div>
       </div>
     </div>
   );
 };
+

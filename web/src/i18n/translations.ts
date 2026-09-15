@@ -2,6 +2,11 @@ export type Language = 'en' | 'si' | 'ta';
 
 export interface Translations {
   // Navigation
+  nav_home: string;
+  nav_platform: string;
+  nav_about: string;
+  nav_contact: string;
+  nav_register: string;
   nav_dashboard: string;
   nav_permits: string;
   nav_workforce: string;
@@ -14,6 +19,7 @@ export interface Translations {
   nav_documentation: string;
   nav_logout: string;
   nav_login: string;
+
 
   // Header & User
   header_title: string;
@@ -94,8 +100,14 @@ export interface Translations {
 
 export const translations: Record<Language, Translations> = {
   en: {
+    nav_home: 'Home',
+    nav_platform: 'Platform & Agents',
+    nav_about: 'About Us',
+    nav_contact: 'Contact & Ops',
+    nav_register: 'Register',
     nav_dashboard: 'Dashboard',
     nav_permits: 'Safety Permits',
+
     nav_workforce: 'Workforce & Certs',
     nav_equipment: 'Safety Equipment',
     nav_hazard_rules: 'Hazard Zones & SIMOPS',
@@ -178,8 +190,14 @@ export const translations: Record<Language, Translations> = {
     docs_tab_database: 'Database Schema & ERD'
   },
   si: {
+    nav_home: 'මුල් පිටුව',
+    nav_platform: 'වේදිකාව සහ නියෝජිතයන්',
+    nav_about: 'අප ගැන',
+    nav_contact: 'සම්බන්ධ වන්න',
+    nav_register: 'ලියාපදිංචි වන්න',
     nav_dashboard: 'පාලක පුවරුව',
     nav_permits: 'ආරක්ෂිත බලපත්‍ර',
+
     nav_workforce: 'සේවක මණ්ඩලය සහ සහතික',
     nav_equipment: 'ආරක්ෂිත උපකරණ',
     nav_hazard_rules: 'අන්තරායකර කලාප සහ SIMOPS',
@@ -262,8 +280,14 @@ export const translations: Record<Language, Translations> = {
     docs_tab_database: 'දත්ත සමුදා ER සටහන'
   },
   ta: {
+    nav_home: 'முகப்பு',
+    nav_platform: 'தளம் & முகவர்கள்',
+    nav_about: 'எங்களை பற்றி',
+    nav_contact: 'தொடர்பு கொள்ள',
+    nav_register: 'பதிவு செய்க',
     nav_dashboard: 'டாஷ்போர்டு',
     nav_permits: 'பாதுகாப்பு அனுமதிகள்',
+
     nav_workforce: 'பணியாளர்கள் & சான்றிதழ்கள்',
     nav_equipment: 'பாதுகாப்பு உபகரணங்கள்',
     nav_hazard_rules: 'ஆபத்து மண்டலங்கள் & SIMOPS',

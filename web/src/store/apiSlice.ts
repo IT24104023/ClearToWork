@@ -35,9 +35,20 @@ export const apiSlice = createApi({
         body: credentials,
       }),
     }),
+    register: builder.mutation<
+      { token: string; userId: string; fullName: string; email: string; role: string; contractorId: string | null },
+      { fullName: string; email: string; password: string; role: string; contractorId?: string | null }
+    >({
+      query: (data) => ({
+        url: '/auth/register',
+        method: 'POST',
+        body: data,
+      }),
+    }),
     getMe: builder.query<UserSession, void>({
       query: () => '/auth/me',
     }),
+
 
     // Permit Endpoints
     getPermits: builder.query<
@@ -132,8 +143,10 @@ export const apiSlice = createApi({
 
 export const {
   useLoginMutation,
+  useRegisterMutation,
   useGetMeQuery,
   useGetPermitsQuery,
+
   useGetPermitByIdQuery,
   useCreatePermitDraftMutation,
   useSubmitPermitForAiReviewMutation,

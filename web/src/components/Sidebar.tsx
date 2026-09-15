@@ -31,11 +31,12 @@ export const Sidebar: React.FC = () => {
 
   const operationsItems = [
     {
-      to: '/',
+      to: '/permits',
       label: t('nav_permits'),
       icon: FileCheck2,
       desc: 'Reviews, draft & submissions',
     },
+
     {
       to: '/analytics',
       label: t('nav_analytics'),
