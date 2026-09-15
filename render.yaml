@@ -29,21 +29,16 @@ services:
       - key: Jwt__Audience
         value: ClearToWorkClients
       - key: AgentService__BaseUrl
-        fromService:
-          type: web
-          name: cleartowork-agent
-          property: host
+        value: http://cleartowork-agent:8000
       - key: AgentService__SharedSecret
-        fromService:
-          type: web
-          name: cleartowork-agent
-          envVarKey: SHARED_SECRET
+        value: ClearToWork_Internal_Agent_Key_2026
 
-  # 3. React Frontend Client (Static Site with SPA rewrites)
-  - type: static
+  # 3. React Frontend Client
+  - type: web
     name: cleartowork-frontend
+    runtime: static
     buildCommand: cd web && npm install && npm run build
-    publishPath: web/dist
+    staticPublishPath: ./web/dist
     routes:
       - type: rewrite
         source: /api/*
