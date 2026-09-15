@@ -36,16 +36,8 @@ services:
   # 3. React Frontend Client
   - type: web
     name: cleartowork-frontend
-    runtime: static
-    buildCommand: cd web && npm install && npm run build
-    staticPublishPath: ./web/dist
-    routes:
-      - type: rewrite
-        source: /api/*
-        destination: https://cleartowork-backend.onrender.com/api/*
-      - type: rewrite
-        source: /agent-api/*
-        destination: https://cleartowork-agent.onrender.com/*
-      - type: rewrite
-        source: /*
-        destination: /index.html
+    runtime: docker
+    dockerfilePath: web/Dockerfile
+    dockerContext: web
+    plan: free
+    region: oregon
