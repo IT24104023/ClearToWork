@@ -125,4 +125,9 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+// Root redirect to Swagger and Health check endpoint
+app.MapGet("/", () => Results.Redirect("/swagger"));
+app.MapGet("/health", () => Results.Ok(new { status = "healthy", service = "ClearToWork Backend API", version = "v1" }));
+
 app.Run();
+
