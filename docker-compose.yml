@@ -1,0 +1,45 @@
+version: "3.9"
+
+services:
+  frontend:
+    build:
+      context: ./web
+      dockerfile: Dockerfile
+    ports:
+      - "80:80"
+    restart: unless-stopped
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    environment:
+      - ConnectionStrings__DefaultConnection=Data Source=/data/cleartowork_local.db
+      - Jwt__Key=${JWT_KEY:-ClearToWork_Super_Secret_Key_For_Development_Must_Be_32_Chars_Long!}
+      - Jwt__Issuer=ClearToWorkAPI
+      - Jwt__Audience=ClearToWorkClients
+      - AgentService__BaseUrl=http://agent:8000
+      - AgentService__SharedSecret=${AGENT_SHARED_SECRET:-ClearToWork_Internal_Agent_Key_2026}
+    volumes:
+      - db-data:/data
+    depends_on:
+      - agent
+    restart: unless-stopped
+
+  agent:
+    build:
+      context: ./agents
+      dockerfile: Dockerfile
+    environment:
+      - SHARED_SECRET=${AGENT_SHARED_SECRET:-ClearToWork_Internal_Agent_Key_2026}
+    ports:
+      - "8000:8000"
+    volumes:
+      - db-data:/data
+    restart: unless-stopped
+
+volumes:
+  db-data:
+    driver: local
