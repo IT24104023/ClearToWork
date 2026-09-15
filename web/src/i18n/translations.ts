@@ -20,7 +20,6 @@ export interface Translations {
   nav_logout: string;
   nav_login: string;
 
-
   // Header & User
   header_title: string;
   header_subtitle: string;
@@ -42,6 +41,113 @@ export interface Translations {
   status_closed: string;
   status_refused: string;
   status_expired: string;
+
+  // Homepage Specific Keys
+  home_badge: string;
+  home_hero_title_1: string;
+  home_hero_title_2: string;
+  home_hero_subtitle: string;
+  home_btn_launch: string;
+  home_btn_register: string;
+  home_pixel_compare: string;
+  home_legacy_title: string;
+  home_legacy_heading: string;
+  home_legacy_desc: string;
+  home_legacy_tag1: string;
+  home_legacy_tag2: string;
+  home_ai_title: string;
+  home_ai_heading: string;
+  home_ai_desc: string;
+  home_ai_tag1: string;
+  home_ai_tag2: string;
+  home_stat_fail_closed: string;
+  home_stat_agents: string;
+  home_stat_latency: string;
+  home_stat_languages: string;
+  home_agents_title: string;
+  home_agents_heading: string;
+  home_agents_desc: string;
+  home_agent_1_title: string;
+  home_agent_1_desc: string;
+  home_agent_2_title: string;
+  home_agent_2_desc: string;
+  home_agent_3_title: string;
+  home_agent_3_desc: string;
+  home_agent_4_title: string;
+  home_agent_4_desc: string;
+  home_agent_5_title: string;
+  home_agent_5_desc: string;
+  home_cta_heading: string;
+  home_cta_desc: string;
+  home_cta_signin: string;
+  home_cta_about: string;
+  home_footer_desc: string;
+  home_footer_copy: string;
+
+  // About Page Specific Keys
+  about_badge: string;
+  about_title: string;
+  about_subtitle: string;
+  about_team_badge: string;
+  about_team_heading: string;
+  about_team_desc: string;
+  about_team_stat: string;
+  about_problem_badge: string;
+  about_problem_heading: string;
+  about_problem_desc: string;
+  about_problem_1_title: string;
+  about_problem_1_desc: string;
+  about_problem_2_title: string;
+  about_problem_2_desc: string;
+  about_problem_3_title: string;
+  about_problem_3_desc: string;
+  about_solution_badge: string;
+  about_solution_heading: string;
+  about_solution_desc: string;
+  about_ownership_badge: string;
+  about_ownership_heading: string;
+  about_ownership_desc: string;
+  about_s1_title: string;
+  about_s1_desc: string;
+  about_s2_title: string;
+  about_s2_desc: string;
+  about_s3_title: string;
+  about_s3_desc: string;
+  about_s4_title: string;
+  about_s4_desc: string;
+
+  // Contact Page Specific Keys
+  contact_badge: string;
+  contact_title: string;
+  contact_subtitle: string;
+  contact_emergency_title: string;
+  contact_emergency_desc: string;
+  contact_form_title: string;
+  contact_form_desc: string;
+  contact_field_name: string;
+  contact_field_email: string;
+  contact_field_facility: string;
+  contact_field_subject: string;
+  contact_field_message: string;
+  contact_btn_submit: string;
+  contact_success_title: string;
+  contact_success_desc: string;
+  contact_hq_title: string;
+  contact_hq_address: string;
+  contact_response_title: string;
+  contact_response_desc: string;
+
+  // Register Page Specific Keys
+  reg_title: string;
+  reg_subtitle: string;
+  reg_name: string;
+  reg_email: string;
+  reg_role: string;
+  reg_password: string;
+  reg_confirm_password: string;
+  reg_submit: string;
+  reg_have_account: string;
+  reg_signin: string;
 
   // Agent Command Center & QChat
   agent_center_title: string;
@@ -107,7 +213,6 @@ export const translations: Record<Language, Translations> = {
     nav_register: 'Register',
     nav_dashboard: 'Dashboard',
     nav_permits: 'Safety Permits',
-
     nav_workforce: 'Workforce & Certs',
     nav_equipment: 'Safety Equipment',
     nav_hazard_rules: 'Hazard Zones & SIMOPS',
@@ -138,6 +243,113 @@ export const translations: Record<Language, Translations> = {
     status_closed: 'Closed Out',
     status_refused: 'Refused (Safe Failure)',
     status_expired: 'Expired',
+
+    // Homepage
+    home_badge: 'Autonomous Industrial Safety Clearance Engine',
+    home_hero_title_1: 'Zero Incidents.',
+    home_hero_title_2: 'Multi-Agent AI Clearance.',
+    home_hero_subtitle: 'Eliminate simultaneous hazardous clashes (SIMOPS), uncalibrated safety gear, and unqualified crews across petrochemical plants and refineries with deterministic LangGraph multi-agent evaluation.',
+    home_btn_launch: 'Launch Safety Portal',
+    home_btn_register: 'Register New Contractor',
+    home_pixel_compare: 'Hover or Click to Compare Paradigm Shift',
+    home_legacy_title: 'Legacy Vulnerabilities (Manual PTW)',
+    home_legacy_heading: 'Paper Permits & Spreadsheet Blindspots',
+    home_legacy_desc: 'Manual paperwork leads to simultaneous incompatible hot work in adjacent solvent zones, overdue gas monitor calibrations, and expired welder credentials.',
+    home_legacy_tag1: '❌ High SIMOPS Explosion Risk',
+    home_legacy_tag2: '❌ 3-4 Hour Manual Review Delay',
+    home_ai_title: 'ClearToWork AI Autonomous Clearance',
+    home_ai_heading: '5-Agent Fail-Closed Clearance Engine',
+    home_ai_desc: 'Instant spatial-temporal conflict checking, 90-day equipment calibration audit, certified worker replacement synthesis, and live 35km/h wind gust guardrails.',
+    home_ai_tag1: '✓ <80ms LangGraph Consensus',
+    home_ai_tag2: '✓ Fail-Safe Remediation Guidance',
+    home_stat_fail_closed: 'Fail-Closed Safety',
+    home_stat_agents: 'LangGraph Agents',
+    home_stat_latency: 'Evaluation Latency',
+    home_stat_languages: 'Native Languages (EN/SI/TA)',
+    home_agents_title: 'Autonomous Safety Consensus',
+    home_agents_heading: '5 Specialized Agent Nodes in Directed Graph',
+    home_agents_desc: 'Each agent executes deterministic domain-specific verification rules over a strongly-typed shared state model before human sign-off.',
+    home_agent_1_title: 'Planning & Coordination',
+    home_agent_1_desc: 'Decomposes permit objectives, enforces hazard duration ceilings, and mandates fire watches for hot work operations.',
+    home_agent_2_title: 'Personnel & Competency',
+    home_agent_2_desc: 'Audits worker badges, verifies trade qualifications, forecasts 30-day credential expiries, and auto-recommends certified replacements.',
+    home_agent_3_title: 'Resource & Isolation',
+    home_agent_3_desc: 'Verifies equipment safety inspection readiness, flags 90-day gas monitor calibration tags, and validates physical LOTO isolation.',
+    home_agent_4_title: 'Site Conditions & Hazard',
+    home_agent_4_desc: 'Queries adjacent zone permits for SIMOPS clashes, and checks live Open-Meteo weather forecasts to enforce a 35 km/h wind gust ceiling.',
+    home_agent_5_title: 'Validation & Safety Guardrail',
+    home_agent_5_desc: 'Enforces authoritative fail-closed consensus. If any safety violation is detected across any preceding node, marks REFUSED_SAFE_FAILURE and synthesizes an automated remediation package.',
+    home_cta_heading: 'Ready to Upgrade Industrial Safety Clearance?',
+    home_cta_desc: 'Sign in to experience the live clearance pipeline or explore our comprehensive system architecture documentation.',
+    home_cta_signin: 'Sign In to Safety Portal',
+    home_cta_about: 'About the Platform →',
+    home_footer_desc: 'Autonomous Safety Clearance & SIMOPS Engine',
+    home_footer_copy: '© 2026 ClearToWork AI · Fail-Closed Industrial Safety Standard',
+
+    // About Page
+    about_badge: 'Industrial Safety Engineering',
+    about_title: 'About ClearToWork AI',
+    about_subtitle: 'Pioneering autonomous, multi-agent Permit-to-Work (PTW) verification and real-time SIMOPS safety clearance for high-hazard industrial environments.',
+    about_team_badge: 'ClearToWork AI Core Engineering Team',
+    about_team_heading: 'Integrated Full-Stack & Agentic AI Team',
+    about_team_desc: 'Engineering next-generation deterministic industrial safety clearance, SIMOPS spatial conflict engines, and fail-closed multi-agent consensus.',
+    about_team_stat: '4 Engineers · 5 Agents',
+    about_problem_badge: 'The Industrial Problem',
+    about_problem_heading: 'Why Legacy PTW Systems Fail',
+    about_problem_desc: 'In high-hazard facilities like refineries and chemical plants, catastrophic incidents routinely occur due to three root causes:',
+    about_problem_1_title: 'SIMOPS Clashes:',
+    about_problem_1_desc: 'Simultaneous incompatible activities (e.g. Hot welding next to volatile solvent lines) going unnoticed in separate paper permits.',
+    about_problem_2_title: 'Uncalibrated Gear:',
+    about_problem_2_desc: 'Expired 90-day multi-gas monitors and extinguishers passing physical inspections without cryptographic verification.',
+    about_problem_3_title: 'Unqualified Crews:',
+    about_problem_3_desc: 'Expired trade certifications for high-risk enclosed welding or confined space entries.',
+    about_solution_badge: 'The Autonomous Solution',
+    about_solution_heading: 'Deterministic 5-Agent Pipeline',
+    about_solution_desc: 'ClearToWork AI executes a Directed Acyclic Graph (DAG) with five autonomous agents in LangGraph that enforce a Fail-Closed Safety Policy.',
+    about_ownership_badge: 'Engineering Team Architecture',
+    about_ownership_heading: 'System Component Ownership',
+    about_ownership_desc: 'Aligned with enterprise safety standards and modular microservice division.',
+    about_s1_title: 'Student 1: Workforce & Competency',
+    about_s1_desc: 'Worker profiles, badge scanning, trade qualification tracking (Welder, Confined Space), and 30-day credential expiry forecasting.',
+    about_s2_title: 'Student 2: Equipment & LOTO',
+    about_s2_desc: 'Safety asset registry (extinguishers, gas monitors), 90-day calibration logs, and physical Lock-Out / Tag-Out isolation points.',
+    about_s3_title: 'Student 3: Permit Lifecycle',
+    about_s3_desc: 'JWT authentication, permit drafting state machines, digital QR token clearance issuance, and fire watch requirements.',
+    about_s4_title: 'Student 4: SIMOPS & Weather',
+    about_s4_desc: 'Geospatial plant zones, spatial-temporal conflict detection matrix, and live Open-Meteo meteorological integration.',
+
+    // Contact Page
+    contact_badge: '24/7 Safety & Plant Operations Support',
+    contact_title: 'Contact & Operations Dispatch',
+    contact_subtitle: 'Get in touch with the ClearToWork AI engineering support team or reach the Central HSE Control Room for high-hazard emergencies.',
+    contact_emergency_title: '24/7 Plant Emergency Hotline',
+    contact_emergency_desc: 'Dedicated HSE Safety Officer line for live SIMOPS halt, gas alarms, and evacuation orders.',
+    contact_form_title: 'Send an Inquiry',
+    contact_form_desc: 'Submit requests for enterprise pilot access, contractor onboarding, or custom safety rule integrations.',
+    contact_field_name: 'Full Name',
+    contact_field_email: 'Work Email',
+    contact_field_facility: 'Facility / Site',
+    contact_field_subject: 'Subject',
+    contact_field_message: 'Message / Operational Requirement',
+    contact_btn_submit: 'Submit Inquiry',
+    contact_success_title: 'Message Dispatched!',
+    contact_success_desc: 'Thank you for contacting ClearToWork AI. Our safety operations team will respond shortly.',
+    contact_hq_title: 'Central Operations HQ',
+    contact_hq_address: 'Petrochemical Complex Corridor, Block 7, Industrial Zone',
+    contact_response_title: 'Operating Response Windows',
+    contact_response_desc: 'Emergency SIMOPS escalation calls are routed deterministically in < 30 seconds. Standard pilot and enterprise inquiries are answered within 2 business hours.',
+
+    // Register Page
+    reg_title: 'Register User Profile',
+    reg_subtitle: 'Create an authorized account for ClearToWork AI Permit-to-Work Clearance',
+    reg_name: 'Full Name',
+    reg_email: 'Work Email',
+    reg_role: 'Operational Role',
+    reg_password: 'Password',
+    reg_confirm_password: 'Confirm Password',
+    reg_submit: 'Complete Registration',
+    reg_have_account: 'Already registered?',
+    reg_signin: 'Sign in here →',
 
     agent_center_title: 'QChat & Agent Command Center',
     agent_center_subtitle: 'Real-time observability, pipeline tracking, and interactive safety reasoning',
@@ -197,7 +409,6 @@ export const translations: Record<Language, Translations> = {
     nav_register: 'ලියාපදිංචි වන්න',
     nav_dashboard: 'පාලක පුවරුව',
     nav_permits: 'ආරක්ෂිත බලපත්‍ර',
-
     nav_workforce: 'සේවක මණ්ඩලය සහ සහතික',
     nav_equipment: 'ආරක්ෂිත උපකරණ',
     nav_hazard_rules: 'අන්තරායකර කලාප සහ SIMOPS',
@@ -228,6 +439,113 @@ export const translations: Record<Language, Translations> = {
     status_closed: 'අවසන් කරන ලදි',
     status_refused: 'ප්‍රතික්ෂේප විය (ආරක්ෂිත අසමත් වීම)',
     status_expired: 'කල් ඉකුත් විය',
+
+    // Homepage
+    home_badge: 'ස්වයංක්‍රීය කාර්මික ආරක්ෂණ සහතික කිරීමේ පද්ධතිය',
+    home_hero_title_1: 'අනතුරු ශුන්‍යයි.',
+    home_hero_title_2: 'බහු-නියෝජිත AI ආරක්ෂණ සහතිකය.',
+    home_hero_subtitle: 'පෙට්‍රෝකෙමිකල් සහ පිරිපහදු ශාලා වල එකවර සිදුවන පරස්පර අවදානම් (SIMOPS), ක්‍රමාංකනය නොකළ උපකරණ සහ නුසුදුසු සේවක ගැටළු LangGraph මගින් ස්වයංක්‍රීයව වළක්වන්න.',
+    home_btn_launch: 'ආරක්ෂිත පද්ධතියට පිවිසෙන්න',
+    home_btn_register: 'නව කොන්ත්‍රාත්කරුවෙකු ලියාපදිංචි කරන්න',
+    home_pixel_compare: 'පැරණි සහ නව පද්ධති සංසන්දනයට ක්ලික් කරන්න',
+    home_legacy_title: 'පැරණි ක්‍රමයේ අවදානම් (Manual PTW)',
+    home_legacy_heading: 'කඩදාසි බලපත්‍ර සහ පැතුරුම්පත් ගැටළු',
+    home_legacy_desc: 'කඩදාසි ලේඛන මගින් යාබද කලාප වල එකවර සිදුවන අනතුරුදායක වෙල්ඩින්, ක්‍රමාංකනය නොකළ ගෑස් අනාවරක සහ කල් ඉකුත් වූ සහතික මග හැරේ.',
+    home_legacy_tag1: '❌ ඉහළ SIMOPS පිපිරුම් අවදානම',
+    home_legacy_tag2: '❌ පැය 3-4ක අතින් පරීක්ෂා කිරීමේ ප්‍රමාදය',
+    home_ai_title: 'ClearToWork AI ස්වයංක්‍රීය අනුමැතිය',
+    home_ai_heading: 'නියෝජිතයන් 5 දෙනාගේ Fail-Closed පද්ධතිය',
+    home_ai_desc: 'ක්ෂණික භූගෝලීය පරස්පරතා පරීක්ෂාව, දින 90 උපකරණ ක්‍රමාංකන විගණනය, සහතික කළ සේවක ආදේශන සහ තථ්‍ය කාලීන 35km/h සුළං වේග ආරක්ෂණය.',
+    home_ai_tag1: '✓ මිලි තත්පර 80ට අඩු LangGraph තීරණය',
+    home_ai_tag2: '✓ ස්වයංක්‍රීය ආරක්ෂිත විසඳුම් මඟපෙන්වීම',
+    home_stat_fail_closed: 'අනතුරු-ආරක්ෂිත ප්‍රතිපත්තිය',
+    home_stat_agents: 'LangGraph නියෝජිතයන්',
+    home_stat_latency: 'තක්සේරු කාලය',
+    home_stat_languages: 'ස්වදේශීය භාෂා ත්‍රිත්වය (EN/SI/TA)',
+    home_agents_title: 'ස්වයංක්‍රීය ආරක්ෂණ සම්මුතිය',
+    home_agents_heading: 'විශේෂඥ නියෝජිත නෝඩ් 5ක්',
+    home_agents_desc: 'මිනිස් අනුමැතියට පෙර සෑම නියෝජිතයෙකුම දැඩි ආරක්ෂණ නීති පද්ධතියක් ඔස්සේ තීරණ ලබා ගනී.',
+    home_agent_1_title: 'සැලසුම් සහ සම්බන්ධීකරණය',
+    home_agent_1_desc: 'වැඩ බලපත්‍ර අරමුණු විශ්ලේෂණය, කාල සීමා පැනවීම සහ ගිනි මුරකරුවන් අනිවාර්ය කිරීම.',
+    home_agent_2_title: 'සේවක මණ්ඩලය සහ නිපුණතාවය',
+    home_agent_2_desc: 'සේවක බැජ් විගණනය, වෘත්තීය සුදුසුකම් පරීක්ෂාව, සහතික කල් ඉකුත්වීම් පුරෝකථනය සහ සුදුසු සේවකයින් නිර්දේශය.',
+    home_agent_3_title: 'උපකරණ සහ හුදකලා කිරීම් (LOTO)',
+    home_agent_3_desc: 'ආරක්ෂිත උපකරණ පරීක්ෂාව, දින 90 ගෑස් අනාවරක ටැග් පරීක්ෂාව සහ භෞතික LOTO තහවුරු කිරීම.',
+    home_agent_4_title: 'ක්ෂේත්‍ර තත්වයන් සහ අවදානම් (SIMOPS)',
+    home_agent_4_desc: 'යාබද කලාප අවදානම් පරීක්ෂාව සහ Open-Meteo කාලගුණ දත්ත මගින් 35km/h සුළං සීමාව පැනවීම.',
+    home_agent_5_title: 'අවසාන ආරක්ෂිත තහවුරු කිරීම',
+    home_agent_5_desc: 'යම් හෝ ආරක්ෂිත උල්ලංඝනයක් ඇත්නම් බලපත්‍රය ප්‍රතික්ෂේප කර ස්වයංක්‍රීය පිළියම් සහ විකල්ප සේවකයින් ලබා දීම.',
+    home_cta_heading: 'කාර්මික ආරක්ෂාව උසස් කිරීමට සූදානම්ද?',
+    home_cta_desc: 'තථ්‍ය කාලීන ආරක්ෂණ පද්ධතිය අත්විඳීමට හෝ තාක්ෂණික ලියකියවිලි ගවේෂණය කිරීමට පිවිසෙන්න.',
+    home_cta_signin: 'ආරක්ෂිත පද්ධතියට පිවිසෙන්න',
+    home_cta_about: 'අපේ පද්ධතිය ගැන විස්තර →',
+    home_footer_desc: 'ස්වයංක්‍රීය වැඩ බලපත්‍ර සහ SIMOPS ආරක්ෂණ පද්ධතිය',
+    home_footer_copy: '© 2026 ClearToWork AI · Fail-Closed කාර්මික ආරක්ෂණ ප්‍රමිතිය',
+
+    // About Page
+    about_badge: 'කාර්මික ආරක්ෂණ ඉංජිනේරු විද්‍යාව',
+    about_title: 'ClearToWork AI ගැන',
+    about_subtitle: 'අවදානම් සහිත කාර්මික පරිසරයන් සඳහා ස්වයංක්‍රීය, බහු-නියෝජිත වැඩ බලපත්‍ර සත්‍යාපනය සහ SIMOPS ආරක්ෂණ පද්ධතිය.',
+    about_team_badge: 'ClearToWork AI ප්‍රධාන ඉංජිනේරු කණ්ඩායම',
+    about_team_heading: 'Full-Stack සහ Agentic AI සංවර්ධන කණ්ඩායම',
+    about_team_desc: 'නවතම පරම්පරාවේ ආරක්ෂිත වැඩ බලපත්‍ර, අවකාශීය පරස්පරතා එන්ජිම සහ බහු-නියෝජිත ආරක්ෂණ සම්මුතිය නිර්මාණය කිරීම.',
+    about_team_stat: 'ඉංජිනේරුවන් 4ක් · නියෝජිතයන් 5ක්',
+    about_problem_badge: 'කාර්මික ගැටළුව',
+    about_problem_heading: 'පැරණි PTW පද්ධති අසමත් වන්නේ ඇයි?',
+    about_problem_desc: 'පිරිපහදු සහ රසායනික කර්මාන්තශාලා වල ප්‍රධාන හේතු තුනක් නිසා බරපතල අනතුරු සිදුවේ:',
+    about_problem_1_title: 'SIMOPS පරස්පරතා:',
+    about_problem_1_desc: 'යාබද කලාප වල එකවර සිදුවන අනතුරුදායක ක්‍රියාකාරකම් කඩදාසි පද්ධති මගින් හඳුනා නොගැනීම.',
+    about_problem_2_title: 'ක්‍රමාංකනය නොකළ උපකරණ:',
+    about_problem_2_desc: 'දින 90 ගෑස් අනාවරක සහ ගිනි නිවන උපකරණ විධිමත් පරීක්ෂාවකින් තොරව භාවිත කිරීම.',
+    about_problem_3_title: 'නුසුදුසු සේවකයින්:',
+    about_problem_3_desc: 'කල් ඉකුත් වූ වෘත්තීය සහතික ඇති සේවකයින් අනතුරුදායක වෙල්ඩින් හෝ සංවෘත අවකාශ වලට යෙදවීම.',
+    about_solution_badge: 'ස්වයංක්‍රීය විසඳුම',
+    about_solution_heading: 'නියෝජිතයන් 5 දෙනාගේ ක්‍රියාවලි පද්ධතිය',
+    about_solution_desc: 'ClearToWork AI පද්ධතිය LangGraph ඔස්සේ Fail-Closed ආරක්ෂණ ප්‍රතිපත්තියක් ක්‍රියාත්මක කරයි.',
+    about_ownership_badge: 'ඉංජිනේරු කණ්ඩායමේ ව්‍යුහය',
+    about_ownership_heading: 'පද්ධති සංරචක හිමිකාරිත්වය',
+    about_ownership_desc: 'ව්‍යවසාය මට්ටමේ ආරක්ෂණ ප්‍රමිතීන්ට අනුකූලව බෙදා වෙන් කර ඇත.',
+    about_s1_title: 'ශිෂ්‍ය 1: සේවක මණ්ඩලය සහ නිපුණතාවය',
+    about_s1_desc: 'සේවක පැතිකඩ, බැජ් ස්කෑන් කිරීම, සුදුසුකම් ලුහුබැඳීම සහ දින 30 කල් ඉකුත්වීම් පුරෝකථනය.',
+    about_s2_title: 'ශිෂ්‍ය 2: උපකරණ සහ LOTO හුදකලා කිරීම',
+    about_s2_desc: 'ආරක්ෂිත වත්කම් ලේඛනය, දින 90 ක්‍රමාංකන ලොග සහ භෞතික LOTO හුදකලා ස්ථාන.',
+    about_s3_title: 'ශිෂ්‍ය 3: බලපත්‍ර ජීවන චක්‍රය',
+    about_s3_desc: 'JWT සත්‍යාපනය, බලපත්‍ර කෙටුම්පත් කිරීම, ඩිජිටල් QR ටෝකන් නිකුත් කිරීම සහ ගිනි මුර අවශ්‍යතා.',
+    about_s4_title: 'ශිෂ්‍ය 4: SIMOPS සහ කාලගුණය',
+    about_s4_desc: 'භූගෝලීය කලාප, අවකාශීය ගැටුම් හඳුනාගැනීම සහ Open-Meteo සජීවී කාලගුණ ඒකාබද්ධතාවය.',
+
+    // Contact Page
+    contact_badge: '24/7 ආරක්ෂක සහ මෙහෙයුම් සහාය',
+    contact_title: 'සම්බන්ධ වන්න සහ මෙහෙයුම් පාලනය',
+    contact_subtitle: 'ClearToWork AI ඉංජිනේරු සහාය කණ්ඩායම හෝ හදිසි අවස්ථා සඳහා මධ්‍යම HSE පාලක මැදිරිය අමතන්න.',
+    contact_emergency_title: '24/7 හදිසි ආරක්ෂක ඇමතුම් අංකය',
+    contact_emergency_desc: 'හදිසි SIMOPS නැවැත්වීම්, ගෑස් අනතුරු ඇඟවීම් සහ ඉවත් කිරීමේ නියෝග සඳහා සෘජු ආරක්ෂක නිලධාරී මාර්ගය.',
+    contact_form_title: 'විමසුමක් එවන්න',
+    contact_form_desc: 'පද්ධති නියමු ප්‍රවේශය, කොන්ත්‍රාත්කරු ඇතුළත් කිරීම හෝ ආරක්ෂණ නීති ඒකාබද්ධ කිරීම සඳහා විමසන්න.',
+    contact_field_name: 'සම්පූර්ණ නම',
+    contact_field_email: 'විද්‍යුත් තැපෑල',
+    contact_field_facility: 'කර්මාන්තශාලාව / පරිශ්‍රය',
+    contact_field_subject: 'විෂය',
+    contact_field_message: 'පණිවිඩය / මෙහෙයුම් අවශ්‍යතාවය',
+    contact_btn_submit: 'විමසුම ඉදිරිපත් කරන්න',
+    contact_success_title: 'පණිවිඩය සාර්ථකව යවන ලදි!',
+    contact_success_desc: 'ClearToWork AI හා සම්බන්ධ වීම ගැන ස්තූතියි. අපගේ ආරක්ෂක මෙහෙයුම් කණ්ඩායම ඉක්මනින් ප්‍රතිචාර දක්වනු ඇත.',
+    contact_hq_title: 'ප්‍රධාන මෙහෙයුම් මූලස්ථානය',
+    contact_hq_address: 'පෙට්‍රෝකෙමිකල් සංකීර්ණ තීරය, බ්ලොක් 7, කාර්මික කලාපය',
+    contact_response_title: 'ප්‍රතිචාර කාල සීමාවන්',
+    contact_response_desc: 'හදිසි SIMOPS ඇමතුම් තත්පර 30කට අඩු කාලයකදී යොමු කෙරේ. සාමාන්‍ය විමසුම් ව්‍යාපාරික පැය 2ක් ඇතුළත විසඳනු ලැබේ.',
+
+    // Register Page
+    reg_title: 'පරිශීලක පැතිකඩ ලියාපදිංචි කිරීම',
+    reg_subtitle: 'ClearToWork AI ආරක්ෂණ බලපත්‍ර පද්ධතිය සඳහා බලයලත් ගිණුමක් සාදන්න',
+    reg_name: 'සම්පූර්ණ නම',
+    reg_email: 'විද්‍යුත් තැපෑල',
+    reg_role: 'මෙහෙයුම් කාර්යභාරය',
+    reg_password: 'මුරපදය',
+    reg_confirm_password: 'මුරපදය තහවුරු කරන්න',
+    reg_submit: 'ලියාපදිංචිය සම්පූර්ණ කරන්න',
+    reg_have_account: 'දැනටමත් ගිණුමක් තිබේද?',
+    reg_signin: 'මෙහිදී ඇතුළු වන්න →',
 
     agent_center_title: 'QChat සහ නියෝජිත විධාන මධ්‍යස්ථානය',
     agent_center_subtitle: 'තථ්‍ය කාලීන නිරීක්ෂණය, ක්‍රියාවලි ලුහුබැඳීම සහ බුද්ධිමත් ආරක්ෂණ තීරණ',
@@ -287,7 +605,6 @@ export const translations: Record<Language, Translations> = {
     nav_register: 'பதிவு செய்க',
     nav_dashboard: 'டாஷ்போர்டு',
     nav_permits: 'பாதுகாப்பு அனுமதிகள்',
-
     nav_workforce: 'பணியாளர்கள் & சான்றிதழ்கள்',
     nav_equipment: 'பாதுகாப்பு உபகரணங்கள்',
     nav_hazard_rules: 'ஆபத்து மண்டலங்கள் & SIMOPS',
@@ -318,6 +635,113 @@ export const translations: Record<Language, Translations> = {
     status_closed: 'மூடப்பட்டது',
     status_refused: 'நிராகரிக்கப்பட்டது (பாதுகாப்பான தோல்வி)',
     status_expired: 'காலாவதியானது',
+
+    // Homepage
+    home_badge: 'தானியங்கி தொழில்துறை பாதுகாப்பு அனுமதி இயந்திரம்',
+    home_hero_title_1: 'விபத்துகள் பூஜ்ஜியம்.',
+    home_hero_title_2: 'பல முகவர் AI பாதுகாப்பு அனுமதி.',
+    home_hero_subtitle: 'பெட்ரோகெமிக்கல் மற்றும் சுத்திகரிப்பு நிலையங்களில் ஒரே நேரத்தில் ஏற்படும் முரண்பாடான ஆபத்துகள் (SIMOPS), அளவீடு செய்யப்படாத உபகரணங்கள் மற்றும் தகுதியற்ற குழுக்களை LangGraph மூலம் தவிர்க்கவும்.',
+    home_btn_launch: 'பாதுகாப்பு தளத்திற்குள் நுழையவும்',
+    home_btn_register: 'புதிய ஒப்பந்ததாரரை பதிவு செய்யவும்',
+    home_pixel_compare: 'பழைய மற்றும் புதிய அமைப்பை ஒப்பிட கிளிக் செய்யவும்',
+    home_legacy_title: 'பழைய காகித முறையின் குறைபாடுகள் (Manual PTW)',
+    home_legacy_heading: 'காகித அனுமதிகள் & விரிதாள் குருட்டுப் புள்ளிகள்',
+    home_legacy_desc: 'காகித வேலைகள் அருகிலுள்ள கரைப்பான் மண்டலங்களில் ஒரே நேரத்தில் வெல்டிங் செய்தல், காலாவதியான வாயு கண்காணிப்பு அளவீடுகள் போன்ற ஆபத்துகளை புறக்கணிக்கிறது.',
+    home_legacy_tag1: '❌ அதிக SIMOPS வெடிப்பு ஆபத்து',
+    home_legacy_tag2: '❌ 3-4 மணிநேர மனித மதிப்பாய்வு தாமதம்',
+    home_ai_title: 'ClearToWork AI தானியங்கி அனுமதி',
+    home_ai_heading: '5-முகவர் தோல்வி-பாதுகாப்பு அனுமதி இயந்திரம்',
+    home_ai_desc: 'உடனடி இடஞ்சார்ந்த மோதல் சரிபார்ப்பு, 90 நாள் உபகரண அளவீட்டு தணிக்கை, சான்றளிக்கப்பட்ட தொழிலாளர் மாற்றீடு மற்றும் நேரடி 35km/h காற்று வேக வரம்பு.',
+    home_ai_tag1: '✓ <80ms LangGraph ஒருமித்த முடிவு',
+    home_ai_tag2: '✓ தோல்வி-பாதுகாப்பான தீர்வு வழிகாட்டுதல்',
+    home_stat_fail_closed: 'தோல்வி-பாதுகாப்பான கொள்கை',
+    home_stat_agents: 'LangGraph முகவர்கள்',
+    home_stat_latency: 'மதிப்பீட்டு வேகம்',
+    home_stat_languages: 'பூர்வீக 3 மொழிகள் (EN/SI/TA)',
+    home_agents_title: 'தானியங்கி பாதுகாப்பு ஒருமித்த கருத்து',
+    home_agents_heading: 'இயக்கப்பட்ட வரைபடத்தில் 5 சிறப்பு முகவர்கள்',
+    home_agents_desc: 'மனித கையொப்பத்திற்கு முன் ஒவ்வொரு முகவரும் கடுமையான பாதுகாப்பு விதிகளை தானாகவே மதிப்பீடு செய்கிறது.',
+    home_agent_1_title: 'திட்டமிடல் & ஒருங்கிணைப்பு',
+    home_agent_1_desc: 'பணி நோக்கங்களை பகுப்பாய்வு செய்தல், நேர வரம்புகளை விதித்தல் மற்றும் தீ கண்காணிப்பாளர்களை கட்டாயப்படுத்துதல்.',
+    home_agent_2_title: 'பணியாளர்கள் & தகுதி',
+    home_agent_2_desc: 'தொழிலாளர் பேட்ஜ் தணிக்கை, தகுதி சரிபார்ப்பு, 30 நாள் காலாவதி கணிப்பு மற்றும் தகுதியான தொழிலாளர் பரிந்துரை.',
+    home_agent_3_title: 'உபகரணங்கள் & தனிமைப்படுத்தல் (LOTO)',
+    home_agent_3_desc: 'பாதுகாப்பு உபகரண சரிபார்ப்பு, 90 நாள் வாயு கண்காணிப்பு குறிச்சொற்கள் மற்றும் உடல் LOTO பூட்டுதல் சரிபார்ப்பு.',
+    home_agent_4_title: 'தள நிலைமைகள் & அபாயங்கள் (SIMOPS)',
+    home_agent_4_desc: 'அருகிலுள்ள மண்டல மோதல்களை சரிபார்த்தல் மற்றும் Open-Meteo மூலம் 35 km/h காற்று வேக வரம்பை செயல்படுத்துதல்.',
+    home_agent_5_title: 'இறுதி பாதுகாப்பு சரிபார்ப்பு',
+    home_agent_5_desc: 'ஏதேனும் பாதுகாப்பு மீறல் கண்டறியப்பட்டால் அனுமதியை நிராகரித்து, மாற்று தொழிலாளர்கள் மற்றும் நேரத்தை தானாகவே பரிந்துரைக்கிறது.',
+    home_cta_heading: 'தொழில்துறை பாதுகாப்பை மேம்படுத்த தயாரா?',
+    home_cta_desc: 'நேரடி பாதுகாப்பு அமைப்பை அனுபவிக்க உள்நுழையவும் அல்லது தொழில்நுட்ப ஆவணங்களை ஆராயவும்.',
+    home_cta_signin: 'பாதுகாப்பு தளத்தில் உள்நுழையவும்',
+    home_cta_about: 'எங்கள் தளம் பற்றி அறிய →',
+    home_footer_desc: 'தானியங்கி பணி அனுமதி & SIMOPS பாதுகாப்பு இயந்திரம்',
+    home_footer_copy: '© 2026 ClearToWork AI · தோல்வி-பாதுகாப்பான தொழில்துறை தரம்',
+
+    // About Page
+    about_badge: 'தொழில்துறை பாதுகாப்பு பொறியியல்',
+    about_title: 'ClearToWork AI பற்றி',
+    about_subtitle: 'அதிவேக மற்றும் ஆபத்தான தொழில்துறை சூழல்களுக்கான தானியங்கி, பல முகவர் பணி அனுமதி (PTW) சரிபார்ப்பு மற்றும் SIMOPS பாதுகாப்பு அமைப்பு.',
+    about_team_badge: 'ClearToWork AI முதன்மை பொறியியல் குழு',
+    about_team_heading: 'Full-Stack மற்றும் Agentic AI மேம்பாட்டுக் குழு',
+    about_team_desc: 'அடுத்த தலைமுறை தொழில்துறை பாதுகாப்பு அனுமதி, இடஞ்சார்ந்த மோதல் இயந்திரம் மற்றும் பல முகவர் ஒருமித்த அமைப்பை உருவாக்குகிறது.',
+    about_team_stat: '4 பொறியாளர்கள் · 5 முகவர்கள்',
+    about_problem_badge: 'தொழில்துறை பிரச்சனை',
+    about_problem_heading: 'பழைய PTW அமைப்புகள் ஏன் தோல்வியடைகின்றன?',
+    about_problem_desc: 'சுத்திகரிப்பு மற்றும் ரசாயன ஆலைகளில் மூன்று முக்கிய காரணங்களால் பெரும் விபத்துகள் ஏற்படுகின்றன:',
+    about_problem_1_title: 'SIMOPS மோதல்கள்:',
+    about_problem_1_desc: 'அருகிலுள்ள மண்டலங்களில் ஒரே நேரத்தில் நடக்கும் ஆபத்தான வெல்டிங் வேலைகள் காகித அமைப்பால் கவனிக்கப்படாமல் போவது.',
+    about_problem_2_title: 'அளவீடு செய்யப்படாத உபகரணங்கள்:',
+    about_problem_2_desc: '90 நாள் வாயு கண்காணிப்பாளர்கள் மற்றும் தீயணைப்பு கருவிகள் முறையான சரிபார்ப்பு இல்லாமல் பயன்படுத்தப்படுவது.',
+    about_problem_3_title: 'தகுதியற்ற பணியாளர்கள்:',
+    about_problem_3_desc: 'காலாவதியான சான்றிதழ்களைக் கொண்ட தொழிலாளர்கள் ஆபத்தான பணிகளில் ஈடுபடுத்தப்படுவது.',
+    about_solution_badge: 'தானியங்கி தீர்வு',
+    about_solution_heading: '5-முகவர் செயல்முறை பைப்லைன்',
+    about_solution_desc: 'ClearToWork AI அமைப்பு LangGraph வழியாக கடுமையான தோல்வி-பாதுகாப்புக் கொள்கையை செயல்படுத்துகிறது.',
+    about_ownership_badge: 'பொறியியல் குழு கட்டமைப்பு',
+    about_ownership_heading: 'கணினி கூறுகளின் உரிமை',
+    about_ownership_desc: 'நிறுவன பாதுகாப்பு தரநிலைகளுக்கு ஏற்ப பிரிக்கப்பட்டுள்ளது.',
+    about_s1_title: 'மாணவர் 1: பணியாளர்கள் & தகுதி',
+    about_s1_desc: 'தொழிலாளர் விவரங்கள், பேட்ஜ் ஸ்கேனிங், தகுதி கண்காணிப்பு மற்றும் 30 நாள் காலாவதி கணிப்பு.',
+    about_s2_title: 'மாணவர் 2: உபகரணங்கள் & LOTO தனிமைப்படுத்தல்',
+    about_s2_desc: 'பாதுகாப்பு சொத்து பதிவேடு, 90 நாள் அளவீட்டு பதிவுகள் மற்றும் உடல் LOTO தனிமைப்படுத்தல் புள்ளிகள்.',
+    about_s3_title: 'மாணவர் 3: பணி அனுமதி வாழ்க்கை சுழற்சி',
+    about_s3_desc: 'JWT அங்கீகாரம், அனுமதி வரைவு நிலை, டிஜிட்டல் QR டோக்கன் வெளியீடு மற்றும் தீ கண்காணிப்பு தேவைகள்.',
+    about_s4_title: 'மாணவர் 4: SIMOPS & வானிலை',
+    about_s4_desc: 'இடஞ்சார்ந்த மண்டலங்கள், மோதல் கண்டறிதல் மற்றும் Open-Meteo நேரடி வானிலை ஒருங்கிணைப்பு.',
+
+    // Contact Page
+    contact_badge: '24/7 பாதுகாப்பு & செயல்பாட்டு ஆதரவு',
+    contact_title: 'தொடர்பு & செயல்பாட்டு கட்டுப்பாடு',
+    contact_subtitle: 'ClearToWork AI பொறியியல் ஆதரவு குழு அல்லது அவசர தேவைகளுக்கு மத்திய HSE கட்டுப்பாட்டு அறையை தொடர்பு கொள்ளவும்.',
+    contact_emergency_title: '24/7 அவசர பாதுகாப்பு உதவி எண்',
+    contact_emergency_desc: 'நேரடி SIMOPS நிறுத்தம், வாயு எச்சரிக்கைகள் மற்றும் வெளியேற்ற உத்தரவுகளுக்கான பிரத்யேக பாதுகாப்பு அதிகாரி எண்.',
+    contact_form_title: 'ஒரு வினவலை அனுப்பவும்',
+    contact_form_desc: 'முன்னோடி அணுகல், ஒப்பந்ததாரர் பதிவு அல்லது பாதுகாப்பு விதிகளை ஒருங்கிணைக்க கோரிக்கைகளை சமர்ப்பிக்கவும்.',
+    contact_field_name: 'முழு பெயர்',
+    contact_field_email: 'மின்னஞ்சல் முகவரி',
+    contact_field_facility: 'ஆலை / தளம்',
+    contact_field_subject: 'பொருள்',
+    contact_field_message: 'செய்தி / செயல்பாட்டு தேவை',
+    contact_btn_submit: 'வினவலை சமர்ப்பிக்கவும்',
+    contact_success_title: 'செய்தி வெற்றிகரமாக அனுப்பப்பட்டது!',
+    contact_success_desc: 'ClearToWork AI ஐ தொடர்பு கொண்டதற்கு நன்றி. எங்கள் பாதுகாப்பு குழு விரைவில் பதிலளிக்கும்.',
+    contact_hq_title: 'மத்திய செயல்பாட்டு தலைமையகம்',
+    contact_hq_address: 'பெட்ரோகெமிக்கல் வளாகம், பிளாக் 7, தொழில்துறை மண்டலம்',
+    contact_response_title: 'பதில் அளிக்கும் நேரங்கள்',
+    contact_response_desc: 'அவசர SIMOPS அழைப்புகள் 30 வினாடிகளுக்குள் இணைக்கப்படுகின்றன. நிலையான வினவல்கள் 2 வணிக மணிநேரத்திற்குள் தீர்க்கப்படும்.',
+
+    // Register Page
+    reg_title: 'பயனர் சுயவிவரத்தை பதிவு செய்யவும்',
+    reg_subtitle: 'ClearToWork AI பணி அனுமதி அமைப்புக்கு அங்கீகரிக்கப்பட்ட கணக்கை உருவாக்கவும்',
+    reg_name: 'முழு பெயர்',
+    reg_email: 'மின்னஞ்சல் முகவரி',
+    reg_role: 'செயல்பாட்டு பங்கு',
+    reg_password: 'கடவுச்சொல்',
+    reg_confirm_password: 'கடவுச்சொல்லை உறுதிப்படுத்தவும்',
+    reg_submit: 'பதிவை முடிக்கவும்',
+    reg_have_account: 'ஏற்கனவே கணக்கு உள்ளதா?',
+    reg_signin: 'இங்கே உள்நுழையவும் →',
 
     agent_center_title: 'QChat & முகவர் கட்டளை மையம்',
     agent_center_subtitle: 'நிகழ்நேர கண்காணிப்பு, செயல்முறை கண்காணிப்பு மற்றும் புத்திசாலித்தனமான பாதுகாப்பு பகுத்தறிவு',

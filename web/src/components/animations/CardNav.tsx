@@ -110,7 +110,7 @@ export const CardNav: React.FC<CardNavProps> = ({
   const navItems = items.length > 0 ? items : defaultItems;
 
   return (
-    <header className={`sticky top-0 z-50 w-full backdrop-blur-xl bg-slate-950/80 border-b border-slate-800/80 transition-colors ${className}`}>
+    <header className={`sticky top-0 z-50 w-full backdrop-blur-xl bg-white/85 dark:bg-slate-950/85 border-b border-slate-200 dark:border-slate-800/80 transition-colors ${className}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20" ref={navRef}>
           {/* Logo */}
@@ -126,10 +126,10 @@ export const CardNav: React.FC<CardNavProps> = ({
               </div>
             )}
             <div className="flex flex-col">
-              <span className="text-xl font-bold tracking-tight bg-gradient-to-r from-slate-100 via-slate-200 to-amber-400 bg-clip-text text-transparent">
-                ClearToWork <span className="text-amber-400">AI</span>
+              <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+                ClearToWork <span className="text-amber-500 dark:text-amber-400">AI</span>
               </span>
-              <span className="text-[10px] tracking-wider uppercase text-slate-400 font-semibold">
+              <span className="text-[10px] tracking-wider uppercase text-slate-500 dark:text-slate-400 font-semibold">
                 Industrial Safety Clearance
               </span>
             </div>
@@ -146,14 +146,14 @@ export const CardNav: React.FC<CardNavProps> = ({
                     onMouseEnter={() => setActiveItem(index)}
                     className={`px-4 py-2 rounded-xl text-sm font-medium transition-all duration-300 flex items-center space-x-1.5 ${
                       isOpen
-                        ? 'bg-slate-800/90 text-amber-400 shadow-inner'
-                        : 'text-slate-300 hover:text-white hover:bg-slate-900/60'
+                        ? 'bg-amber-500/10 text-amber-600 dark:bg-slate-800/90 dark:text-amber-400 shadow-inner'
+                        : 'text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-900/60'
                     }`}
                   >
                     <span>{item.label}</span>
                     <ChevronDown
                       className={`w-4 h-4 transition-transform duration-300 ${
-                        isOpen ? 'rotate-180 text-amber-400' : 'text-slate-500'
+                        isOpen ? 'rotate-180 text-amber-500 dark:text-amber-400' : 'text-slate-400'
                       }`}
                     />
                   </button>
@@ -164,16 +164,10 @@ export const CardNav: React.FC<CardNavProps> = ({
                       className="absolute top-full left-1/2 -translate-x-1/2 pt-3 w-84 sm:w-96 z-50 animate-in fade-in slide-in-from-top-2 duration-200"
                       onMouseLeave={() => setActiveItem(null)}
                     >
-                      <div
-                        className="rounded-2xl p-4 shadow-2xl border border-slate-700/80 backdrop-blur-2xl transition-all"
-                        style={{
-                          backgroundColor: item.bgColor || '#0f172a',
-                          color: item.textColor || '#ffffff',
-                        }}
-                      >
-                        <div className="text-xs uppercase tracking-wider font-bold text-amber-400/90 mb-3 px-2 flex items-center justify-between">
+                      <div className="rounded-2xl p-4 shadow-2xl border border-slate-200 dark:border-slate-700/80 bg-white dark:bg-slate-900 backdrop-blur-2xl transition-all">
+                        <div className="text-xs uppercase tracking-wider font-bold text-amber-600 dark:text-amber-400 mb-3 px-2 flex items-center justify-between">
                           <span>{item.label}</span>
-                          <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+                          <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
                         </div>
                         <div className="space-y-1">
                           {item.links.map((link) => (
@@ -181,26 +175,26 @@ export const CardNav: React.FC<CardNavProps> = ({
                               key={link.label}
                               to={link.href || '#'}
                               onClick={() => setActiveItem(null)}
-                              className="group/link flex items-start p-2.5 rounded-xl hover:bg-white/10 transition-colors"
+                              className="group/link flex items-start p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-white/10 transition-colors"
                             >
                               <div className="flex-1">
                                 <div className="flex items-center space-x-2">
-                                  <span className="text-sm font-semibold text-slate-100 group-hover/link:text-amber-300 transition-colors">
+                                  <span className="text-sm font-semibold text-slate-800 dark:text-slate-100 group-hover/link:text-amber-600 dark:group-hover/link:text-amber-300 transition-colors">
                                     {link.label}
                                   </span>
                                   {link.badge && (
-                                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30 font-medium">
+                                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-700 dark:text-amber-300 border border-amber-500/30 font-medium">
                                       {link.badge}
                                     </span>
                                   )}
                                 </div>
                                 {link.description && (
-                                  <p className="text-xs text-slate-400 mt-0.5 line-clamp-1">
+                                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 line-clamp-1">
                                     {link.description}
                                   </p>
                                 )}
                               </div>
-                              <ArrowRight className="w-4 h-4 text-slate-500 opacity-0 -translate-x-1 group-hover/link:opacity-100 group-hover/link:translate-x-0 transition-all text-amber-400 mt-1" />
+                              <ArrowRight className="w-4 h-4 text-slate-400 opacity-0 -translate-x-1 group-hover/link:opacity-100 group-hover/link:translate-x-0 transition-all text-amber-500 mt-1" />
                             </Link>
                           ))}
                         </div>
@@ -218,15 +212,15 @@ export const CardNav: React.FC<CardNavProps> = ({
             <div className="relative">
               <button
                 onClick={() => setIsLangOpen(!isLangOpen)}
-                className="p-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-900 border border-slate-800 transition-all flex items-center space-x-1.5"
+                className="p-2.5 rounded-xl text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 transition-all flex items-center space-x-1.5"
                 title="Switch Language"
               >
-                <Globe className="w-4 h-4 text-amber-400" />
+                <Globe className="w-4 h-4 text-amber-500 dark:text-amber-400" />
                 <span className="text-xs uppercase font-bold tracking-wider">{language}</span>
               </button>
 
               {isLangOpen && (
-                <div className="absolute right-0 top-full mt-2 w-36 rounded-xl bg-slate-900 border border-slate-800 shadow-xl p-1 z-50 animate-in fade-in">
+                <div className="absolute right-0 top-full mt-2 w-36 rounded-xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-xl p-1 z-50 animate-in fade-in">
                   {(['en', 'si', 'ta'] as Language[]).map((lang) => (
                     <button
                       key={lang}
@@ -237,7 +231,7 @@ export const CardNav: React.FC<CardNavProps> = ({
                       className={`w-full text-left px-3 py-2 rounded-lg text-xs font-semibold flex items-center justify-between ${
                         language === lang
                           ? 'bg-amber-500 text-slate-950 font-bold'
-                          : 'text-slate-300 hover:bg-slate-800'
+                          : 'text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800'
                       }`}
                     >
                       <span>
@@ -252,23 +246,23 @@ export const CardNav: React.FC<CardNavProps> = ({
             {/* Theme Toggle */}
             <button
               onClick={toggleTheme}
-              className="p-2.5 rounded-xl text-slate-300 hover:text-white hover:bg-slate-900 border border-slate-800 transition-all"
+              className="p-2.5 rounded-xl text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 transition-all"
               title="Toggle Theme"
             >
               {theme === 'dark' ? (
                 <Sun className="w-4 h-4 text-amber-400" />
               ) : (
-                <Moon className="w-4 h-4 text-slate-300" />
+                <Moon className="w-4 h-4 text-slate-700" />
               )}
             </button>
 
             {/* Register Button */}
             <Link
               to="/register"
-              className="px-4 py-2 rounded-xl text-sm font-semibold text-slate-200 hover:text-white hover:bg-slate-800/80 border border-slate-700/80 transition-all flex items-center space-x-1.5"
+              className="px-4 py-2 rounded-xl text-sm font-semibold text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800/80 border border-slate-300 dark:border-slate-700/80 transition-all flex items-center space-x-1.5"
             >
-              <UserPlus className="w-4 h-4 text-slate-400" />
-              <span>Register</span>
+              <UserPlus className="w-4 h-4 text-slate-500 dark:text-slate-400" />
+              <span>{t('nav_register')}</span>
             </Link>
 
             {/* Sign In CTA */}
@@ -277,7 +271,7 @@ export const CardNav: React.FC<CardNavProps> = ({
               className="relative group px-5 py-2.5 rounded-xl text-sm font-bold text-slate-950 bg-gradient-to-r from-amber-400 via-amber-300 to-amber-500 hover:from-amber-300 hover:to-amber-400 shadow-lg shadow-amber-500/20 hover:shadow-amber-500/40 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center space-x-2"
             >
               <LogIn className="w-4 h-4 stroke-[2.5]" />
-              <span>Sign In</span>
+              <span>{t('nav_login')}</span>
             </Link>
           </div>
 
@@ -291,7 +285,7 @@ export const CardNav: React.FC<CardNavProps> = ({
             </Link>
             <button
               onClick={() => setIsMobileOpen(!isMobileOpen)}
-              className="p-2.5 rounded-xl bg-slate-900 border border-slate-800 text-slate-300 hover:text-white"
+              className="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:text-slate-950 dark:hover:text-white"
             >
               {isMobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
@@ -300,10 +294,10 @@ export const CardNav: React.FC<CardNavProps> = ({
 
         {/* Mobile Navigation Drawer */}
         {isMobileOpen && (
-          <div className="lg:hidden border-t border-slate-800 py-4 px-2 space-y-3 animate-in slide-in-from-top-4 duration-200">
+          <div className="lg:hidden border-t border-slate-200 dark:border-slate-800 py-4 px-2 space-y-3 animate-in slide-in-from-top-4 duration-200">
             {navItems.map((item) => (
-              <div key={item.label} className="bg-slate-900/60 rounded-xl p-3 border border-slate-800">
-                <div className="text-xs font-bold uppercase tracking-wider text-amber-400 mb-2">
+              <div key={item.label} className="bg-slate-50 dark:bg-slate-900/60 rounded-xl p-3 border border-slate-200 dark:border-slate-800">
+                <div className="text-xs font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400 mb-2">
                   {item.label}
                 </div>
                 <div className="space-y-1.5">
@@ -312,7 +306,7 @@ export const CardNav: React.FC<CardNavProps> = ({
                       key={link.label}
                       to={link.href || '#'}
                       onClick={() => setIsMobileOpen(false)}
-                      className="block p-2 rounded-lg text-sm font-medium text-slate-200 hover:bg-slate-800"
+                      className="block p-2 rounded-lg text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-800"
                     >
                       {link.label}
                     </Link>
@@ -327,7 +321,7 @@ export const CardNav: React.FC<CardNavProps> = ({
                     key={lang}
                     onClick={() => setLanguage(lang)}
                     className={`px-3 py-1 rounded-lg text-xs font-bold ${
-                      language === lang ? 'bg-amber-500 text-slate-950' : 'bg-slate-800 text-slate-300'
+                      language === lang ? 'bg-amber-500 text-slate-950' : 'bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300'
                     }`}
                   >
                     {lang.toUpperCase()}
@@ -337,9 +331,9 @@ export const CardNav: React.FC<CardNavProps> = ({
               <Link
                 to="/register"
                 onClick={() => setIsMobileOpen(false)}
-                className="text-xs text-amber-400 font-bold hover:underline"
+                className="text-xs text-amber-600 dark:text-amber-400 font-bold hover:underline"
               >
-                Register New User →
+                {t('nav_register')} →
               </Link>
             </div>
           </div>

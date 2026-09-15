@@ -29,7 +29,7 @@ import { DocsViewerPage } from './pages/DocsViewerPage';
 
 const AppLayout: React.FC = () => {
   return (
-    <div className="min-h-screen bg-slate-950 dark:bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-amber-500 selection:text-slate-950 transition-colors">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 flex flex-col font-sans selection:bg-amber-500 selection:text-slate-950 transition-colors">
       <Navbar />
       <div className="flex-1 flex overflow-hidden">
         <Sidebar />
