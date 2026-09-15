@@ -51,17 +51,13 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontendClients", policy =>
     {
-        policy.WithOrigins(
-                "http://localhost:5173",
-                "http://localhost:3000",
-                "http://localhost:8080",
-                "http://10.0.2.2:5000" // Android emulator
-            )
+        policy.SetIsOriginAllowed(_ => true)
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
     });
 });
+
 
 // 5. Configure Swagger / OpenAPI with JWT Authorization Support
 builder.Services.AddEndpointsApiExplorer();
@@ -111,14 +107,13 @@ using (var scope = app.Services.CreateScope())
 }
 
 // 7. HTTP Request Pipeline
-if (app.Environment.IsDevelopment())
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "ClearToWork AI API v1");
-    });
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "ClearToWork AI API v1");
+    c.RoutePrefix = "swagger";
+});
+
 
 app.UseCors("AllowFrontendClients");
 app.UseAuthentication();
