@@ -8,7 +8,7 @@ namespace ClearToWork.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(Roles = "Administrator")]
+[Authorize]
 public class AdminController : ControllerBase
 {
     private readonly AppDbContext _context;
@@ -21,6 +21,7 @@ public class AdminController : ControllerBase
     }
 
     [HttpGet("database/summary")]
+    [Authorize(Roles = "Administrator")]
     public async Task<IActionResult> GetDatabaseSummary()
     {
         var usersCount = await _context.Users.CountAsync();
@@ -65,6 +66,7 @@ public class AdminController : ControllerBase
     }
 
     [HttpPost("database/seed")]
+    [Authorize(Roles = "Administrator")]
     public async Task<IActionResult> SeedDatabase()
     {
         await DbInitializer.SeedAsync(_context);
@@ -72,6 +74,7 @@ public class AdminController : ControllerBase
     }
 
     [HttpPost("database/reset")]
+    [Authorize(Roles = "Administrator")]
     public async Task<IActionResult> ResetDatabase()
     {
         await _context.Database.EnsureDeletedAsync();

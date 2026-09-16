@@ -147,6 +147,101 @@ public class PermitLifecycleService : IPermitLifecycleService
         return (await GetPermitByIdAsync(permit.Id))!;
     }
 
+    public async Task<PermitDetailsDto?> UpdatePermitDraftAsync(Guid permitId, Guid supervisorId, UpdatePermitRequest request)
+    {
+        var permit = await _context.PermitRequests
+            .Include(p => p.AssignedWorkers)
+            .Include(p => p.AssignedAssets)
+            .Include(p => p.EvidencePhotos)
+            .FirstOrDefaultAsync(p => p.Id == permitId);
+
+        if (permit == null) return null;
+
+        if (permit.Status != PermitStatus.Draft && permit.Status != PermitStatus.Submitted && permit.Status != PermitStatus.Refused)
+        {
+            throw new InvalidOperationException("Only draft, submitted, or refused permits can be modified.");
+        }
+
+        permit.PermitTypeId = request.PermitTypeId;
+        permit.ZoneId = request.ZoneId;
+        permit.ObjectiveDescription = request.ObjectiveDescription.Trim();
+        permit.ScheduledStartTime = request.ScheduledStartTime;
+        permit.ScheduledEndTime = request.ScheduledEndTime;
+        permit.Status = PermitStatus.Draft;
+
+        _context.PermitWorkers.RemoveRange(permit.AssignedWorkers);
+        foreach (var workerId in request.WorkerIds)
+        {
+            permit.AssignedWorkers.Add(new PermitWorker
+            {
+                PermitRequestId = permit.Id,
+                WorkerId = workerId,
+                RoleOnPermit = "Worker"
+            });
+        }
+
+        _context.PermitAssets.RemoveRange(permit.AssignedAssets);
+        foreach (var assetId in request.AssetIds)
+        {
+            permit.AssignedAssets.Add(new PermitAsset
+            {
+                PermitRequestId = permit.Id,
+                AssetId = assetId,
+                ReservedFrom = request.ScheduledStartTime,
+                ReservedUntil = request.ScheduledEndTime
+            });
+        }
+
+        if (request.PhotoUrls != null && request.PhotoUrls.Count > 0)
+        {
+            foreach (var photoUrl in request.PhotoUrls)
+            {
+                if (!permit.EvidencePhotos.Any(p => p.PhotoUrl == photoUrl))
+                {
+                    permit.EvidencePhotos.Add(new EvidencePhoto
+                    {
+                        Id = Guid.NewGuid(),
+                        PermitRequestId = permit.Id,
+                        Stage = "Submission",
+                        PhotoUrl = photoUrl,
+                        CapturedAt = DateTime.UtcNow
+                    });
+                }
+            }
+        }
+
+        await _context.SaveChangesAsync();
+        return await GetPermitByIdAsync(permit.Id);
+    }
+
+    public async Task<bool> DeletePermitDraftAsync(Guid permitId, Guid supervisorId)
+    {
+        var permit = await _context.PermitRequests
+            .Include(p => p.AssignedWorkers)
+            .Include(p => p.AssignedAssets)
+            .Include(p => p.EvidencePhotos)
+            .Include(p => p.Approvals)
+            .Include(p => p.AgentWorkflowRun)
+            .FirstOrDefaultAsync(p => p.Id == permitId);
+
+        if (permit == null) return false;
+
+        if (permit.Status != PermitStatus.Draft && permit.Status != PermitStatus.Submitted && permit.Status != PermitStatus.Refused)
+        {
+            throw new InvalidOperationException("Approved or Active permits cannot be deleted.");
+        }
+
+        _context.PermitWorkers.RemoveRange(permit.AssignedWorkers);
+        _context.PermitAssets.RemoveRange(permit.AssignedAssets);
+        _context.EvidencePhotos.RemoveRange(permit.EvidencePhotos);
+        if (permit.Approvals.Any()) _context.Approvals.RemoveRange(permit.Approvals);
+        if (permit.AgentWorkflowRun != null) _context.AgentWorkflowRuns.Remove(permit.AgentWorkflowRun);
+
+        _context.PermitRequests.Remove(permit);
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
     public async Task<ValidationReportDto> SubmitPermitForAiReviewAsync(Guid permitId)
     {
         var permit = await _context.PermitRequests
