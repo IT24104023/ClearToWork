@@ -21,19 +21,20 @@ def planning_agent_node(state: AgentWorkflowState) -> AgentWorkflowState:
         latency_ms=t_latency
     ))
 
-    # Formulate structured plan
+    # Formulate structured plan (Student 3)
     state.plan_steps = [
-        f"1. Verify {template.get('name', 'Hazard')} operational safety envelope.",
-        "2. Audit assigned worker competencies and trade certifications.",
-        "3. Validate equipment readiness, calibration, and isolation points.",
-        "4. Evaluate spatial-temporal SIMOPS conflicts with adjacent plant zones.",
-        "5. Execute deterministic clearance rule validation before human sign-off."
+        f"1. Safety Envelope: Enforce {template.get('name', 'Hot Work')} limits (Max {template.get('maxDurationHours', 8)}h window, Fire Watch required).",
+        "2. Competency Audit: Verify worker trade qualifications and in-date certifications for all personnel.",
+        "3. Equipment & LOTO: Inspect asset calibration, inspection certificates, and verify isolation lock-out points.",
+        "4. SIMOPS Spatial Clearance: Evaluate 2D collision matrix and adjacent zone operational conflicts.",
+        "5. Deterministic Gate: Execute multi-factor clearance validation engine before issuing permit sign-off."
     ]
 
     trace.findings = [
-        f"Identified hazard type: {template.get('name')}.",
-        f"Maximum allowed window: {template.get('maxDurationHours', 8)} hours.",
-        f"Fire watch required: {template.get('requiresFireWatch', True)}."
+        f"Identified Hazard Class: {template.get('name', 'Hot Work')}.",
+        f"Permitted Operational Envelope: Maximum {template.get('maxDurationHours', 8)} hours duration.",
+        f"Safeguards Mandate: Fire watch required = {template.get('requiresFireWatch', True)}.",
+        f"Structured Execution Plan: 5-Stage DAG pipeline generated ({len(state.plan_steps)} milestones)."
     ]
 
     trace.latency_ms = (time.time() - start_time) * 1000
