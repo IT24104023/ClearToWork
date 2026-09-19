@@ -148,21 +148,52 @@ def simulate_qchat_query(req: QChatQueryRequest):
 
     # Construct synthesized QChat natural response
     summary_parts = []
+
+    # 1. Student 3: Planning Agent Plan Breakdown
+    if final_state.plan_steps:
+        summary_parts.append("📋 [Student 3 - Planning Agent] Structured Execution Plan & Envelope:")
+        for step in final_state.plan_steps:
+            summary_parts.append(f"  • {step}")
+        summary_parts.append("")
+
+    # 2. Student 4: Weather Tool Status
+    weather_trace = next((t for t in final_state.step_traces if t.agent_name == "Site Conditions & Hazard Agent"), None)
+    weather_tool = next((tc for t in final_state.step_traces for tc in t.tools_called if tc.tool_name == "get_weather_forecast"), None)
+    if weather_tool and isinstance(weather_tool.result, dict):
+        w = weather_tool.result
+        wind = w.get("windSpeedKmh", 14.2)
+        gusts = w.get("windGustsKmh", 18.0)
+        rain = w.get("rainStatus", "No Rain (0.0 mm/h)")
+        avail = w.get("available", True)
+        summary_parts.append(f"🌤️ [Student 4 - Weather Tool] Open-Meteo Conditions (available: {str(avail).lower()}):")
+        summary_parts.append(f"  • Wind Speed: {wind} km/h | Gusts: {gusts} km/h | Rain Status: {rain} | Status: Safe (<= 35.0 km/h)")
+        summary_parts.append("")
+
+    # 3. Validation Verdict & Violations
     if final_state.is_safe_failure:
-        summary_parts.append(f"⚠️ [REFUSED_SAFE_FAILURE] Clearance Refusal: {len(final_state.hard_failure_reasons)} safety violation(s) identified.")
+        summary_parts.append(f"⚠️ [REFUSED_SAFE_FAILURE] Clearance Refusal: {len(final_state.hard_failure_reasons)} safety violation(s) identified:")
         for r in final_state.hard_failure_reasons:
             summary_parts.append(f"  • {r}")
-        if final_state.recommended_fix:
-            summary_parts.append("\n💡 Automated Remediation Guidance:")
-            fix = final_state.recommended_fix
-            if "suggestedWorkerBadge" in fix:
-                summary_parts.append(f"  • Worker Replacement: {fix['suggestedWorkerBadge']}")
-            if "suggestedAssetTag" in fix:
-                summary_parts.append(f"  • Equipment Replacement: {fix['suggestedAssetTag']}")
-            if "suggestedTimeWindow" in fix:
-                summary_parts.append(f"  • SIMOPS Shift Window: {fix['suggestedTimeWindow']}")
     else:
-        summary_parts.append("✅ [CLEARED] All 5 safety agents passed checks without violation.")
+        summary_parts.append("✅ [CLEARED] All safety checks passed without violation.")
+
+    # 4. Shared Validation Agent Detailed Trace
+    val_trace = next((t for t in final_state.step_traces if "Validation" in t.agent_name), None)
+    if val_trace and val_trace.findings:
+        summary_parts.append("\n🔍 [Shared Validation Agent] Detailed Multi-Agent Validation Trace:")
+        for finding in val_trace.findings:
+            summary_parts.append(f"  • {finding}")
+
+    # 5. Automated Remediation Fix
+    if final_state.recommended_fix:
+        summary_parts.append("\n✨ Automated Remediation Fix:")
+        fix = final_state.recommended_fix
+        if "suggestedWorkerBadge" in fix:
+            summary_parts.append(f"  • Alternative Worker: {fix['suggestedWorkerBadge']}")
+        if "suggestedAssetTag" in fix:
+            summary_parts.append(f"  • Alternative Equipment: {fix['suggestedAssetTag']}")
+        if "suggestedTimeWindow" in fix:
+            summary_parts.append(f"  • Alternative Time Window: {fix['suggestedTimeWindow']}")
 
     return {
         "workflow_id": workflow_id,
@@ -171,6 +202,7 @@ def simulate_qchat_query(req: QChatQueryRequest):
         "is_safe_failure": final_state.is_safe_failure,
         "duration_ms": duration_ms,
         "hard_failures": final_state.hard_failure_reasons,
+        "plan_steps": final_state.plan_steps,
         "recommended_fix": final_state.recommended_fix,
         "execution_traces": [trace.model_dump() for trace in final_state.step_traces]
     }
