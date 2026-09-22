@@ -12,6 +12,8 @@ export interface Translations {
   nav_workforce: string;
   nav_equipment: string;
   nav_hazard_rules: string;
+  nav_rulebook_editor: string;
+  nav_conflict_matrix: string;
   nav_analytics: string;
   nav_agent_command: string;
   nav_database_admin: string;
@@ -299,6 +301,8 @@ export const translations: Record<Language, Translations> = {
     nav_workforce: 'Workforce & Certs',
     nav_equipment: 'Safety Equipment',
     nav_hazard_rules: 'Hazard Zones & SIMOPS',
+    nav_rulebook_editor: 'Rulebook Editor',
+    nav_conflict_matrix: 'Conflict Matrix',
     nav_analytics: 'Safety Analytics',
     nav_agent_command: 'QChat & Agent Command',
     nav_database_admin: 'Database Management',
@@ -578,6 +582,8 @@ export const translations: Record<Language, Translations> = {
     nav_workforce: 'සේවක මණ්ඩලය සහ සහතික',
     nav_equipment: 'ආරක්ෂිත උපකරණ',
     nav_hazard_rules: 'අන්තරායකර කලාප සහ SIMOPS',
+    nav_rulebook_editor: 'රීති පොත් සංස්කාරකය (Rulebook)',
+    nav_conflict_matrix: 'ගැටුම් න්‍යාසය (Conflict Matrix)',
     nav_analytics: 'ආරක්ෂිත විශ්ලේෂණ',
     nav_agent_command: 'QChat සහ නියෝජිත විධාන මධ්‍යස්ථානය',
     nav_database_admin: 'දත්ත සමුදාය කළමනාකරණය',
@@ -857,6 +863,8 @@ export const translations: Record<Language, Translations> = {
     nav_workforce: 'பணியாளர்கள் & சான்றிதழ்கள்',
     nav_equipment: 'பாதுகாப்பு உபகரணங்கள்',
     nav_hazard_rules: 'ஆபத்து மண்டலங்கள் & SIMOPS',
+    nav_rulebook_editor: 'விதிமுறை எடிட்டர் (Rulebook)',
+    nav_conflict_matrix: 'முரண்பாடு அணி (Conflict Matrix)',
     nav_analytics: 'பாதுகாப்பு பகுப்பாய்வு',
     nav_agent_command: 'QChat & முகவர் கட்டளை மையம்',
     nav_database_admin: 'தரவுத்தள மேலாண்மை',

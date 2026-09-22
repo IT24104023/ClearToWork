@@ -22,6 +22,14 @@ interface SidebarProps {
   onClose?: () => void;
 }
 
+interface NavItem {
+  to: string;
+  label: string;
+  icon: React.ComponentType<{ className?: string }>;
+  desc: string;
+  restricted?: boolean;
+}
+
 export const Sidebar: React.FC<SidebarProps> = ({
   isOpen = false,
   onClose,
@@ -29,11 +37,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const user = useSelector((state: RootState) => state.auth.user);
   const { t } = useTranslation();
 
-  const isSafetyOfficer = user?.role === 'SafetyOfficer';
   const isAdmin = user?.role === 'Administrator';
-  const isAreaSupervisor = user?.role === 'AreaSupervisor';
 
-  const operationsItems = [
+  const operationsItems: NavItem[] = [
     {
       to: '/permits',
       label: t('nav_permits'),
@@ -45,7 +51,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
       label: t('nav_analytics'),
       icon: BarChart3,
       desc: 'Safe failures & causes',
-      restricted: !isSafetyOfficer && !isAdmin && !isAreaSupervisor,
     },
     {
       to: '/workforce',
@@ -63,17 +68,28 @@ export const Sidebar: React.FC<SidebarProps> = ({
       to: '/hazard-rules',
       label: t('nav_hazard_rules'),
       icon: AlertTriangle,
-      desc: 'SIMOPS & weather limits',
+      desc: 'Zones & observations',
+    },
+    {
+      to: '/hazard-rules/rulebook',
+      label: t('nav_rulebook_editor'),
+      icon: BookOpen,
+      desc: 'Hazards & control measures',
+    },
+    {
+      to: '/hazard-rules/matrix',
+      label: t('nav_conflict_matrix'),
+      icon: Sliders,
+      desc: 'SIMOPS collision matrix',
     },
   ];
 
-  const adminItems = [
+  const adminItems: NavItem[] = [
     {
       to: '/admin/agents',
       label: t('nav_agent_command'),
       icon: Bot,
       desc: '5-Agent monitor & QChat',
-      restricted: !isAdmin && !isSafetyOfficer,
     },
     {
       to: '/admin/database',

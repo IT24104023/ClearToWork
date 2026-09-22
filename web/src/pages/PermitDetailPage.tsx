@@ -6,8 +6,10 @@ import {
   useGetPermitByIdQuery,
   useRecordDecisionMutation,
   useSubmitPermitForAiReviewMutation,
+  useDeletePermitDraftMutation,
 } from '../store/apiSlice';
 import { StatusBadge } from '../components/StatusBadge';
+import { EditPermitModal } from '../components/EditPermitModal';
 import { AgentExecutionTimeline } from '../components/AgentExecutionTimeline';
 import { useTranslation } from '../context/I18nContext';
 import {
@@ -24,6 +26,8 @@ import {
   Cpu,
   QrCode,
   FileCheck,
+  Pencil,
+  Trash2,
 } from 'lucide-react';
 
 export const PermitDetailPage: React.FC = () => {
@@ -35,9 +39,11 @@ export const PermitDetailPage: React.FC = () => {
   const { data: permit, isLoading, error, refetch } = useGetPermitByIdQuery(id || '');
   const [recordDecision, { isLoading: isDeciding }] = useRecordDecisionMutation();
   const [submitForAiReview, { isLoading: isReviewing }] = useSubmitPermitForAiReviewMutation();
+  const [deletePermit, { isLoading: isDeleting }] = useDeletePermitDraftMutation();
 
   const [decisionNotes, setDecisionNotes] = useState('');
   const [showSignOffModal, setShowSignOffModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   const [decisionAction, setDecisionAction] = useState<'Approved' | 'Rejected' | 'RevisionRequested'>('Approved');
 
   if (isLoading) {
@@ -65,6 +71,7 @@ export const PermitDetailPage: React.FC = () => {
 
   const isSafetyOfficer = currentUser?.role === 'SafetyOfficer';
   const isAdmin = currentUser?.role === 'Administrator';
+  const canEditOrDelete = !isSafetyOfficer && (permit.status === 'Draft' || permit.status === 'Refused');
   // Only allow human sign-off once AI has cleared the permit to PendingApproval
   const canDecide = (isSafetyOfficer || isAdmin) && permit.status === 'PendingApproval';
 
@@ -91,8 +98,27 @@ export const PermitDetailPage: React.FC = () => {
     }
   };
 
+  const handleDeleteDraft = async () => {
+    if (window.confirm(`Are you sure you want to delete permit draft ${permit.permitNumber}?`)) {
+      try {
+        await deletePermit(permit.id).unwrap();
+        navigate('/permits');
+      } catch (err: any) {
+        alert(err?.data?.message || 'Failed to delete permit draft.');
+      }
+    }
+  };
+
   return (
     <div className="space-y-6 max-w-6xl mx-auto pb-12">
+      {showEditModal && (
+        <EditPermitModal
+          permit={permit}
+          onClose={() => setShowEditModal(false)}
+          onUpdated={() => refetch()}
+        />
+      )}
+
       {/* Top Bar */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <button
@@ -103,6 +129,26 @@ export const PermitDetailPage: React.FC = () => {
         </button>
 
         <div className="flex items-center gap-3">
+          {canEditOrDelete && (
+            <>
+              <button
+                onClick={() => setShowEditModal(true)}
+                className="flex items-center gap-1.5 px-3.5 py-2 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-800 dark:text-slate-200 font-bold rounded-xl text-xs transition border border-slate-200 dark:border-slate-700"
+              >
+                <Pencil className="w-3.5 h-3.5 text-amber-500" />
+                <span>Edit Draft</span>
+              </button>
+              <button
+                onClick={handleDeleteDraft}
+                disabled={isDeleting}
+                className="flex items-center gap-1.5 px-3.5 py-2 bg-rose-50 dark:bg-rose-950/40 hover:bg-rose-100 dark:hover:bg-rose-900/60 text-rose-700 dark:text-rose-300 font-bold rounded-xl text-xs transition border border-rose-300 dark:border-rose-800"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                <span>{isDeleting ? 'Deleting...' : 'Delete Draft'}</span>
+              </button>
+            </>
+          )}
+
           {permit.status === 'Draft' && (
             <button
               onClick={handleRunAi}
@@ -128,6 +174,7 @@ export const PermitDetailPage: React.FC = () => {
           )}
         </div>
       </div>
+
 
       {/* Main Header Card */}
       <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-sm">

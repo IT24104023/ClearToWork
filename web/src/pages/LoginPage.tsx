@@ -16,16 +16,19 @@ export const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const { t } = useTranslation();
 
-  const handleLoginSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleLoginSubmit = async (e?: React.FormEvent, customEmail?: string, customPassword?: string) => {
+    if (e) e.preventDefault();
     setErrorMsg('');
+    const emailToUse = customEmail || email;
+    const passwordToUse = customPassword || password;
+
     try {
-      const res = await login({ email, password }).unwrap();
+      const res = await login({ email: emailToUse, password: passwordToUse }).unwrap();
       dispatch(
         setCredentials({
           token: res.token,
           user: {
-            id: res.id,
+            id: res.userId || res.id || '',
             fullName: res.fullName,
             email: res.email,
             role: res.role as UserRole,
@@ -36,13 +39,14 @@ export const LoginPage: React.FC = () => {
       );
       navigate('/permits');
     } catch (err: any) {
-      setErrorMsg(err.data?.message || 'Authentication failed. Please check credentials.');
+      setErrorMsg(err.data?.message || err?.message || 'Authentication failed. Please check credentials.');
     }
   };
 
   const setDemoUser = (demoEmail: string) => {
     setEmail(demoEmail);
     setPassword('Password123!');
+    handleLoginSubmit(undefined, demoEmail, 'Password123!');
   };
 
   return (

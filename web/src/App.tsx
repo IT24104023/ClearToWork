@@ -22,6 +22,8 @@ import { AnalyticsPage } from './pages/AnalyticsPage';
 import { WorkforcePage } from './pages/WorkforcePage';
 import { EquipmentPage } from './pages/EquipmentPage';
 import { HazardRulesPage } from './pages/HazardRulesPage';
+import { RulebookEditorPage } from './pages/RulebookEditorPage';
+import { ConflictMatrixEditorPage } from './pages/ConflictMatrixEditorPage';
 import { QChatAgentCommandCenter } from './pages/QChatAgentCommandCenter';
 import { DatabaseAdminPage } from './pages/DatabaseAdminPage';
 import { ProfilePage } from './pages/ProfilePage';
@@ -72,6 +74,8 @@ export const App: React.FC = () => {
                   <Route path="/workforce" element={<WorkforcePage />} />
                   <Route path="/equipment" element={<EquipmentPage />} />
                   <Route path="/hazard-rules" element={<HazardRulesPage />} />
+                  <Route path="/hazard-rules/rulebook" element={<RulebookEditorPage />} />
+                  <Route path="/hazard-rules/matrix" element={<ConflictMatrixEditorPage />} />
                   <Route path="/admin/agents" element={<QChatAgentCommandCenter />} />
                   <Route path="/admin/database" element={<DatabaseAdminPage />} />
                   <Route path="/profile" element={<ProfilePage />} />

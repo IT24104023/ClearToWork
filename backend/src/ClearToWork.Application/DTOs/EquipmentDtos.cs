@@ -44,3 +44,46 @@ public record IsolationPointDto(
     string? LockedByUserId,
     DateTime? LockedAt
 );
+
+public record CreateAssetRequest(
+    string AssetTag,
+    string Name,
+    string Category,
+    Guid? CurrentZoneId
+);
+
+public record UpdateAssetRequest(
+    string Name,
+    string Category,
+    string Status,
+    Guid? CurrentZoneId
+);
+
+public record CreateInspectionRequest(
+    DateTime InspectionDate,
+    DateTime NextInspectionDate,
+    string InspectorName,
+    bool Passed,
+    string? Notes
+);
+
+public record CreateCalibrationRequest(
+    DateTime CalibrationDate,
+    DateTime NextCalibrationDate,
+    string CalibratedBy,
+    string CertificateNumber,
+    bool PassStatus
+);
+
+public record CreateIsolationPointRequest(
+    Guid ZoneId,
+    string TagIdentifier,
+    string Description,
+    string Type,
+    string State
+);
+
+public record UpdateIsolationPointStateRequest(
+    string State,
+    string? LockedByUserId
+);

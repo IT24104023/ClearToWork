@@ -25,9 +25,18 @@ def validation_agent_node(state: AgentWorkflowState) -> AgentWorkflowState:
     state.recommended_fix = validator_report.get("proposedFix")
     state.is_safe_failure = not validator_report.get("isApproved", False)
 
+    # Detailed domain validation traces
+    competency_status = "FAIL (Expired certification)" if any("Welder" in r or "Worker" in r or "Certificate" in r for r in state.hard_failure_reasons) else "PASS (Valid certifications)"
+    equipment_status = "FAIL (Overdue inspection/calibration)" if any("Asset" in r or "Equipment" in r or "inspection" in r for r in state.hard_failure_reasons) else "PASS (Equipment ready & certified)"
+    simops_status = "FAIL (Adjacent zone hazard collision)" if any("SIMOPS" in r or "Zone" in r or "clash" in r or "solvent" in r.lower() for r in state.hard_failure_reasons) else "PASS (No spatial conflicts)"
+    weather_status = "FAIL (Adverse weather)" if any("Wind" in r or "Weather" in r for r in state.hard_failure_reasons) else "PASS (Weather envelope verified)"
+
     trace.findings = [
-        f"Validation Verdict: {state.validation_verdict}",
-        f"Total Hard Failures: {len(state.hard_failure_reasons)}"
+        f"1. Student 1 (Competency Audit): {competency_status}",
+        f"2. Student 2 (Equipment & Isolation): {equipment_status}",
+        f"3. Student 4 (SIMOPS & Site Conditions): {simops_status}",
+        f"4. Student 4 (Weather Tool Envelope): {weather_status}",
+        f"5. Final Deterministic Clearance Gate: {state.validation_verdict} ({len(state.hard_failure_reasons)} hard safety violations)."
     ]
 
     trace.latency_ms = (time.time() - start_time) * 1000

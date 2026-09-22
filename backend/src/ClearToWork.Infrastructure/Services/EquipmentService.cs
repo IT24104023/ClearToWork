@@ -48,6 +48,127 @@ public class EquipmentService : IEquipmentService
         return asset == null ? null : MapAssetToDto(asset);
     }
 
+    public async Task<AssetDto> CreateAssetAsync(CreateAssetRequest request)
+    {
+        Enum.TryParse<AssetCategory>(request.Category, true, out var catEnum);
+
+        var asset = new Asset
+        {
+            Id = Guid.NewGuid(),
+            AssetTag = request.AssetTag.Trim().ToUpperInvariant(),
+            Name = request.Name.Trim(),
+            Category = catEnum,
+            Status = AssetStatus.Available,
+            CurrentZoneId = request.CurrentZoneId
+        };
+
+        _context.Assets.Add(asset);
+        await _context.SaveChangesAsync();
+        return (await GetAssetByIdAsync(asset.Id))!;
+    }
+
+    public async Task<AssetDto?> UpdateAssetAsync(Guid id, UpdateAssetRequest request)
+    {
+        var asset = await _context.Assets
+            .Include(a => a.CalibrationRecords)
+            .Include(a => a.InspectionRecords)
+            .FirstOrDefaultAsync(a => a.Id == id);
+
+        if (asset == null) return null;
+
+        if (Enum.TryParse<AssetCategory>(request.Category, true, out var catEnum))
+        {
+            asset.Category = catEnum;
+        }
+
+        if (Enum.TryParse<AssetStatus>(request.Status, true, out var statEnum))
+        {
+            asset.Status = statEnum;
+        }
+
+        asset.Name = request.Name.Trim();
+        asset.CurrentZoneId = request.CurrentZoneId;
+
+        await _context.SaveChangesAsync();
+        return await GetAssetByIdAsync(asset.Id);
+    }
+
+    public async Task<bool> DeleteAssetAsync(Guid id)
+    {
+        var asset = await _context.Assets.FindAsync(id);
+        if (asset == null) return false;
+
+        var inspections = await _context.InspectionRecords.Where(i => i.AssetId == id).ToListAsync();
+        _context.InspectionRecords.RemoveRange(inspections);
+
+        var calibrations = await _context.CalibrationRecords.Where(c => c.AssetId == id).ToListAsync();
+        _context.CalibrationRecords.RemoveRange(calibrations);
+
+        _context.Assets.Remove(asset);
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<bool> AddInspectionRecordAsync(Guid assetId, CreateInspectionRequest request)
+    {
+        var asset = await _context.Assets.FindAsync(assetId);
+        if (asset == null) return false;
+
+        var record = new InspectionRecord
+        {
+            Id = Guid.NewGuid(),
+            AssetId = assetId,
+            InspectionDate = request.InspectionDate,
+            NextInspectionDate = request.NextInspectionDate,
+            InspectorName = request.InspectorName.Trim(),
+            Passed = request.Passed,
+            Notes = request.Notes
+        };
+
+        _context.InspectionRecords.Add(record);
+        if (!request.Passed)
+        {
+            asset.Status = AssetStatus.OutOfService;
+        }
+        else if (asset.Status == AssetStatus.OutOfService)
+        {
+            asset.Status = AssetStatus.Available;
+        }
+
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<bool> AddCalibrationRecordAsync(Guid assetId, CreateCalibrationRequest request)
+    {
+        var asset = await _context.Assets.FindAsync(assetId);
+        if (asset == null) return false;
+
+        var record = new CalibrationRecord
+        {
+            Id = Guid.NewGuid(),
+            AssetId = assetId,
+            CalibrationDate = request.CalibrationDate,
+            NextCalibrationDate = request.NextCalibrationDate,
+            CalibratedBy = request.CalibratedBy.Trim(),
+            CertificateNumber = request.CertificateNumber.Trim(),
+            PassStatus = request.PassStatus
+        };
+
+        _context.CalibrationRecords.Add(record);
+        if (!request.PassStatus)
+        {
+            asset.Status = AssetStatus.OutOfService;
+        }
+        else if (asset.Status == AssetStatus.OutOfService)
+        {
+            asset.Status = AssetStatus.Available;
+        }
+
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
     public async Task<EquipmentReadinessResponse> CheckReadinessAsync(EquipmentReadinessRequest request)
     {
         var assets = await _context.Assets
@@ -207,6 +328,62 @@ public class EquipmentService : IEquipmentService
             p.LockedByUserId,
             p.LockedAt
         )).ToList();
+    }
+
+    public async Task<IsolationPointDto> CreateIsolationPointAsync(CreateIsolationPointRequest request)
+    {
+        Enum.TryParse<IsolationType>(request.Type, true, out var typeEnum);
+        Enum.TryParse<IsolationState>(request.State, true, out var stateEnum);
+
+        var point = new IsolationPoint
+        {
+            Id = Guid.NewGuid(),
+            ZoneId = request.ZoneId,
+            TagIdentifier = request.TagIdentifier.Trim(),
+            Description = request.Description.Trim(),
+            Type = typeEnum,
+            State = stateEnum
+        };
+
+        _context.IsolationPoints.Add(point);
+        await _context.SaveChangesAsync();
+
+        return new IsolationPointDto(
+            point.Id,
+            point.ZoneId,
+            point.TagIdentifier,
+            point.Description,
+            point.Type.ToString(),
+            point.State.ToString(),
+            point.LockedByUserId,
+            point.LockedAt
+        );
+    }
+
+    public async Task<IsolationPointDto?> UpdateIsolationPointStateAsync(Guid id, UpdateIsolationPointStateRequest request)
+    {
+        var point = await _context.IsolationPoints.FindAsync(id);
+        if (point == null) return null;
+
+        if (Enum.TryParse<IsolationState>(request.State, true, out var stateEnum))
+        {
+            point.State = stateEnum;
+            point.LockedByUserId = request.LockedByUserId;
+            point.LockedAt = stateEnum != IsolationState.Open ? DateTime.UtcNow : null;
+        }
+
+        await _context.SaveChangesAsync();
+
+        return new IsolationPointDto(
+            point.Id,
+            point.ZoneId,
+            point.TagIdentifier,
+            point.Description,
+            point.Type.ToString(),
+            point.State.ToString(),
+            point.LockedByUserId,
+            point.LockedAt
+        );
     }
 
     private static AssetDto MapAssetToDto(Asset a)

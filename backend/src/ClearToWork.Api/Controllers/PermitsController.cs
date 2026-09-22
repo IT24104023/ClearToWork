@@ -62,6 +62,50 @@ public class PermitsController : ControllerBase
         return CreatedAtAction(nameof(GetPermitById), new { id = created.Id }, created);
     }
 
+    [HttpPut("{id:guid}")]
+    [Authorize(Roles = "ContractorSupervisor,AreaSupervisor,Administrator")]
+    public async Task<ActionResult<PermitDetailsDto>> UpdatePermitDraft(Guid id, [FromBody] UpdatePermitRequest request)
+    {
+        var userIdStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (!Guid.TryParse(userIdStr, out var supervisorId))
+        {
+            return Unauthorized();
+        }
+
+        try
+        {
+            var updated = await _permitService.UpdatePermitDraftAsync(id, supervisorId, request);
+            if (updated == null) return NotFound(new { message = "Permit not found." });
+            return Ok(updated);
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
+    [HttpDelete("{id:guid}")]
+    [Authorize(Roles = "ContractorSupervisor,AreaSupervisor,Administrator")]
+    public async Task<IActionResult> DeletePermitDraft(Guid id)
+    {
+        var userIdStr = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (!Guid.TryParse(userIdStr, out var supervisorId))
+        {
+            return Unauthorized();
+        }
+
+        try
+        {
+            var success = await _permitService.DeletePermitDraftAsync(id, supervisorId);
+            if (!success) return NotFound(new { message = "Permit not found." });
+            return Ok(new { message = "Permit draft successfully deleted.", id });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
+
     [HttpPost("{id:guid}/submit")]
     [Authorize(Roles = "ContractorSupervisor,AreaSupervisor,Administrator")]
     public async Task<ActionResult<ValidationReportDto>> SubmitPermit(Guid id)

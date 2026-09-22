@@ -57,3 +57,117 @@ public record AnalyticsSafetySummaryDto(
     Dictionary<string, int> RefusalCausesRanking,
     Dictionary<string, int> PermitsByZoneDistribution
 );
+
+// ─── Student 4: Safety Observations DTOs ─────────────────────────────────────
+public record ObservationDto(
+    Guid Id,
+    Guid ZoneId,
+    string ZoneCode,
+    string ZoneName,
+    Guid ReportedByUserId,
+    string ReporterName,
+    string Category,
+    string Description,
+    DateTime LoggedAt,
+    DateTime CreatedAt
+);
+
+public record CreateObservationRequest(
+    Guid ZoneId,
+    string Category,
+    string Description
+);
+
+public record UpdateObservationRequest(
+    Guid? ZoneId,
+    string Category,
+    string Description
+);
+
+// ─── Student 4: Rulebook & Hazard Types DTOs ─────────────────────────────────
+public record ControlMeasureDto(
+    Guid Id,
+    Guid HazardTypeId,
+    string Code,
+    string RequirementDescription,
+    bool IsMandatory
+);
+
+public record HazardTypeDto(
+    Guid Id,
+    string Code,
+    string Name,
+    string SeverityLevel,
+    double? MaxWindSpeedKmh,
+    bool ProhibitedInRain,
+    List<ControlMeasureDto> ControlMeasures
+);
+
+public record CreateHazardTypeRequest(
+    string Code,
+    string Name,
+    string SeverityLevel,
+    double? MaxWindSpeedKmh,
+    bool ProhibitedInRain
+);
+
+public record UpdateHazardTypeRequest(
+    string Name,
+    string SeverityLevel,
+    double? MaxWindSpeedKmh,
+    bool ProhibitedInRain
+);
+
+public record CreateControlMeasureRequest(
+    Guid HazardTypeId,
+    string Code,
+    string RequirementDescription,
+    bool IsMandatory
+);
+
+public record UpdateControlMeasureRequest(
+    string RequirementDescription,
+    bool IsMandatory
+);
+
+// ─── Student 4: Incompatibility & SIMOPS Matrix DTOs ────────────────────────
+public record IncompatibilityRuleDto(
+    Guid Id,
+    string RuleCode,
+    Guid PrimaryHazardId,
+    string PrimaryHazardCode,
+    string PrimaryHazardName,
+    Guid ConflictingHazardId,
+    string ConflictingHazardCode,
+    string ConflictingHazardName,
+    string Reason,
+    bool AppliesToAdjacentZones
+);
+
+public record CreateIncompatibilityRuleRequest(
+    string RuleCode,
+    Guid PrimaryHazardId,
+    Guid ConflictingHazardId,
+    string Reason,
+    bool AppliesToAdjacentZones
+);
+
+public record UpdateIncompatibilityRuleRequest(
+    string Reason,
+    bool AppliesToAdjacentZones
+);
+
+public record ZoneAdjacencyDto(
+    Guid ZoneId,
+    string ZoneCode,
+    string ZoneName,
+    Guid AdjacentZoneId,
+    string AdjacentZoneCode,
+    string AdjacentZoneName
+);
+
+public record AddZoneAdjacencyRequest(
+    Guid ZoneId,
+    Guid AdjacentZoneId
+);
+

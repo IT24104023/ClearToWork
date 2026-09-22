@@ -53,3 +53,42 @@ public record ExpiryForecastItem(
     DateTime ExpiryDate,
     int DaysRemaining
 );
+
+public record CreateWorkerRequest(
+    string FirstName,
+    string LastName,
+    string BadgeNumber,
+    string Trade,
+    Guid ContractorId
+);
+
+public record UpdateWorkerRequest(
+    string FirstName,
+    string LastName,
+    string Trade,
+    bool IsActive,
+    Guid? ContractorId = null
+);
+
+public record CreateCertificateRequest(
+    Guid CertificateTypeId,
+    string CertificateNumber,
+    string IssuingBody,
+    DateTime IssueDate,
+    DateTime ExpiryDate
+);
+
+public record ContractorDto(
+    Guid Id,
+    string CompanyName,
+    string LicenseNumber,
+    string ContactEmail
+);
+
+public record CertificateTypeDto(
+    Guid Id,
+    string Code,
+    string Name,
+    string RequiredForTrade,
+    int ValidityMonths
+);

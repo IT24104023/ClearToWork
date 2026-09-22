@@ -6,17 +6,20 @@ import {
   useGetPermitsQuery,
   useSubmitPermitForAiReviewMutation,
   useCreatePermitDraftMutation,
+  useDeletePermitDraftMutation,
   useGetZonesQuery,
   useGetWorkersQuery,
   useGetEquipmentQuery,
 } from '../store/apiSlice';
 import { StatusBadge } from '../components/StatusBadge';
+import { EditPermitModal } from '../components/EditPermitModal';
 import { useTranslation } from '../context/I18nContext';
 import {
   Search, Filter, Cpu, ArrowUpRight, AlertCircle, RefreshCw,
-  FileText, Plus, X,
+  FileText, Plus, X, Pencil, Trash2,
 } from 'lucide-react';
-import type { PermitStatus } from '../types';
+import type { PermitStatus, PermitDetails } from '../types';
+
 
 // ─── New Permit Modal ────────────────────────────────────────────────────────
 
@@ -312,15 +315,17 @@ export const PermitsListPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
   const [showNewPermit, setShowNewPermit] = useState(false);
+  const [editingPermit, setEditingPermit] = useState<PermitDetails | null>(null);
   const navigate = useNavigate();
 
   const user = useSelector((state: RootState) => state.auth.user);
-  // Per RBAC: Admins, AreaSupervisors, and ContractorSupervisors can create permits
-  // SafetyOfficers cannot create permits
+  // Per RBAC: Admins, AreaSupervisors, and ContractorSupervisors can create/edit permits
+  // SafetyOfficers cannot create/edit permits
   const canCreatePermit = user?.role !== 'SafetyOfficer';
 
   const { data: permits = [], isLoading, error, refetch } = useGetPermitsQuery();
   const [submitForAiReview, { isLoading: isSubmitting }] = useSubmitPermitForAiReviewMutation();
+  const [deletePermit] = useDeletePermitDraftMutation();
 
   const handleTriggerAiReview = async (e: React.MouseEvent, permitId: string) => {
     e.stopPropagation();
@@ -330,6 +335,23 @@ export const PermitsListPage: React.FC = () => {
     } catch (err: any) {
       alert(`AI Review failed: ${err.data?.message || 'Server error'}`);
     }
+  };
+
+  const handleDeleteDraft = async (e: React.MouseEvent, permit: PermitDetails) => {
+    e.stopPropagation();
+    if (window.confirm(`Are you sure you want to delete permit draft ${permit.permitNumber}?`)) {
+      try {
+        await deletePermit(permit.id).unwrap();
+        refetch();
+      } catch (err: any) {
+        alert(err?.data?.message || 'Failed to delete permit draft.');
+      }
+    }
+  };
+
+  const handleEditDraft = (e: React.MouseEvent, permit: PermitDetails) => {
+    e.stopPropagation();
+    setEditingPermit(permit);
   };
 
   const filteredPermits = permits.filter((p) => {
@@ -353,6 +375,14 @@ export const PermitsListPage: React.FC = () => {
         <NewPermitModal
           onClose={() => setShowNewPermit(false)}
           onCreated={() => refetch()}
+        />
+      )}
+
+      {editingPermit && (
+        <EditPermitModal
+          permit={editingPermit}
+          onClose={() => setEditingPermit(null)}
+          onUpdated={() => refetch()}
         />
       )}
 
@@ -502,7 +532,26 @@ export const PermitsListPage: React.FC = () => {
                     <td className="py-3.5 px-4">
                       <StatusBadge status={permit.status as PermitStatus} />
                     </td>
-                    <td className="py-3.5 px-4 text-right space-x-2">
+                    <td className="py-3.5 px-4 text-right space-x-1.5 whitespace-nowrap">
+                      {canCreatePermit && (permit.status === 'Draft' || permit.status === 'Refused') && (
+                        <>
+                          <button
+                            onClick={(e) => handleEditDraft(e, permit)}
+                            title="Edit Permit Draft"
+                            className="inline-flex items-center p-1.5 text-slate-400 hover:text-amber-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition"
+                          >
+                            <Pencil className="w-3.5 h-3.5" />
+                          </button>
+                          <button
+                            onClick={(e) => handleDeleteDraft(e, permit)}
+                            title="Delete Permit Draft"
+                            className="inline-flex items-center p-1.5 text-slate-400 hover:text-rose-500 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
+                        </>
+                      )}
+
                       {permit.status === 'Draft' && (
                         <button
                           onClick={(e) => handleTriggerAiReview(e, permit.id)}
@@ -510,10 +559,10 @@ export const PermitsListPage: React.FC = () => {
                           className="inline-flex items-center gap-1 px-2.5 py-1 bg-purple-100 dark:bg-purple-900/60 hover:bg-purple-200 dark:hover:bg-purple-800 text-purple-800 dark:text-purple-300 border border-purple-300 dark:border-purple-700 rounded-lg text-[11px] font-semibold transition"
                         >
                           <Cpu className="w-3 h-3" />
-                          <span>Trigger AI Review</span>
+                          <span>AI Review</span>
                         </button>
                       )}
-                      <span className="inline-flex items-center gap-1 text-slate-400 dark:text-slate-400 hover:text-amber-600 dark:hover:text-amber-400 font-semibold text-xs">
+                      <span className="inline-flex items-center gap-1 text-slate-400 dark:text-slate-400 hover:text-amber-600 dark:hover:text-amber-400 font-semibold text-xs ml-1">
                         <span>Details</span>
                         <ArrowUpRight className="w-3.5 h-3.5" />
                       </span>
@@ -528,3 +577,4 @@ export const PermitsListPage: React.FC = () => {
     </div>
   );
 };
+

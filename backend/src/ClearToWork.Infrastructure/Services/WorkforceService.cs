@@ -64,7 +64,105 @@ public class WorkforceService : IWorkforceService
 
         _context.Workers.Add(worker);
         await _context.SaveChangesAsync();
-        return MapWorkerToDto(worker);
+        return (await GetWorkerByIdAsync(worker.Id))!;
+    }
+
+    public async Task<WorkerDto?> UpdateWorkerAsync(Guid id, UpdateWorkerRequest request)
+    {
+        var worker = await _context.Workers
+            .Include(w => w.Contractor)
+            .Include(w => w.Certificates)
+                .ThenInclude(c => c.CertificateType)
+            .FirstOrDefaultAsync(w => w.Id == id);
+
+        if (worker == null) return null;
+
+        worker.FirstName = request.FirstName.Trim();
+        worker.LastName = request.LastName.Trim();
+        worker.Trade = request.Trade.Trim();
+        worker.IsActive = request.IsActive;
+        if (request.ContractorId.HasValue && request.ContractorId.Value != Guid.Empty)
+        {
+            worker.ContractorId = request.ContractorId.Value;
+        }
+
+        await _context.SaveChangesAsync();
+        return await GetWorkerByIdAsync(worker.Id);
+    }
+
+    public async Task<bool> DeleteWorkerAsync(Guid id)
+    {
+        var worker = await _context.Workers.FindAsync(id);
+        if (worker == null) return false;
+
+        // Remove certificates first
+        var certs = await _context.WorkerCertificates.Where(c => c.WorkerId == id).ToListAsync();
+        _context.WorkerCertificates.RemoveRange(certs);
+
+        _context.Workers.Remove(worker);
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<WorkerCertificateDto?> AddWorkerCertificateAsync(Guid workerId, CreateCertificateRequest request)
+    {
+        var worker = await _context.Workers.FindAsync(workerId);
+        if (worker == null) return null;
+
+        var certType = await _context.CertificateTypes.FindAsync(request.CertificateTypeId);
+
+        var cert = new WorkerCertificate
+        {
+            Id = Guid.NewGuid(),
+            WorkerId = workerId,
+            CertificateTypeId = request.CertificateTypeId,
+            CertificateNumber = request.CertificateNumber.Trim(),
+            IssuingBody = request.IssuingBody.Trim(),
+            IssueDate = request.IssueDate,
+            ExpiryDate = request.ExpiryDate,
+            Status = request.ExpiryDate > DateTime.UtcNow ? CertificateStatus.Valid : CertificateStatus.Expired
+        };
+
+        _context.WorkerCertificates.Add(cert);
+        await _context.SaveChangesAsync();
+
+        return new WorkerCertificateDto(
+            cert.Id,
+            certType?.Code ?? "",
+            certType?.Name ?? "",
+            cert.CertificateNumber,
+            cert.IssuingBody,
+            cert.IssueDate,
+            cert.ExpiryDate,
+            cert.Status.ToString(),
+            (cert.ExpiryDate.Date - DateTime.UtcNow.Date).Days
+        );
+    }
+
+    public async Task<bool> DeleteWorkerCertificateAsync(Guid certificateId)
+    {
+        var cert = await _context.WorkerCertificates.FindAsync(certificateId);
+        if (cert == null) return false;
+
+        _context.WorkerCertificates.Remove(cert);
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<List<ContractorDto>> GetContractorsAsync()
+    {
+        return await _context.Contractors
+            .OrderBy(c => c.CompanyName)
+            .Select(c => new ContractorDto(c.Id, c.CompanyName, c.LicenseNumber, c.ContactEmail))
+            .ToListAsync();
+    }
+
+    public async Task<List<CertificateTypeDto>> GetCertificateTypesAsync()
+    {
+        return await _context.CertificateTypes
+            .OrderBy(ct => ct.Name)
+            .Select(ct => new CertificateTypeDto(ct.Id, ct.Code, ct.Name, ct.RequiredForTrade, ct.ValidityMonths))
+            .ToListAsync();
     }
 
     public async Task<EligibilityCheckResponse> CheckEligibilityAsync(EligibilityCheckRequest request)

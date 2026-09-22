@@ -13,6 +13,17 @@ public record CreatePermitRequest(
     List<string> PhotoUrls
 );
 
+public record UpdatePermitRequest(
+    Guid PermitTypeId,
+    Guid ZoneId,
+    string ObjectiveDescription,
+    DateTime ScheduledStartTime,
+    DateTime ScheduledEndTime,
+    List<Guid> WorkerIds,
+    List<Guid> AssetIds,
+    List<string>? PhotoUrls = null
+);
+
 public record PermitDetailsDto(
     Guid Id,
     string PermitNumber,
