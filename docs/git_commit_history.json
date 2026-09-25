@@ -1,0 +1,163 @@
+[
+  {
+    "CommitHash": "08f41c2",
+    "AuthorName": "Oshini",
+    "AuthorEmail": "oshini@cleartowork.com",
+    "Date": "2026-09-23",
+    "Subject": "feat(equipment): implement gas monitor calibration audit, LOTO isolation points, and resource agent node"
+  },
+  {
+    "CommitHash": "6facf1b",
+    "AuthorName": "Mohammed Zakee",
+    "AuthorEmail": "it24104023@my.sliit.lk",
+    "Date": "2026-09-23",
+    "Subject": "feat(permits): implement Permit-to-Work core foundation, JWT authentication, and Planning Coordinator Node"
+  },
+  {
+    "CommitHash": "ee03d72",
+    "AuthorName": "Dinithi",
+    "AuthorEmail": "It24104198@my.sliit.lk",
+    "Date": "2026-09-23",
+    "Subject": "feat(workforce): implement worker trade tracking, 30-day credential expiry forecast, and competency agent node"
+  },
+  {
+    "CommitHash": "245e65f",
+    "AuthorName": "Chemini",
+    "AuthorEmail": "IT24104054@my.sliit.lk",
+    "Date": "2026-09-23",
+    "Subject": "feat(simops): implement Hazard Zones, SIMOPS clash matrix, and hazard control agent node"
+  },
+  {
+    "CommitHash": "7cfe0e4",
+    "AuthorName": "Mohammed Zakee",
+    "AuthorEmail": "it24104023@my.sliit.lk",
+    "Date": "2026-09-23",
+    "Subject": "chore: remove comprehensive README for active development phase"
+  },
+  {
+    "CommitHash": "f6155da",
+    "AuthorName": "Dinithi",
+    "AuthorEmail": "It24104198@my.sliit.lk",
+    "Date": "2026-09-23",
+    "Subject": "feat(workforce): implement worker trade tracking, 30-day credential expiry forecast, and competency agent node"
+  },
+  {
+    "CommitHash": "12a5514",
+    "AuthorName": "Chemini",
+    "AuthorEmail": "IT24104054@my.sliit.lk",
+    "Date": "2026-09-22",
+    "Subject": "feat(simops): implement Hazard Zones, SIMOPS clash matrix, and hazard control agent node"
+  },
+  {
+    "CommitHash": "50bae80",
+    "AuthorName": "Mohammed Zakee",
+    "AuthorEmail": "it24104023@my.sliit.lk",
+    "Date": "2026-09-22",
+    "Subject": "feat(permits): implement Permit-to-Work core foundation, JWT authentication, and Planning Coordinator Node"
+  },
+  {
+    "CommitHash": "6bc09f9",
+    "AuthorName": "Mohammed Zakee",
+    "AuthorEmail": "it24104023@my.sliit.lk",
+    "Date": "2026-09-22",
+    "Subject": "Add project title to README"
+  },
+  {
+    "CommitHash": "6924fd3",
+    "AuthorName": "IT24104023",
+    "AuthorEmail": "mohammedzakee2006@gmail.com",
+    "Date": "2026-09-22",
+    "Subject": "feat: complete CRUD for students 1-4, add Rulebook and Conflict Matrix editors, and enhance multi-agent validation trace"
+  },
+  {
+    "CommitHash": "465ed44",
+    "AuthorName": "IT24104023",
+    "AuthorEmail": "mohammedzakee2006@gmail.com",
+    "Date": "2026-09-16",
+    "Subject": "feat: complete trilingual i18n, full light/dark theme parity, mobile responsiveness, and database access guides"
+  },
+  {
+    "CommitHash": "f1d4f35",
+    "AuthorName": "IT24104023",
+    "AuthorEmail": "mohammedzakee2006@gmail.com",
+    "Date": "2026-09-16",
+    "Subject": "Add comprehensive root README.md covering architecture, multi-agent workflow, student ownership, and setup instructions"
+  },
+  {
+    "CommitHash": "231f388",
+    "AuthorName": "IT24104023",
+    "AuthorEmail": "mohammedzakee2006@gmail.com",
+    "Date": "2026-09-16",
+    "Subject": "Fix i18n trilingual translations across all pages and enable full dynamic light/dark mode support"
+  },
+  {
+    "CommitHash": "68575ef",
+    "AuthorName": "IT24104023",
+    "AuthorEmail": "mohammedzakee2006@gmail.com",
+    "Date": "2026-09-16",
+    "Subject": "Embed core engineering team photo into AboutUsPage"
+  },
+  {
+    "CommitHash": "d34135b",
+    "AuthorName": "IT24104023",
+    "AuthorEmail": "mohammedzakee2006@gmail.com",
+    "Date": "2026-09-16",
+    "Subject": "Add 3D animated Landing HomePage, About Us, Contact Us, Register pages, PixelSwap, and CardNav"
+  },
+  {
+    "CommitHash": "ece524c",
+    "AuthorName": "IT24104023",
+    "AuthorEmail": "mohammedzakee2006@gmail.com",
+    "Date": "2026-09-16",
+    "Subject": "Add root redirect to Swagger and /health endpoint on backend"
+  },
+  {
+    "CommitHash": "85c0e4e",
+    "AuthorName": "IT24104023",
+    "AuthorEmail": "mohammedzakee2006@gmail.com",
+    "Date": "2026-09-15",
+    "Subject": "Fix Swagger RouteTemplate for reverse-proxy routing"
+  },
+  {
+    "CommitHash": "7ea2dac",
+    "AuthorName": "IT24104023",
+    "AuthorEmail": "mohammedzakee2006@gmail.com",
+    "Date": "2026-09-15",
+    "Subject": "Update web/Dockerfile to node:20-alpine and configure nginx port 80/10000 with SSL proxying"
+  },
+  {
+    "CommitHash": "387caae",
+    "AuthorName": "IT24104023",
+    "AuthorEmail": "mohammedzakee2006@gmail.com",
+    "Date": "2026-09-15",
+    "Subject": "Keep runtime: docker across all 3 services in render.yaml with updated nginx proxy"
+  },
+  {
+    "CommitHash": "ad915f2",
+    "AuthorName": "IT24104023",
+    "AuthorEmail": "mohammedzakee2006@gmail.com",
+    "Date": "2026-09-15",
+    "Subject": "Fix render.yaml schema with type: web and runtime: static for frontend"
+  },
+  {
+    "CommitHash": "460952b",
+    "AuthorName": "IT24104023",
+    "AuthorEmail": "mohammedzakee2006@gmail.com",
+    "Date": "2026-09-15",
+    "Subject": "Fix Dockerfiles, CORS, Swagger, and optimize frontend as static site in render blueprint"
+  },
+  {
+    "CommitHash": "cb897c5",
+    "AuthorName": "IT24104023",
+    "AuthorEmail": "mohammedzakee2006@gmail.com",
+    "Date": "2026-09-15",
+    "Subject": "Add full-stack ClearToWork AI codebase with Docker and Render deployment setup"
+  },
+  {
+    "CommitHash": "baa2ce1",
+    "AuthorName": "IT24104023",
+    "AuthorEmail": "mohammedzakee2006@gmail.com",
+    "Date": "2026-09-13",
+    "Subject": "feat: initial ClearToWork AI full-stack foundation with .NET 8 API, LangGraph agents, and React UI"
+  }
+]
