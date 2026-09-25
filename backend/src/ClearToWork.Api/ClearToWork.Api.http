@@ -1,6 +1,0 @@
-@ClearToWork.Api_HostAddress = http://localhost:5286
-
-GET {{ClearToWork.Api_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
