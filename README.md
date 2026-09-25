@@ -80,6 +80,44 @@ graph TD
 
 ---
 
+## 📂 Repository Directory Structure
+
+```text
+ClearToWork AI/
+├── 📁 .github/
+│   └── 📁 workflows/
+│       └── ci.yml                 # GitHub Actions CI Build & Test Pipeline
+├── 📁 agents/                     # Python 3.11 LangGraph Multi-Agent Engine
+│   ├── 📁 nodes/                  # AI Agent Nodes (Planning, Competency, Hazard, Validation)
+│   ├── 📁 tools/                  # OpenAPI & Tool Bindings
+│   ├── server.py                  # FastAPI Agent Server
+│   └── Dockerfile                 # Agent Docker Container Manifest
+├── 📁 backend/                    # ASP.NET Core 8 Clean Architecture Solution
+│   ├── ClearToWork.sln            # Visual Studio / .NET Solution File
+│   ├── 📁 src/
+│   │   ├── 📁 ClearToWork.Api/           # Controllers, Middleware, Auth & Swagger
+│   │   ├── 📁 ClearToWork.Application/   # Interfaces, Contracts & DTO Models
+│   │   ├── 📁 ClearToWork.Domain/        # Domain Entities, Enums & Rule Validators
+│   │   └── 📁 ClearToWork.Infrastructure/ # EF Core, JWT Auth & Service Implementations
+│   └── 📁 tests/
+│       └── 📁 ClearToWork.Tests/         # Comprehensive XUnit Unit Test Suites
+├── 📁 web/                        # React 18 + TypeScript + Vite Web Application
+│   ├── 📁 src/
+│   │   ├── 📁 components/         # Reusable UI & Modal Components
+│   │   ├── 📁 pages/              # Module Dashboard Pages
+│   │   ├── 📁 store/              # Redux Toolkit API Store
+│   │   └── 📁 i18n/               # Trilingual Translation Dictionary
+│   ├── index.html                 # HTML Root Template
+│   └── vite.config.ts             # Vite Build Configuration
+├── 📁 docs/                       # Enterprise Documentation & Image Previews
+│   └── 📁 images/                 # Screenshot Previews & Screenshots
+├── docker-compose.yml             # Full-Stack Multi-Container Orchestration
+├── render.yaml                    # Cloud Production Deployment Blueprint
+└── README.md                      # Primary Enterprise Documentation
+```
+
+---
+
 ## 🚀 Key Functional Modules
 
 ### 📋 1. Permits & Planning (Mohammed Zakee — IT24104023)
