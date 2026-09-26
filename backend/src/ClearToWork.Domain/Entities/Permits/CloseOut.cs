@@ -20,4 +20,6 @@ public class CloseOut : BaseEntity
     public string FinalComments { get; set; } = string.Empty;
     public DateTime ClosedAt { get; set; } = DateTime.UtcNow;
     public string ClosedBy { get; set; } = string.Empty;
+    public string? ClosedByUserId { get => ClosedBy; set => ClosedBy = value ?? string.Empty; }
+    public DateTime? SignOffTimestamp { get => ClosedAt; set => ClosedAt = value ?? DateTime.UtcNow; }
 }
