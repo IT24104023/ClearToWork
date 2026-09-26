@@ -381,7 +381,7 @@ public class PermitLifecycleService : IPermitLifecycleService
         {
             Id = Guid.NewGuid(),
             PermitRequestId = permit.Id,
-            OutcomeStatus = report.IsApproved ? WorkflowOutcome.Clear : WorkflowOutcome.Refused_SafeFailure,
+            OutcomeStatus = (report.IsApproved ? WorkflowOutcome.Clear : WorkflowOutcome.Refused_SafeFailure).ToString(),
             DurationMs = durationMs,
             ModelUsed = modelUsed,
             ExecutionTraceJson = JsonSerializer.Serialize(traceObj, jsonOptions),
@@ -475,8 +475,8 @@ public class PermitLifecycleService : IPermitLifecycleService
 
         permit.Status = PermitStatus.Active;
         permit.ActivatedAt = DateTime.UtcNow;
-        permit.ActivationGpsLatitude = request.CurrentLatitude;
-        permit.ActivationGpsLongitude = request.CurrentLongitude;
+        permit.ActivationGpsLatitude = (double)request.CurrentLatitude;
+        permit.ActivationGpsLongitude = (double)request.CurrentLongitude;
 
         await _context.SaveChangesAsync();
         return true;

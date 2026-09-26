@@ -15,7 +15,7 @@ namespace ClearToWork.Infrastructure.Services;
 /// Energy sources isolated under Lockout/Tagout (LOTO) protocols to prevent hazardous energy release.
 /// </summary>
 [JsonConverter(typeof(JsonStringEnumConverter))]
-public enum IsolationType
+public enum LotoIsolationType
 {
     /// <summary>
     /// High/medium/low voltage electrical energy isolated via circuit breakers, disconnect switches, or racked-out contactors.
@@ -166,7 +166,7 @@ public class LotoIsolationPoint
     /// <summary>
     /// Energy category isolated by this device.
     /// </summary>
-    public IsolationType Type { get; set; }
+    public LotoIsolationType Type { get; set; }
 
     /// <summary>
     /// Current physical LOTO state.
