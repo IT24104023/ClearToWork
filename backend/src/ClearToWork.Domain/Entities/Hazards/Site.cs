@@ -15,5 +15,8 @@ public class Site : BaseAuditableEntity
     public string Name { get; set; } = string.Empty;
     public string Code { get; set; } = string.Empty;
     public string Location { get; set; } = string.Empty;
+    public string LocationCode { get => Code; set => Code = value; }
+    public decimal Latitude { get; set; }
+    public decimal Longitude { get; set; }
     public ICollection<Zone> Zones { get; set; } = new List<Zone>();
 }
