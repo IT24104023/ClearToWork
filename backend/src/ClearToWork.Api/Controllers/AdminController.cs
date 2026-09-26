@@ -3,6 +3,12 @@ using ClearToWork.Infrastructure.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using ClearToWork.Domain.Common;
+using ClearToWork.Domain.Entities.Equipment;
+using ClearToWork.Domain.Entities.Hazards;
+using ClearToWork.Domain.Entities.Identity;
+using ClearToWork.Domain.Entities.Permits;
+using ClearToWork.Domain.Entities.Workforce;
 
 namespace ClearToWork.Api.Controllers;
 
