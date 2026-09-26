@@ -14,5 +14,6 @@ public enum AssetStatus
     InUse,
     Maintenance,
     Quarantined,
-    Decommissioned
+    Decommissioned,
+    Reserved
 }

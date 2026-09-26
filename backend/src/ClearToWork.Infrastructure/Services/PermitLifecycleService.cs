@@ -497,7 +497,7 @@ public class PermitLifecycleService : IPermitLifecycleService
         {
             Id = Guid.NewGuid(),
             PermitRequestId = permit.Id,
-            ClosedByUserId = userId,
+            ClosedByUserId = userId.ToString(),
             SiteCleaned = request.SiteCleaned,
             ToolsRemoved = request.ToolsRemoved,
             IsolationsRestored = request.IsolationsRestored,
@@ -551,7 +551,7 @@ public class PermitLifecycleService : IPermitLifecycleService
             p.PermitType?.Code ?? "GENERAL",
             zones.GetValueOrDefault(p.ZoneId, "Unknown Zone"),
             zoneCodes.GetValueOrDefault(p.ZoneId, "ZONE_UNKNOWN"),
-            users.GetValueOrDefault(p.SupervisorId, "Supervisor"),
+            users.GetValueOrDefault(p.SupervisorId ?? Guid.Empty, "Supervisor"),
             p.ObjectiveDescription,
             p.ScheduledStartTime,
             p.ScheduledEndTime,
