@@ -114,11 +114,11 @@ app.MapGet("/db", () => Results.Content(@"<!DOCTYPE html>
 
     <!-- Quick Table Selector Tabs -->
     <ul class='nav nav-tabs mb-4' id='dbTabs' role='tablist'>
-      <li class='nav-item'><button class='nav-link active fw-bold' onclick='showTable("permits")'>📋 Permits Table</button></li>
-      <li class='nav-item'><button class='nav-link fw-bold' onclick='showTable("workforce")'>👷 Workforce Table</button></li>
-      <li class='nav-item'><button class='nav-link fw-bold' onclick='showTable("hazards")'>⚠️ Hazard Zones Table</button></li>
-      <li class='nav-item'><button class='nav-link fw-bold' onclick='showTable("equipment")'>⛽ Equipment Table</button></li>
-      <li class='nav-item'><button class='nav-link fw-bold' onclick='showTable("raw")'>💻 Raw JSON Payload</button></li>
+      <li class='nav-item'><button class='nav-link active fw-bold' onclick="showTable('permits')">📋 Permits Table</button></li>
+      <li class='nav-item'><button class='nav-link fw-bold' onclick="showTable('workforce')">👷 Workforce Table</button></li>
+      <li class='nav-item'><button class='nav-link fw-bold' onclick="showTable('hazards')">⚠️ Hazard Zones Table</button></li>
+      <li class='nav-item'><button class='nav-link fw-bold' onclick="showTable('equipment')">⛽ Equipment Table</button></li>
+      <li class='nav-item'><button class='nav-link fw-bold' onclick="showTable('raw')">💻 Raw JSON Payload</button></li>
     </ul>
 
     <!-- Main Display Card -->
