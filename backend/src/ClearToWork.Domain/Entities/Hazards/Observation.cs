@@ -20,4 +20,5 @@ public class Observation : BaseAuditableEntity
     public Guid ReportedByUserId { get; set; }
     public DateTime ObservedAt { get; set; } = DateTime.UtcNow;
     public DateTime LoggedAt { get; set; } = DateTime.UtcNow;
+    public DateTime? UpdatedAt { get => LastModifiedAt; set => LastModifiedAt = value; }
 }

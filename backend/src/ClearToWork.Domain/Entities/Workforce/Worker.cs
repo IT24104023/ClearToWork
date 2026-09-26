@@ -13,6 +13,7 @@ public class Worker : BaseAuditableEntity
     public string BadgeNumber { get; set; } = string.Empty;
     public string FirstName { get; set; } = string.Empty;
     public string LastName { get; set; } = string.Empty;
+    public string FullName => $"{FirstName} {LastName}".Trim();
     public string Trade { get; set; } = string.Empty;
     public Guid ContractorId { get; set; }
     public Contractor? Contractor { get; set; }
