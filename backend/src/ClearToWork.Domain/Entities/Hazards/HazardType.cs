@@ -16,5 +16,8 @@ public class HazardType : BaseAuditableEntity
     public string Name { get; set; } = string.Empty;
     public string Category { get; set; } = string.Empty;
     public HazardSeverity Severity { get; set; } = HazardSeverity.Medium;
+    public HazardSeverity SeverityLevel { get => Severity; set => Severity = value; }
+    public double? MaxWindSpeedKmh { get; set; }
+    public bool ProhibitedInRain { get; set; }
     public ICollection<ControlMeasure> ControlMeasures { get; set; } = new List<ControlMeasure>();
 }
