@@ -94,7 +94,17 @@ builder.Services.AddSwaggerGen(c =>
             Array.Empty<string>()
         }
     });
+
+    c.DocumentFilter<OpenApiVersionFixFilter>();
 });
+
+public class OpenApiVersionFixFilter : IDocumentFilter
+{
+    public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
+    {
+        swaggerDoc.OpenApi = "3.0.1";
+    }
+}
 
 var app = builder.Build();
 
