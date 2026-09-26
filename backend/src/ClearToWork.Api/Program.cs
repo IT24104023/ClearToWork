@@ -1,11 +1,12 @@
 using System.Text;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using ClearToWork.Infrastructure;
 using ClearToWork.Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.SwaggerGen;
+using Swashbuckle.AspNetCore.Swagger;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -106,11 +107,27 @@ using (var scope = app.Services.CreateScope())
     await DbInitializer.SeedAsync(context);
 }
 
-// 7. HTTP Request Pipeline & Swagger UI with Swagger 2.0 Serialization
+// 7. Custom Route for /swagger/v1/swagger.json returning clean OpenAPI 3.0.1
+app.MapGet("/swagger/v1/swagger.json", (ISwaggerProvider swaggerProvider) =>
+{
+    var doc = swaggerProvider.GetSwagger("v1", null, "/");
+    doc.OpenApi = "3.0.1"; // Force 3.0.1 for Swagger UI compatibility
+    
+    using var writer = new StringWriter();
+    var openApiWriter = new Swashbuckle.AspNetCore.Swagger.OpenApiJsonWriter(writer);
+    doc.SerializeAsV30(openApiWriter);
+    
+    var json = writer.ToString();
+    json = json.Replace("\"openapi\": \"3.0.4\"", "\"openapi\": \"3.0.1\"")
+               .Replace("\"openapi\":\"3.0.4\"", "\"openapi\":\"3.0.1\"");
+               
+    return Results.Content(json, "application/json;charset=utf-8");
+}).ExcludeFromDescription();
+
+// 8. HTTP Request Pipeline & Swagger UI
 app.UseSwagger(c =>
 {
     c.RouteTemplate = "swagger/{documentName}/swagger.json";
-    c.SerializeAsV2 = true;
 });
 
 app.UseSwaggerUI(c =>
@@ -118,6 +135,25 @@ app.UseSwaggerUI(c =>
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "ClearToWork AI API v1");
     c.RoutePrefix = "swagger";
 });
+
+// 9. Alternative Modern RapiDoc API Explorer at /docs
+app.MapGet("/docs", () => Results.Content(@"<!text/html>
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ClearToWork AI API Explorer</title>
+  <script type='module' src='https://unpkg.com/rapidoc/dist/rapidoc-min.js'></script>
+</head>
+<body>
+  <rapi-doc 
+    spec-url='/swagger/v1/swagger.json'
+    theme='dark'
+    show-header='true'
+    allow-authentication='true'
+    render-style='read'
+  > </rapi-doc>
+</body>
+</html>", "text/html")).ExcludeFromDescription();
 
 app.UseCors("AllowFrontendClients");
 app.UseAuthentication();
