@@ -26,6 +26,8 @@ public class PermitRequest : BaseAuditableEntity
     public Guid? SupervisorId { get; set; }
     public string? PermitQrToken { get; set; }
     public DateTime? ActivatedAt { get; set; }
+    public double? ActivationGpsLatitude { get; set; }
+    public double? ActivationGpsLongitude { get; set; }
     public DateTime ScheduledStartTime { get; set; } = DateTime.UtcNow;
     public DateTime ScheduledEndTime { get; set; } = DateTime.UtcNow.AddHours(12);
     public ICollection<PermitWorker> AssignedWorkers { get; set; } = new List<PermitWorker>();

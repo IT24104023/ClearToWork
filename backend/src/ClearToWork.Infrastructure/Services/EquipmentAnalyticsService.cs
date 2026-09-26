@@ -312,7 +312,7 @@ public interface IEquipmentAnalyticsService
     EquipmentAnalyticsSummary AggregateEquipmentAnalytics(
         IEnumerable<EquipmentItem> equipment,
         IEnumerable<EquipmentCheckoutRecord> checkouts,
-        IEnumerable<IsolationPoint> isolationPoints,
+        IEnumerable<LotoIsolationPoint> isolationPoints,
         IEnumerable<GasReading> gasReadings,
         IEnumerable<WorkerSitePresence>? workerPresences = null,
         DateTime? asOfUtc = null);
@@ -336,7 +336,7 @@ public interface IEquipmentAnalyticsService
     /// Evaluates Lockout/Tagout (LOTO) isolation point compliance, lock application, and orphaned padlocks.
     /// </summary>
     LotoComplianceMetrics CalculateLotoMetrics(
-        IEnumerable<IsolationPoint> isolationPoints,
+        IEnumerable<LotoIsolationPoint> isolationPoints,
         IEnumerable<WorkerSitePresence>? workerPresences = null,
         DateTime? asOfUtc = null);
 
@@ -383,7 +383,7 @@ public class EquipmentAnalyticsService : IEquipmentAnalyticsService
     public EquipmentAnalyticsSummary AggregateEquipmentAnalytics(
         IEnumerable<EquipmentItem> equipment,
         IEnumerable<EquipmentCheckoutRecord> checkouts,
-        IEnumerable<IsolationPoint> isolationPoints,
+        IEnumerable<LotoIsolationPoint> isolationPoints,
         IEnumerable<GasReading> gasReadings,
         IEnumerable<WorkerSitePresence>? workerPresences = null,
         DateTime? asOfUtc = null)
@@ -566,7 +566,7 @@ public class EquipmentAnalyticsService : IEquipmentAnalyticsService
 
     /// <inheritdoc />
     public LotoComplianceMetrics CalculateLotoMetrics(
-        IEnumerable<IsolationPoint> isolationPoints,
+        IEnumerable<LotoIsolationPoint> isolationPoints,
         IEnumerable<WorkerSitePresence>? workerPresences = null,
         DateTime? asOfUtc = null)
     {
@@ -581,9 +581,9 @@ public class EquipmentAnalyticsService : IEquipmentAnalyticsService
             return new LotoComplianceMetrics(0, 0, 0, 0, 0, 0, 0, 100.0);
         }
 
-        var lockedCount = pointsList.Count(p => p.State is IsolationState.LockedIsolated or IsolationState.VerifiedZeroEnergy);
+        var lockedCount = pointsList.Count(p => p.State is LotoIsolationState.LockedIsolated or LotoIsolationState.VerifiedZeroEnergy);
         var zeroEnergyCount = pointsList.Count(p => p.ZeroEnergyVerified);
-        var openCount = pointsList.Count(p => p.State == IsolationState.OpenDeIsolated);
+        var openCount = pointsList.Count(p => p.State == LotoIsolationState.OpenDeIsolated);
 
         var activePermitIds = pointsList
             .Where(p => p.ActivePermitId.HasValue)
@@ -602,7 +602,7 @@ public class EquipmentAnalyticsService : IEquipmentAnalyticsService
         if (lockedCount > 0)
         {
             var fullyCompliantLocked = pointsList.Count(p =>
-                (p.State is IsolationState.LockedIsolated or IsolationState.VerifiedZeroEnergy) &&
+                (p.State is LotoIsolationState.LockedIsolated or LotoIsolationState.VerifiedZeroEnergy) &&
                 p.ZeroEnergyVerified &&
                 p.AppliedLocks.Count > 0 &&
                 !orphanedLocks.Any(o => o.IsolationPointId == p.Id));
