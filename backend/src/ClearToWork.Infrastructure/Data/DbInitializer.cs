@@ -38,8 +38,8 @@ public static class DbInitializer
             SiteId = site.Id,
             Code = "ZONE-A1",
             Name = "Crude Distillation Unit Deck",
-            Latitude = 25.2048m,
-            Longitude = 55.2708m,
+            Latitude = 25.2048,
+            Longitude = 55.2708,
             RadiusMeters = 50,
             QrCodePayload = "QR-ZONE-A1-CRUDE-DECK",
             IsActive = true
@@ -51,8 +51,8 @@ public static class DbInitializer
             SiteId = site.Id,
             Code = "ZONE-B2",
             Name = "Hydrocracker & Gas Storage Tank Farm",
-            Latitude = 25.2055m,
-            Longitude = 55.2715m,
+            Latitude = 25.2055,
+            Longitude = 55.2715,
             RadiusMeters = 75,
             QrCodePayload = "QR-ZONE-B2-HYDROCRACKER",
             IsActive = true

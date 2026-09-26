@@ -12,6 +12,8 @@ public class Contractor : BaseAuditableEntity
 {
     public string CompanyName { get; set; } = string.Empty;
     public string LicenseNumber { get; set; } = string.Empty;
+    public string RegistrationNumber { get => LicenseNumber; set => LicenseNumber = value; }
+    public string SafetyRating { get; set; } = "A+";
     public string ContactEmail { get; set; } = string.Empty;
     public bool IsSuspended { get; set; } = false;
 
