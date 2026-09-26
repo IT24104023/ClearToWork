@@ -38,6 +38,7 @@ public class AppDbContext : DbContext
     // Student 3: Permit Lifecycle
     public DbSet<PermitType> PermitTypes => Set<PermitType>();
     public DbSet<PermitRequest> PermitRequests => Set<PermitRequest>();
+    public DbSet<PermitRequest> Permits => PermitRequests;
     public DbSet<PermitWorker> PermitWorkers => Set<PermitWorker>();
     public DbSet<PermitAsset> PermitAssets => Set<PermitAsset>();
     public DbSet<EvidencePhoto> EvidencePhotos => Set<EvidencePhoto>();
