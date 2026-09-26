@@ -5,6 +5,7 @@ using ClearToWork.Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -58,7 +59,6 @@ builder.Services.AddCors(options =>
     });
 });
 
-
 // 5. Configure Swagger / OpenAPI with JWT Authorization Support
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -94,17 +94,7 @@ builder.Services.AddSwaggerGen(c =>
             Array.Empty<string>()
         }
     });
-
-    c.DocumentFilter<OpenApiVersionFixFilter>();
 });
-
-public class OpenApiVersionFixFilter : IDocumentFilter
-{
-    public void Apply(OpenApiDocument swaggerDoc, DocumentFilterContext context)
-    {
-        swaggerDoc.OpenApi = "3.0.1";
-    }
-}
 
 var app = builder.Build();
 
@@ -116,18 +106,50 @@ using (var scope = app.Services.CreateScope())
     await DbInitializer.SeedAsync(context);
 }
 
-// 7. HTTP Request Pipeline
+// 7. OpenAPI Version Compatibility Middleware (forces openapi: 3.0.1 for Swagger UI compatibility)
+app.Use(async (context, next) =>
+{
+    if (context.Request.Path.Value != null && context.Request.Path.Value.EndsWith("swagger.json", StringComparison.OrdinalIgnoreCase))
+    {
+        var originalBodyStream = context.Response.Body;
+        using var memoryStream = new MemoryStream();
+        context.Response.Body = memoryStream;
+
+        await next();
+
+        memoryStream.Seek(0, SeekOrigin.Begin);
+        var responseBody = await new StreamReader(memoryStream).ReadToEndAsync();
+        responseBody = responseBody.Replace("\"openapi\": \"3.0.4\"", "\"openapi\": \"3.0.1\"")
+                                   .Replace("\"openapi\":\"3.0.4\"", "\"openapi\":\"3.0.1\"")
+                                   .Replace("\"openapi\": \"3.1.0\"", "\"openapi\": \"3.0.1\"")
+                                   .Replace("\"openapi\":\"3.1.0\"", "\"openapi\":\"3.0.1\"");
+
+        var modifiedBytes = Encoding.UTF8.GetBytes(responseBody);
+        context.Response.Body = originalBodyStream;
+        context.Response.ContentLength = modifiedBytes.Length;
+        await context.Response.Body.WriteAsync(modifiedBytes, 0, modifiedBytes.Length);
+    }
+    else
+    {
+        await next();
+    }
+});
+
+// 8. HTTP Request Pipeline & Swagger UI
 app.UseSwagger(c =>
 {
     c.RouteTemplate = "swagger/{documentName}/swagger.json";
+    c.PreSerializeFilters.Add((swaggerDoc, httpReq) =>
+    {
+        swaggerDoc.OpenApi = "3.0.1";
+    });
 });
+
 app.UseSwaggerUI(c =>
 {
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "ClearToWork AI API v1");
     c.RoutePrefix = "swagger";
 });
-
-
 
 app.UseCors("AllowFrontendClients");
 app.UseAuthentication();
