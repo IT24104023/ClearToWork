@@ -15,4 +15,5 @@ public class PermitAsset
     public PermitRequest? PermitRequest { get; set; }
     public Guid AssetId { get; set; }
     public Asset? Asset { get; set; }
+    public DateTime? ReturnedAt { get; set; }
 }
