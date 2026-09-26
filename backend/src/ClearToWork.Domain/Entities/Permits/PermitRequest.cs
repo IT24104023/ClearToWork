@@ -23,6 +23,7 @@ public class PermitRequest : BaseAuditableEntity
     public Guid ZoneId { get; set; }
     public string IssuingAuthority { get; set; } = "Mohammed Zakee";
     public string SupervisorName { get; set; } = "Mohammed Zakee";
+    public Guid? SupervisorId { get; set; }
     public string? PermitQrToken { get; set; }
     public DateTime? ActivatedAt { get; set; }
     public DateTime ScheduledStartTime { get; set; } = DateTime.UtcNow;
@@ -30,6 +31,7 @@ public class PermitRequest : BaseAuditableEntity
     public ICollection<PermitWorker> AssignedWorkers { get; set; } = new List<PermitWorker>();
     public ICollection<PermitAsset> AssignedAssets { get; set; } = new List<PermitAsset>();
     public ICollection<EvidencePhoto> Photos { get; set; } = new List<EvidencePhoto>();
+    public ICollection<EvidencePhoto> EvidencePhotos { => Photos; set => Photos = value; }
     public ICollection<Approval> Approvals { get; set; } = new List<Approval>();
     public CloseOut? CloseOut { get; set; }
     public AgentWorkflowRun? AgentWorkflowRun { get; set; }
