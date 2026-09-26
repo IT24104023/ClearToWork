@@ -15,4 +15,6 @@ public class ZoneAdjacency
     public Zone? Zone { get; set; }
     public Guid AdjacentZoneId { get; set; }
     public Zone? AdjacentZone { get; set; }
+    public Guid ZoneAId { get => ZoneId; set => ZoneId = value; }
+    public Guid ZoneBId { get => AdjacentZoneId; set => AdjacentZoneId = value; }
 }
