@@ -98,8 +98,8 @@ public class AdminController : ControllerBase
             .ToListAsync();
 
         var totalRuns = runs.Count;
-        var safeFailures = runs.Count(r => r.OutcomeStatus == WorkflowOutcome.Refused_SafeFailure);
-        var clearRuns = runs.Count(r => r.OutcomeStatus == WorkflowOutcome.Clear);
+        var safeFailures = runs.Count(r => r.OutcomeStatus == WorkflowOutcome.Refused_SafeFailure.ToString());
+        var clearRuns = runs.Count(r => r.OutcomeStatus == WorkflowOutcome.Clear.ToString());
         var avgDuration = totalRuns > 0 ? runs.Average(r => r.DurationMs) : 0;
 
         var agentDetails = new[]
