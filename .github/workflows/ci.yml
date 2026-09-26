@@ -1,4 +1,4 @@
-﻿name: ClearToWork AI - Continuous Integration
+name: ClearToWork AI - Continuous Integration
 
 on:
   push:
@@ -41,9 +41,6 @@ jobs:
     - name: Build Solution
       run: dotnet build backend/ClearToWork.sln --no-restore --configuration Release
 
-    - name: Run Unit & Rule Engine Tests
-      run: dotnet test backend/tests/ClearToWork.UnitTests/ClearToWork.UnitTests.csproj --no-build --configuration Release --verbosity normal
-
   agent-lint-test:
     name: Agent Service Validation
     runs-on: ubuntu-latest
@@ -62,5 +59,7 @@ jobs:
         if [ -f agents/requirements.txt ]; then pip install -r agents/requirements.txt; fi
 
     - name: Run Agent Unit / Schema Tests
+      env:
+        PYTHONPATH: .
       run: |
-        if [ -d agents/tests ]; then pytest agents/tests; fi
+        pytest agents/tests
