@@ -559,10 +559,10 @@ public class HazardRuleService : IHazardRuleService
             z.SiteId,
             z.Code,
             z.Name,
-            z.Latitude,
-            z.Longitude,
-            z.RadiusMeters,
-            z.QrCodePayload,
+            (decimal)(z.Latitude ?? 0.0),
+            (decimal)(z.Longitude ?? 0.0),
+            z.RadiusMeters ?? 0.0,
+            z.QrCodePayload ?? string.Empty,
             z.IsActive,
             z.AdjacentZones.Select(a => a.AdjacentZone?.Code ?? "").Where(c => !string.IsNullOrEmpty(c)).ToList()
         );
