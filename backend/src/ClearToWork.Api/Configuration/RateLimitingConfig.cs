@@ -5,6 +5,13 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.Extensions.DependencyInjection;
+using ClearToWork.Domain.Common;
+using ClearToWork.Domain.Entities.Equipment;
+using ClearToWork.Domain.Entities.Hazards;
+using ClearToWork.Domain.Entities.Identity;
+using ClearToWork.Domain.Entities.Permits;
+using ClearToWork.Domain.Entities.Workforce;
+using ClearToWork.Domain.Enums;
 
 namespace ClearToWork.Api.Configuration;
 
