@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\ClearToWork.Domain\ClearToWork.Domain.csproj" />
+    <ProjectReference Include="../ClearToWork.Domain/ClearToWork.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
