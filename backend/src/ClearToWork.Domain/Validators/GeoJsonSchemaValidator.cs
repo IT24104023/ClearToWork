@@ -1,4 +1,11 @@
 using System.Text.Json;
+using ClearToWork.Domain.Common;
+using ClearToWork.Domain.Entities.Equipment;
+using ClearToWork.Domain.Entities.Hazards;
+using ClearToWork.Domain.Entities.Identity;
+using ClearToWork.Domain.Entities.Permits;
+using ClearToWork.Domain.Entities.Workforce;
+using ClearToWork.Domain.Enums;
 
 namespace ClearToWork.Domain.Validators;
 
@@ -61,13 +68,6 @@ public class GeoJsonSchemaValidator
         try
         {
             using var doc = JsonDocument.Parse(geoJson);
-using ClearToWork.Domain.Common;
-using ClearToWork.Domain.Entities.Equipment;
-using ClearToWork.Domain.Entities.Hazards;
-using ClearToWork.Domain.Entities.Identity;
-using ClearToWork.Domain.Entities.Permits;
-using ClearToWork.Domain.Entities.Workforce;
-using ClearToWork.Domain.Enums;
             return ValidateElement(doc.RootElement);
         }
         catch (JsonException ex)
