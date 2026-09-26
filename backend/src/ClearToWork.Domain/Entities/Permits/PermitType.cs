@@ -18,6 +18,7 @@ public class PermitType : BaseEntity
     /// <summary>Whether continuous gas monitoring (LEL/O2) is required before work commences.</summary>
     public bool RequiresGasTesting { get; set; } = false;
     public bool RequiresIsolation { get; set; } = false;
+    public bool RequiresSafetyOfficerSignOff { get; set; } = false;
     /// <summary>JSON array of mandatory safety controls for this permit type, e.g. ["Dry powder extinguisher within 5m", "Continuous gas monitoring"].</summary>
     public string? MandatoryControlsJson { get; set; }
 }
