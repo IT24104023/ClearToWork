@@ -106,43 +106,11 @@ using (var scope = app.Services.CreateScope())
     await DbInitializer.SeedAsync(context);
 }
 
-// 7. OpenAPI Version Compatibility Middleware (forces openapi: 3.0.1 for Swagger UI compatibility)
-app.Use(async (context, next) =>
-{
-    if (context.Request.Path.Value != null && context.Request.Path.Value.EndsWith("swagger.json", StringComparison.OrdinalIgnoreCase))
-    {
-        var originalBodyStream = context.Response.Body;
-        using var memoryStream = new MemoryStream();
-        context.Response.Body = memoryStream;
-
-        await next();
-
-        memoryStream.Seek(0, SeekOrigin.Begin);
-        var responseBody = await new StreamReader(memoryStream).ReadToEndAsync();
-        responseBody = responseBody.Replace("\"openapi\": \"3.0.4\"", "\"openapi\": \"3.0.1\"")
-                                   .Replace("\"openapi\":\"3.0.4\"", "\"openapi\":\"3.0.1\"")
-                                   .Replace("\"openapi\": \"3.1.0\"", "\"openapi\": \"3.0.1\"")
-                                   .Replace("\"openapi\":\"3.1.0\"", "\"openapi\":\"3.0.1\"");
-
-        var modifiedBytes = Encoding.UTF8.GetBytes(responseBody);
-        context.Response.Body = originalBodyStream;
-        context.Response.ContentLength = modifiedBytes.Length;
-        await context.Response.Body.WriteAsync(modifiedBytes, 0, modifiedBytes.Length);
-    }
-    else
-    {
-        await next();
-    }
-});
-
-// 8. HTTP Request Pipeline & Swagger UI
+// 7. HTTP Request Pipeline & Swagger UI with Swagger 2.0 Serialization
 app.UseSwagger(c =>
 {
     c.RouteTemplate = "swagger/{documentName}/swagger.json";
-    c.PreSerializeFilters.Add((swaggerDoc, httpReq) =>
-    {
-        swaggerDoc.OpenApi = "3.0.1";
-    });
+    c.SerializeAsV2 = true;
 });
 
 app.UseSwaggerUI(c =>
