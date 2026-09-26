@@ -4,6 +4,8 @@ using ClearToWork.Domain.Entities.Identity;
 using ClearToWork.Domain.Entities.Permits;
 using ClearToWork.Domain.Entities.Workforce;
 using Microsoft.EntityFrameworkCore;
+using ClearToWork.Domain.Common;
+using ClearToWork.Domain.Enums;
 
 namespace ClearToWork.Infrastructure.Data;
 
