@@ -83,6 +83,9 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<PermitRequest>()
             .HasIndex(p => new { p.ZoneId, p.ScheduledStartTime, p.ScheduledEndTime });
 
+        modelBuilder.Entity<PermitRequest>()
+            .Ignore(p => p.EvidencePhotos);
+
         modelBuilder.Entity<Zone>()
             .HasIndex(z => z.Code)
             .IsUnique();
