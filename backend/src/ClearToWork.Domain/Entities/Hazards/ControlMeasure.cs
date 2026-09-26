@@ -13,6 +13,8 @@ public class ControlMeasure : BaseEntity
 {
     public Guid HazardTypeId { get; set; }
     public HazardType? HazardType { get; set; }
+    public string Code { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
+    public string RequirementDescription { get => Description; set => Description = value; }
     public bool IsMandatory { get; set; } = true;
 }
