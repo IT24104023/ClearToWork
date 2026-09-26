@@ -55,6 +55,16 @@ class QChatQueryRequest(BaseModel):
     worker_id: Optional[str] = "W-1182"
     asset_tag: Optional[str] = "EX-22"
 
+@app.get("/")
+def root():
+    return {
+        "service": "ClearToWork AI - Agent Orchestration Service",
+        "status": "online",
+        "docs": "/docs",
+        "health": "/health",
+        "agentMetrics": "/agent-metrics"
+    }
+
 @app.get("/health")
 def health():
     return {
