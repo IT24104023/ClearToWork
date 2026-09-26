@@ -188,8 +188,8 @@ public class EquipmentService : IEquipmentService
     private readonly Dictionary<Guid, IsolationPoint> _isolationPoints = new();
     private readonly Dictionary<Guid, EquipmentCheckoutRecord> _checkouts = new();
 
-    // Serial format: 3-12 alphanumeric uppercase characters with optional hyphens (e.g., "BW-ULTRA-001", "VENTIS-9821")
-    private static readonly Regex SerialNumberPattern = new(@"^[A-Z0-9]{2,6}(-[A-Z0-9]{2,8})+$", RegexOptions.Compiled);
+    // Serial format: 3-12 alphanumeric uppercase characters with optional hyphens (e.g., "BW-ULTRA-001", "VENTIS-9821", "DRA-XAM-2500-A")
+    private static readonly Regex SerialNumberPattern = new(@"^[A-Z0-9]{1,8}(-[A-Z0-9]{1,8})+$", RegexOptions.Compiled);
 
     /// <inheritdoc />
     public EquipmentItem RegisterEquipment(string serialNumber, string model, EquipmentType type, bool requiresCalibration, DateTime? initialCalibrationDate = null)

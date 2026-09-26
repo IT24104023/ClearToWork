@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using ClearToWork.Domain.Common;
 using ClearToWork.Domain.Enums;
 using ClearToWork.Domain.Entities.Equipment;
@@ -33,6 +34,7 @@ public class PermitRequest : BaseAuditableEntity
     public ICollection<PermitWorker> AssignedWorkers { get; set; } = new List<PermitWorker>();
     public ICollection<PermitAsset> AssignedAssets { get; set; } = new List<PermitAsset>();
     public ICollection<EvidencePhoto> Photos { get; set; } = new List<EvidencePhoto>();
+    [NotMapped]
     public ICollection<EvidencePhoto> EvidencePhotos { get => Photos; set => Photos = value; }
     public ICollection<Approval> Approvals { get; set; } = new List<Approval>();
     public CloseOut? CloseOut { get; set; }
