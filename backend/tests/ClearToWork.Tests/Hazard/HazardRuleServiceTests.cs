@@ -65,8 +65,8 @@ public class HazardRuleServiceTests : IDisposable
             SiteId = _siteId,
             Code = "ZONE_A",
             Name = "Wellhead Deck Module A",
-            Latitude = 24.5120m,
-            Longitude = 54.3410m,
+            Latitude = 24.5120,
+            Longitude = 54.3410,
             RadiusMeters = 40.0,
             IsActive = true
         };
@@ -77,8 +77,8 @@ public class HazardRuleServiceTests : IDisposable
             SiteId = _siteId,
             Code = "ZONE_B",
             Name = "Process Deck Module B",
-            Latitude = 24.5125m,
-            Longitude = 54.3415m,
+            Latitude = 24.5125,
+            Longitude = 54.3415,
             RadiusMeters = 45.0,
             IsActive = true
         };
@@ -89,8 +89,8 @@ public class HazardRuleServiceTests : IDisposable
             SiteId = _siteId,
             Code = "ZONE_C",
             Name = "Helideck & Accommodation Module C",
-            Latitude = 24.5200m,
-            Longitude = 54.3500m,
+            Latitude = 24.5200,
+            Longitude = 54.3500,
             RadiusMeters = 50.0,
             IsActive = true
         };
