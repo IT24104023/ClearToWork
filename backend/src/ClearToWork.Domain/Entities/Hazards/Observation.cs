@@ -15,6 +15,9 @@ public class Observation : BaseAuditableEntity
     public string Title { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public string Severity { get; set; } = "Low";
+    public string Category { get; set; } = "General Safety";
     public string ReportedBy { get; set; } = string.Empty;
+    public Guid ReportedByUserId { get; set; }
     public DateTime ObservedAt { get; set; } = DateTime.UtcNow;
+    public DateTime LoggedAt { get; set; } = DateTime.UtcNow;
 }
