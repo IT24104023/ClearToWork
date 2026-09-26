@@ -5,6 +5,10 @@ using ClearToWork.Domain.Entities.Permits;
 using ClearToWork.Domain.Enums;
 using ClearToWork.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using ClearToWork.Domain.Common;
+using ClearToWork.Domain.Entities.Hazards;
+using ClearToWork.Domain.Entities.Identity;
+using ClearToWork.Domain.Entities.Workforce;
 
 namespace ClearToWork.Infrastructure.Services;
 
@@ -268,10 +272,6 @@ public class EquipmentService : IEquipmentService
     public async Task<bool> ReserveEquipmentTransactionAsync(Guid permitId, List<Guid> assetIds, DateTime from, DateTime until)
     {
         using var transaction = await _context.Database.BeginTransactionAsync();
-using ClearToWork.Domain.Common;
-using ClearToWork.Domain.Entities.Hazards;
-using ClearToWork.Domain.Entities.Identity;
-using ClearToWork.Domain.Entities.Workforce;
         try
         {
             // Verify no double booking within transaction
