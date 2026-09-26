@@ -1,6 +1,14 @@
 import os
+import sys
 import uuid
 import time
+from pathlib import Path
+
+# Bootstrap sys.path so 'from agents...' imports work regardless of working directory
+root_dir = Path(__file__).resolve().parent.parent
+if str(root_dir) not in sys.path:
+    sys.path.insert(0, str(root_dir))
+
 from fastapi import FastAPI, Header, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
