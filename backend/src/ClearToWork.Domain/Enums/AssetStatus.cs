@@ -15,5 +15,6 @@ public enum AssetStatus
     Maintenance,
     Quarantined,
     Decommissioned,
-    Reserved
+    Reserved,
+    OutOfService
 }
