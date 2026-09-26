@@ -1,3 +1,5 @@
+using ClearToWork.Application.DTOs;
+using ClearToWork.Application.Interfaces;
 using ClearToWork.Domain.Entities.Permits;
 using ClearToWork.Domain.Enums;
 using ClearToWork.Infrastructure.Data;
@@ -78,7 +80,7 @@ public interface IPermitApprovalValidator
 /// 4. All assigned workforce members hold active, non-expired competency certifications.
 /// 5. Zero simultaneous operations (SIMOPS) clashes in target or adjacent hazard zones.
 /// </summary>
-public class PermitApprovalValidator : IPermitApprovalValidator
+public class PermitApprovalValidator : IPermitApprovalValidator, IPermitValidator
 {
     private readonly AppDbContext _context;
     private readonly ILogger<PermitApprovalValidator> _logger;
@@ -87,6 +89,23 @@ public class PermitApprovalValidator : IPermitApprovalValidator
     {
         _context = context;
         _logger = logger;
+    }
+
+    public async Task<ValidationReportDto> ValidatePermitRulesAsync(PermitRequest permit)
+    {
+        var result = await ValidateApprovalPrerequisitesAsync(permit);
+        return new ValidationReportDto(
+            IsApproved: result.IsValid,
+            Verdict: result.IsValid ? "APPROVED" : "REJECTED",
+            HardFailureReasons: result.Issues,
+            WarningNotes: result.Warnings,
+            ProposedFix: result.IsValid ? null : new AgentProposedFixDto(
+                SuggestedWorkerBadge: "W-1002",
+                SuggestedAssetTag: "EQ-GAS-01",
+                SuggestedTimeWindow: "Shift 2 (14:00 - 22:00)",
+                SummaryExplanation: "Resolve worker certification and SIMOPS conflicts before permit activation."
+            )
+        );
     }
 
     /// <inheritdoc/>
