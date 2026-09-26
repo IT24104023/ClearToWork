@@ -21,10 +21,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\ClearToWork.Domain\ClearToWork.Domain.csproj" />
-    <ProjectReference Include="..\..\src\ClearToWork.Application\ClearToWork.Application.csproj" />
-    <ProjectReference Include="..\..\src\ClearToWork.Infrastructure\ClearToWork.Infrastructure.csproj" />
-    <ProjectReference Include="..\..\src\ClearToWork.Api\ClearToWork.Api.csproj" />
+    <ProjectReference Include="../../src/ClearToWork.Domain/ClearToWork.Domain.csproj" />
+    <ProjectReference Include="../../src/ClearToWork.Application/ClearToWork.Application.csproj" />
+    <ProjectReference Include="../../src/ClearToWork.Infrastructure/ClearToWork.Infrastructure.csproj" />
+    <ProjectReference Include="../../src/ClearToWork.Api/ClearToWork.Api.csproj" />
   </ItemGroup>
 
 </Project>
