@@ -36,10 +36,10 @@ jobs:
         dotnet-version: '8.0.x'
 
     - name: Restore Dependencies
-      run: dotnet restore backend/src/ClearToWork.Api/ClearToWork.Api.csproj
+      run: dotnet restore backend/ClearToWork.sln
 
     - name: Build Solution
-      run: dotnet build backend/src/ClearToWork.Api/ClearToWork.Api.csproj --no-restore --configuration Release
+      run: dotnet build backend/ClearToWork.sln --no-restore --configuration Release
 
   agent-lint-test:
     name: Agent Service Validation
