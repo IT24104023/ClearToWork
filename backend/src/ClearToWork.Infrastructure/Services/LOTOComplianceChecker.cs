@@ -52,7 +52,7 @@ public enum IsolationType
 /// Physical Lockout/Tagout state progression for equipment isolation points.
 /// </summary>
 [JsonConverter(typeof(JsonStringEnumConverter))]
-public enum LotoLotoIsolationState
+public enum LotoIsolationState
 {
     /// <summary>
     /// Isolation point is in normal operational configuration; energy flow is unrestricted.
@@ -141,7 +141,7 @@ public record LotoLock(
 /// <summary>
 /// Physical energy isolation point (breaker, block valve, spectacle blind) tracked in the facility.
 /// </summary>
-public class LotoLotoIsolationPoint
+public class LotoIsolationPoint
 {
     /// <summary>
     /// Unique identifier for the isolation point entity.
