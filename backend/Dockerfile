@@ -1,19 +1,16 @@
 # ---- Build stage ----
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-WORKDIR /src
+WORKDIR /app
 
-# Copy all csproj files first for layer caching
-COPY ["src/ClearToWork.Domain/ClearToWork.Domain.csproj", "src/ClearToWork.Domain/"]
-COPY ["src/ClearToWork.Application/ClearToWork.Application.csproj", "src/ClearToWork.Application/"]
-COPY ["src/ClearToWork.Infrastructure/ClearToWork.Infrastructure.csproj", "src/ClearToWork.Infrastructure/"]
-COPY ["src/ClearToWork.Api/ClearToWork.Api.csproj", "src/ClearToWork.Api/"]
+# Copy all project files
+COPY . .
 
-RUN dotnet restore "src/ClearToWork.Api/ClearToWork.Api.csproj"
-
-# Copy all source files and publish
-COPY src/ src/
-WORKDIR "/src/src/ClearToWork.Api"
-RUN dotnet publish -c Release -o /app/publish /p:UseAppHost=false
+# Publish Api project regardless of whether build context is repo root or backend folder
+RUN if [ -f "src/ClearToWork.Api/ClearToWork.Api.csproj" ]; then \
+        dotnet publish "src/ClearToWork.Api/ClearToWork.Api.csproj" -c Release -o /app/publish /p:UseAppHost=false; \
+    else \
+        dotnet publish "backend/src/ClearToWork.Api/ClearToWork.Api.csproj" -c Release -o /app/publish /p:UseAppHost=false; \
+    fi
 
 # ---- Runtime stage ----
 FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
