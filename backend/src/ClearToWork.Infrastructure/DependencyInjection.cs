@@ -30,6 +30,8 @@ public static class DependencyInjection
         services.AddScoped<ClearToWork.Application.Interfaces.IWorkforceService, ClearToWork.Infrastructure.Services.WorkforceService>();
         services.AddScoped<ClearToWork.Application.Interfaces.IHazardRuleService, ClearToWork.Infrastructure.Services.HazardRuleService>();
         services.AddScoped<ClearToWork.Application.Interfaces.IEquipmentService, ClearToWork.Infrastructure.Services.EquipmentService>();
+        services.AddScoped<ClearToWork.Application.Interfaces.IPermitValidator, ClearToWork.Infrastructure.Services.PermitApprovalValidator>();
+        services.AddScoped<ClearToWork.Infrastructure.Services.IPermitApprovalValidator, ClearToWork.Infrastructure.Services.PermitApprovalValidator>();
 
         services.AddMemoryCache();
         services.AddHttpClient();
