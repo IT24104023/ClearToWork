@@ -78,7 +78,8 @@ using (var scope = app.Services.CreateScope())
 }
 
 // 6. DEDICATED INTERACTIVE DATABASE EXPLORER UI AT /db
-app.MapGet("/db", () => Results.Content("""<!DOCTYPE html>
+app.MapGet("/db", () => Results.Content("""
+<!DOCTYPE html>
 <html lang='en'>
 <head>
   <meta charset='UTF-8'>
@@ -207,7 +208,8 @@ app.MapGet("/db", () => Results.Content("""<!DOCTYPE html>
     window.onload = loadAllData;
   </script>
 </body>
-</html>""", "text/html")).ExcludeFromDescription();
+</html>
+""", "text/html")).ExcludeFromDescription();
 
 // 7. Internal API Endpoints for /db Queries
 app.MapGet("/api/db/query/permits", async (AppDbContext db) =>
