@@ -14,8 +14,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ClearToWork.Infrastructure\ClearToWork.Infrastructure.csproj" />
-    <ProjectReference Include="..\ClearToWork.Application\ClearToWork.Application.csproj" />
+    <ProjectReference Include="../ClearToWork.Infrastructure/ClearToWork.Infrastructure.csproj" />
+    <ProjectReference Include="../ClearToWork.Application/ClearToWork.Application.csproj" />
   </ItemGroup>
 
 </Project>

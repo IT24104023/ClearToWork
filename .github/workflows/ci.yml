@@ -41,6 +41,9 @@ jobs:
     - name: Build Solution
       run: dotnet build backend/ClearToWork.sln --no-restore --configuration Release
 
+    - name: Run Backend Unit Tests
+      run: dotnet test backend/tests/ClearToWork.Tests/ClearToWork.Tests.csproj --no-build --configuration Release --verbosity normal
+
   agent-lint-test:
     name: Agent Service Validation
     runs-on: ubuntu-latest
