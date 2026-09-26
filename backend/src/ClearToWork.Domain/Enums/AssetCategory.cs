@@ -11,6 +11,7 @@ namespace ClearToWork.Domain.Enums;
 public enum AssetCategory
 {
     GasMonitor,
+    GasDetector,
     SCBA,
     IsolationDevice,
     HeavyMachinery,

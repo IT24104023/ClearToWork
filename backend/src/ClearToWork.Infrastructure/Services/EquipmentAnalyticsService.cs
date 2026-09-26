@@ -605,7 +605,7 @@ public class EquipmentAnalyticsService : IEquipmentAnalyticsService
                 (p.State is LotoIsolationState.LockedIsolated or LotoIsolationState.VerifiedZeroEnergy) &&
                 p.ZeroEnergyVerified &&
                 p.AppliedLocks.Count > 0 &&
-                !orphanedLocks.Any(o => o.IsolationPointId == p.Id));
+                !orphanedLocks.Any(o => o.LotoIsolationPointId == p.Id));
 
             complianceRate = Math.Round(((double)fullyCompliantLocked / lockedCount) * 100.0, 1);
         }
