@@ -236,7 +236,7 @@ public class PermitApprovalValidator : IPermitApprovalValidator, IPermitValidato
             return false;
         }
 
-        if (permit.AgentWorkflowRun.OutcomeStatus != WorkflowOutcome.Clear)
+        if (permit.AgentWorkflowRun.OutcomeStatus != WorkflowOutcome.Clear.ToString())
         {
             issues.Add($"Hazard assessment failed: AI validation reported outcome '{permit.AgentWorkflowRun.OutcomeStatus}'.");
             return false;
