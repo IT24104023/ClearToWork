@@ -39,6 +39,8 @@ public static class DependencyInjection
         services.AddScoped<ClearToWork.Application.Interfaces.IEquipmentService, ClearToWork.Infrastructure.Services.EquipmentService>();
         services.AddScoped<ClearToWork.Application.Interfaces.IPermitValidator, ClearToWork.Infrastructure.Services.PermitApprovalValidator>();
         services.AddScoped<ClearToWork.Infrastructure.Services.IPermitApprovalValidator, ClearToWork.Infrastructure.Services.PermitApprovalValidator>();
+        services.AddScoped<ClearToWork.Application.Interfaces.IAuthService, ClearToWork.Infrastructure.Services.AuthService>();
+        services.AddScoped<ClearToWork.Application.Interfaces.IWeatherService, ClearToWork.Infrastructure.Services.WeatherService>();
 
         services.AddMemoryCache();
         services.AddHttpClient();
