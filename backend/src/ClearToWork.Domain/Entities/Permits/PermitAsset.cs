@@ -16,4 +16,6 @@ public class PermitAsset
     public Guid AssetId { get; set; }
     public Asset? Asset { get; set; }
     public DateTime? ReturnedAt { get; set; }
+    public DateTime? ReservedFrom { get; set; }
+    public DateTime? ReservedUntil { get; set; }
 }

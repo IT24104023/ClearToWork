@@ -52,7 +52,7 @@ public enum IsolationType
 /// Physical Lockout/Tagout state progression for equipment isolation points.
 /// </summary>
 [JsonConverter(typeof(JsonStringEnumConverter))]
-public enum IsolationState
+public enum LotoLotoIsolationState
 {
     /// <summary>
     /// Isolation point is in normal operational configuration; energy flow is unrestricted.
@@ -141,7 +141,7 @@ public record LotoLock(
 /// <summary>
 /// Physical energy isolation point (breaker, block valve, spectacle blind) tracked in the facility.
 /// </summary>
-public class IsolationPoint
+public class LotoLotoIsolationPoint
 {
     /// <summary>
     /// Unique identifier for the isolation point entity.
@@ -171,7 +171,7 @@ public class IsolationPoint
     /// <summary>
     /// Current physical LOTO state.
     /// </summary>
-    public IsolationState State { get; set; } = IsolationState.OpenDeIsolated;
+    public LotoIsolationState State { get; set; } = LotoIsolationState.OpenDeIsolated;
 
     /// <summary>
     /// Permit ID currently governing this isolation point, if actively isolated.
@@ -220,7 +220,7 @@ public record PermitLotoContext(
     string PermitNumber,
     string PermitTitle,
     string WorkZoneCode,
-    IReadOnlyList<Guid> RequiredIsolationPointIds,
+    IReadOnlyList<Guid> RequiredLotoIsolationPointIds,
     IReadOnlyList<Guid> AssignedWorkerIds,
     Guid? LeadTechnicianWorkerId = null,
     string? LeadTechnicianBadge = null
@@ -233,7 +233,7 @@ public record LotoViolation(
     string ViolationCode,
     LotoViolationSeverity Severity,
     string Description,
-    string? IsolationPointTag,
+    string? LotoIsolationPointTag,
     string? WorkerBadge,
     string RemediationAction
 );
@@ -242,8 +242,8 @@ public record LotoViolation(
 /// Detailed record of a safety padlock whose owner is no longer on facility grounds.
 /// </summary>
 public record OrphanedLockDetail(
-    Guid IsolationPointId,
-    string IsolationPointTag,
+    Guid LotoIsolationPointId,
+    string LotoIsolationPointTag,
     string LockSerialNumber,
     Guid WorkerId,
     string WorkerName,
@@ -280,12 +280,12 @@ public record LotoComplianceReport(
     string PermitNumber,
     LotoComplianceStatus Status,
     bool CanActivatePermit,
-    int TotalRequiredIsolationPoints,
+    int TotalRequiredLotoIsolationPoints,
     int CompliantPointsCount,
     int TotalLocksApplied,
     IReadOnlyList<LotoViolation> Violations,
     IReadOnlyList<OrphanedLockDetail> OrphanedLocks,
-    IReadOnlyList<IsolationPoint> IsolationPointSnapshots,
+    IReadOnlyList<LotoIsolationPoint> LotoIsolationPointSnapshots,
     DateTime EvaluatedAtUtc,
     string EvaluatedBy,
     string SummaryNotes
@@ -312,7 +312,7 @@ public interface ILOTOComplianceChecker
     /// <returns>A structured <see cref="PermitActivationCheckResult"/> indicating pass/fail status and violations.</returns>
     PermitActivationCheckResult VerifyPreActivationCompliance(
         PermitLotoContext permit,
-        IEnumerable<IsolationPoint> facilityPoints,
+        IEnumerable<LotoIsolationPoint> facilityPoints,
         IEnumerable<WorkerSitePresence> workerPresences);
 
     /// <summary>
@@ -324,7 +324,7 @@ public interface ILOTOComplianceChecker
     /// <param name="leadTechnicianWorkerId">Optional worker ID of the lead isolation technician or performing authority.</param>
     /// <returns>A collection of ownership violations, or empty if all locks are legitimately owned.</returns>
     IReadOnlyList<LotoViolation> ValidateLockOwnership(
-        IsolationPoint point,
+        LotoIsolationPoint point,
         IEnumerable<Guid> assignedWorkerIds,
         Guid? leadTechnicianWorkerId = null);
 
@@ -337,7 +337,7 @@ public interface ILOTOComplianceChecker
     /// <param name="asOfUtc">Audit reference timestamp; defaults to UTC now.</param>
     /// <returns>A list of detected orphaned lock details.</returns>
     IReadOnlyList<OrphanedLockDetail> DetectOrphanedLocks(
-        IEnumerable<IsolationPoint> isolationPoints,
+        IEnumerable<LotoIsolationPoint> isolationPoints,
         IEnumerable<WorkerSitePresence> workerPresences,
         DateTime? asOfUtc = null);
 
@@ -353,7 +353,7 @@ public interface ILOTOComplianceChecker
     /// <returns>A complete <see cref="LotoComplianceReport"/>.</returns>
     LotoComplianceReport GenerateComplianceReport(
         PermitLotoContext permit,
-        IEnumerable<IsolationPoint> facilityPoints,
+        IEnumerable<LotoIsolationPoint> facilityPoints,
         IEnumerable<WorkerSitePresence> workerPresences,
         string auditorBadge = "SYSTEM_SAFETY_ENGINE",
         DateTime? asOfUtc = null);
@@ -367,7 +367,7 @@ public interface ILOTOComplianceChecker
     /// <returns>True if 100% compliant and ready for activation; otherwise false.</returns>
     bool IsPermitReadyForActivation(
         PermitLotoContext permit,
-        IEnumerable<IsolationPoint> facilityPoints,
+        IEnumerable<LotoIsolationPoint> facilityPoints,
         IEnumerable<WorkerSitePresence> workerPresences);
 }
 
@@ -384,7 +384,7 @@ public class LOTOComplianceChecker : ILOTOComplianceChecker
     /// <inheritdoc />
     public PermitActivationCheckResult VerifyPreActivationCompliance(
         PermitLotoContext permit,
-        IEnumerable<IsolationPoint> facilityPoints,
+        IEnumerable<LotoIsolationPoint> facilityPoints,
         IEnumerable<WorkerSitePresence> workerPresences)
     {
         ArgumentNullException.ThrowIfNull(permit);
@@ -395,7 +395,7 @@ public class LOTOComplianceChecker : ILOTOComplianceChecker
         var presenceMap = workerPresences.ToDictionary(p => p.WorkerId);
         var violations = new List<LotoViolation>();
 
-        var requiredIds = permit.RequiredIsolationPointIds ?? Array.Empty<Guid>();
+        var requiredIds = permit.RequiredLotoIsolationPointIds ?? Array.Empty<Guid>();
         var totalRequired = requiredIds.Count;
         var lockedCount = 0;
         var zeroEnergyVerifiedCount = 0;
@@ -406,13 +406,13 @@ public class LOTOComplianceChecker : ILOTOComplianceChecker
                 ViolationCode: "LOTO-ERR-001",
                 Severity: LotoViolationSeverity.Warning,
                 Description: $"Permit {permit.PermitNumber} has no required isolation points defined. If work involves hazardous energy, an isolation plan must be established.",
-                IsolationPointTag: null,
+                LotoIsolationPointTag: null,
                 WorkerBadge: permit.LeadTechnicianBadge,
                 RemediationAction: "Verify whether mechanical, electrical, or chemical energy isolation is required for this work scope."
             ));
         }
 
-        var matchedPoints = new List<IsolationPoint>();
+        var matchedPoints = new List<LotoIsolationPoint>();
 
         foreach (var reqId in requiredIds)
         {
@@ -422,7 +422,7 @@ public class LOTOComplianceChecker : ILOTOComplianceChecker
                     ViolationCode: "LOTO-CRIT-002",
                     Severity: LotoViolationSeverity.Critical,
                     Description: $"Required isolation point ID '{reqId}' does not exist in facility equipment records.",
-                    IsolationPointTag: reqId.ToString(),
+                    LotoIsolationPointTag: reqId.ToString(),
                     WorkerBadge: null,
                     RemediationAction: "Correct isolation certificate configuration to reference valid plant asset tags."
                 ));
@@ -432,7 +432,7 @@ public class LOTOComplianceChecker : ILOTOComplianceChecker
             matchedPoints.Add(point);
 
             // Check 1: Physical Lock State
-            var isLocked = point.State == IsolationState.LockedIsolated || point.State == IsolationState.VerifiedZeroEnergy;
+            var isLocked = point.State == LotoIsolationState.LockedIsolated || point.State == LotoIsolationState.VerifiedZeroEnergy;
             if (isLocked)
             {
                 lockedCount++;
@@ -443,7 +443,7 @@ public class LOTOComplianceChecker : ILOTOComplianceChecker
                     ViolationCode: "LOTO-CRIT-003",
                     Severity: LotoViolationSeverity.Critical,
                     Description: $"Isolation point '{point.TagNumber}' ({point.Type}) is NOT locked (Current State: {point.State}).",
-                    IsolationPointTag: point.TagNumber,
+                    LotoIsolationPointTag: point.TagNumber,
                     WorkerBadge: null,
                     RemediationAction: $"Apply physical padlock and Danger Tag to {point.TagNumber} before permit release."
                 ));
@@ -456,7 +456,7 @@ public class LOTOComplianceChecker : ILOTOComplianceChecker
                     ViolationCode: "LOTO-CRIT-004",
                     Severity: LotoViolationSeverity.Critical,
                     Description: $"Isolation point '{point.TagNumber}' has zero applied padlocks on the lockout hasp.",
-                    IsolationPointTag: point.TagNumber,
+                    LotoIsolationPointTag: point.TagNumber,
                     WorkerBadge: null,
                     RemediationAction: $"Work party members must affix individual personal safety locks to {point.TagNumber}."
                 ));
@@ -469,7 +469,7 @@ public class LOTOComplianceChecker : ILOTOComplianceChecker
                     ViolationCode: "LOTO-CRIT-005",
                     Severity: LotoViolationSeverity.Critical,
                     Description: $"Isolation point '{point.TagNumber}' is locked under conflicting Permit ID '{point.ActivePermitId.Value}'. Shared isolation procedure must be applied.",
-                    IsolationPointTag: point.TagNumber,
+                    LotoIsolationPointTag: point.TagNumber,
                     WorkerBadge: null,
                     RemediationAction: "Coordinate with Area Authority to apply group lockout lockbox protocol."
                 ));
@@ -486,7 +486,7 @@ public class LOTOComplianceChecker : ILOTOComplianceChecker
                     ViolationCode: "LOTO-CRIT-006",
                     Severity: LotoViolationSeverity.Critical,
                     Description: $"Zero energy verification has not been signed off for isolation point '{point.TagNumber}'.",
-                    IsolationPointTag: point.TagNumber,
+                    LotoIsolationPointTag: point.TagNumber,
                     WorkerBadge: null,
                     RemediationAction: $"Conduct physical test-for-dead/pressure bleed on {point.TagNumber} and record verification signature."
                 ));
@@ -506,8 +506,8 @@ public class LOTOComplianceChecker : ILOTOComplianceChecker
                 violations.Add(new LotoViolation(
                     ViolationCode: "LOTO-CRIT-007",
                     Severity: LotoViolationSeverity.Critical,
-                    Description: $"Orphaned lock '{orphaned.LockSerialNumber}' detected on '{orphaned.IsolationPointTag}'. Worker '{orphaned.WorkerName}' ({orphaned.WorkerBadge}) departed site {orphaned.DurationOrphaned.TotalHours:F1}h ago.",
-                    IsolationPointTag: orphaned.IsolationPointTag,
+                    Description: $"Orphaned lock '{orphaned.LockSerialNumber}' detected on '{orphaned.LotoIsolationPointTag}'. Worker '{orphaned.WorkerName}' ({orphaned.WorkerBadge}) departed site {orphaned.DurationOrphaned.TotalHours:F1}h ago.",
+                    LotoIsolationPointTag: orphaned.LotoIsolationPointTag,
                     WorkerBadge: orphaned.WorkerBadge,
                     RemediationAction: orphaned.RecommendedProcedure
                 ));
@@ -547,7 +547,7 @@ public class LOTOComplianceChecker : ILOTOComplianceChecker
 
     /// <inheritdoc />
     public IReadOnlyList<LotoViolation> ValidateLockOwnership(
-        IsolationPoint point,
+        LotoIsolationPoint point,
         IEnumerable<Guid> assignedWorkerIds,
         Guid? leadTechnicianWorkerId = null)
     {
@@ -570,7 +570,7 @@ public class LOTOComplianceChecker : ILOTOComplianceChecker
                     ViolationCode: "LOTO-OWN-001",
                     Severity: LotoViolationSeverity.Critical,
                     Description: $"Unauthorized Lock: Lock '{lockItem.LockSerialNumber}' on '{point.TagNumber}' is owned by '{lockItem.WorkerName}' (Badge: {lockItem.WorkerBadge}), who is not assigned to this permit.",
-                    IsolationPointTag: point.TagNumber,
+                    LotoIsolationPointTag: point.TagNumber,
                     WorkerBadge: lockItem.WorkerBadge,
                     RemediationAction: "Worker must either be added to permit work party or personal lock must be replaced by an assigned worker."
                 ));
@@ -589,7 +589,7 @@ public class LOTOComplianceChecker : ILOTOComplianceChecker
                 ViolationCode: "LOTO-OWN-002",
                 Severity: LotoViolationSeverity.Critical,
                 Description: $"Duplicate Lock Serial: Serial '{dup.Key}' appears {dup.Count()} times on '{point.TagNumber}'. Lock serials must be unique.",
-                IsolationPointTag: point.TagNumber,
+                LotoIsolationPointTag: point.TagNumber,
                 WorkerBadge: null,
                 RemediationAction: "Inspect physical lock keying; duplicate serials indicate key duplication risk."
             ));
@@ -600,7 +600,7 @@ public class LOTOComplianceChecker : ILOTOComplianceChecker
 
     /// <inheritdoc />
     public IReadOnlyList<OrphanedLockDetail> DetectOrphanedLocks(
-        IEnumerable<IsolationPoint> isolationPoints,
+        IEnumerable<LotoIsolationPoint> isolationPoints,
         IEnumerable<WorkerSitePresence> workerPresences,
         DateTime? asOfUtc = null)
     {
@@ -624,8 +624,8 @@ public class LOTOComplianceChecker : ILOTOComplianceChecker
                         var duration = now > departedAt ? now - departedAt : TimeSpan.Zero;
 
                         orphanedLocks.Add(new OrphanedLockDetail(
-                            IsolationPointId: point.Id,
-                            IsolationPointTag: point.TagNumber,
+                            LotoIsolationPointId: point.Id,
+                            LotoIsolationPointTag: point.TagNumber,
                             LockSerialNumber: lockItem.LockSerialNumber,
                             WorkerId: lockItem.WorkerId,
                             WorkerName: lockItem.WorkerName,
@@ -640,8 +640,8 @@ public class LOTOComplianceChecker : ILOTOComplianceChecker
                 {
                     // Worker not present in site presence database at all
                     orphanedLocks.Add(new OrphanedLockDetail(
-                        IsolationPointId: point.Id,
-                        IsolationPointTag: point.TagNumber,
+                        LotoIsolationPointId: point.Id,
+                        LotoIsolationPointTag: point.TagNumber,
                         LockSerialNumber: lockItem.LockSerialNumber,
                         WorkerId: lockItem.WorkerId,
                         WorkerName: lockItem.WorkerName,
@@ -660,7 +660,7 @@ public class LOTOComplianceChecker : ILOTOComplianceChecker
     /// <inheritdoc />
     public LotoComplianceReport GenerateComplianceReport(
         PermitLotoContext permit,
-        IEnumerable<IsolationPoint> facilityPoints,
+        IEnumerable<LotoIsolationPoint> facilityPoints,
         IEnumerable<WorkerSitePresence> workerPresences,
         string auditorBadge = "SYSTEM_SAFETY_ENGINE",
         DateTime? asOfUtc = null)
@@ -669,15 +669,15 @@ public class LOTOComplianceChecker : ILOTOComplianceChecker
 
         var now = asOfUtc ?? DateTime.UtcNow;
         var checkResult = VerifyPreActivationCompliance(permit, facilityPoints, workerPresences);
-        var pointsList = facilityPoints.Where(p => (permit.RequiredIsolationPointIds ?? Array.Empty<Guid>()).Contains(p.Id)).ToList();
+        var pointsList = facilityPoints.Where(p => (permit.RequiredLotoIsolationPointIds ?? Array.Empty<Guid>()).Contains(p.Id)).ToList();
         var orphanedLocks = DetectOrphanedLocks(pointsList, workerPresences, now);
 
         var totalLocksApplied = pointsList.Sum(p => p.AppliedLocks.Count);
         var compliantPointsCount = pointsList.Count(p =>
-            (p.State == IsolationState.LockedIsolated || p.State == IsolationState.VerifiedZeroEnergy) &&
+            (p.State == LotoIsolationState.LockedIsolated || p.State == LotoIsolationState.VerifiedZeroEnergy) &&
             p.ZeroEnergyVerified &&
             p.AppliedLocks.Count > 0 &&
-            !orphanedLocks.Any(o => o.IsolationPointId == p.Id));
+            !orphanedLocks.Any(o => o.LotoIsolationPointId == p.Id));
 
         LotoComplianceStatus status;
         if (checkResult.IsApprovedForActivation && checkResult.Violations.Count == 0)
@@ -709,12 +709,12 @@ public class LOTOComplianceChecker : ILOTOComplianceChecker
             PermitNumber: permit.PermitNumber,
             Status: status,
             CanActivatePermit: checkResult.IsApprovedForActivation,
-            TotalRequiredIsolationPoints: checkResult.TotalRequiredPoints,
+            TotalRequiredLotoIsolationPoints: checkResult.TotalRequiredPoints,
             CompliantPointsCount: compliantPointsCount,
             TotalLocksApplied: totalLocksApplied,
             Violations: checkResult.Violations,
             OrphanedLocks: orphanedLocks,
-            IsolationPointSnapshots: pointsList,
+            LotoIsolationPointSnapshots: pointsList,
             EvaluatedAtUtc: now,
             EvaluatedBy: auditorBadge,
             SummaryNotes: notes
@@ -724,7 +724,7 @@ public class LOTOComplianceChecker : ILOTOComplianceChecker
     /// <inheritdoc />
     public bool IsPermitReadyForActivation(
         PermitLotoContext permit,
-        IEnumerable<IsolationPoint> facilityPoints,
+        IEnumerable<LotoIsolationPoint> facilityPoints,
         IEnumerable<WorkerSitePresence> workerPresences)
     {
         var result = VerifyPreActivationCompliance(permit, facilityPoints, workerPresences);
