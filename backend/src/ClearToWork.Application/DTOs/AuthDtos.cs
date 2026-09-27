@@ -11,9 +11,9 @@ public record RegisterRequest(
     string FullName,
     string Email,
     string Password,
-    string Role,
-    string BadgeNumber,
-    Guid? ContractorId
+    string Role = "Worker",
+    string? BadgeNumber = null,
+    Guid? ContractorId = null
 );
 
 public record AuthResponse(
