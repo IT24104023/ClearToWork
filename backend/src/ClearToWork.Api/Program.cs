@@ -311,4 +311,62 @@ app.MapControllers();
 // Health check endpoint
 app.MapGet("/health", () => Results.Ok(new { status = "healthy", service = "ClearToWork Backend API", version = "v1" }));
 
-app.Run();
+// Root Gateway Landing Page (Fixes 404 on root URL)
+app.MapGet("/", () => Results.Content("""
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <meta charset='UTF-8'>
+  <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+  <title>ClearToWork AI — Backend Gateway</title>
+  <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css' rel='stylesheet'>
+  <style>
+    body { background: #0f172a; color: #f8fafc; font-family: system-ui, -apple-system, sans-serif; min-height: 100vh; display: flex; align-items: center; justify-content: center; margin: 0; }
+    .gateway-card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; max-width: 650px; width: 100%; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
+    .badge-active { background-color: #10b981; }
+    .btn-portal { background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%); color: white; border: none; font-weight: 600; padding: 12px 24px; border-radius: 8px; text-decoration: none; display: inline-block; }
+    .btn-portal:hover { color: white; opacity: 0.95; }
+    .nav-btn { background: #334155; color: #f8fafc; border: 1px solid #475569; padding: 12px 20px; border-radius: 8px; text-decoration: none; font-weight: 500; display: flex; align-items: center; justify-content: space-between; transition: all 0.2s ease; }
+    .nav-btn:hover { background: #475569; color: #38bdf8; border-color: #38bdf8; }
+  </style>
+</head>
+<body class='p-3'>
+  <div class='gateway-card p-4 p-md-5'>
+    <div class='text-center mb-4'>
+      <div class='d-inline-flex align-items-center gap-2 mb-2'>
+        <span class='badge badge-active fs-6 px-3 py-2 rounded-pill'>🟢 API ONLINE</span>
+        <span class='text-secondary'>v1.0.0</span>
+      </div>
+      <h1 class='fw-bold text-info m-0'>ClearToWork AI</h1>
+      <p class='text-secondary mt-1'>Industrial Safety & Permit-to-Work Backend Gateway</p>
+    </div>
+
+    <div class='d-grid gap-3 mb-4'>
+      <a href='/swagger' class='nav-btn'>
+        <span>📜 Swagger UI Explorer</span>
+        <span class='text-info'><code>/swagger</code> ➔</span>
+      </a>
+      <a href='/db' class='nav-btn'>
+        <span>🛡️ Live EF Core Database Explorer</span>
+        <span class='text-success'><code>/db</code> ➔</span>
+      </a>
+      <a href='/docs' class='nav-btn'>
+        <span>📖 RapiDoc Interactive Specs</span>
+        <span class='text-warning'><code>/docs</code> ➔</span>
+      </a>
+      <a href='/health' class='nav-btn'>
+        <span>💚 System Health Check JSON</span>
+        <span class='text-emerald-400'><code>/health</code> ➔</span>
+      </a>
+    </div>
+
+    <div class='text-center pt-3 border-top border-secondary'>
+      <p class='text-muted small mb-3'>To access the user web interface, click below:</p>
+      <a href='https://cleartowork-frontend-h0pr.onrender.com' class='btn-portal w-100'>🌐 Launch ClearToWork Frontend Portal</a>
+    </div>
+  </div>
+</body>
+</html>
+""", "text/html")).ExcludeFromDescription();
+
+app.Run();
