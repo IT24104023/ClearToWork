@@ -28,7 +28,42 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
     });
 
-// 3. Configure JWT Bearer Authentication
+// 3. Add Swagger & OpenAPI Explorer
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "ClearToWork AI - Industrial Permit-to-Work API",
+        Version = "v1",
+        Description = "API for Permit-to-Work lifecycle, SIMOPS hazard checking, equipment calibration, and AI agent coordination."
+    });
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "JWT Authorization header using the Bearer scheme. Example: \"Bearer {token}\"",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT"
+    });
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+});
+
+// 4. Configure JWT Bearer Authentication
 var jwtKey = builder.Configuration["Jwt:Key"] ?? "ClearToWork_Super_Secret_Key_For_Development_Must_Be_32_Chars_Long!";
 var keyBytes = Encoding.UTF8.GetBytes(jwtKey);
 
@@ -55,7 +90,7 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization();
 
-// 4. Configure CORS
+// 5. Configure CORS
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontendClients", policy =>
@@ -69,7 +104,15 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// 5. Automatic Database Creation & Seeding on Startup
+// Enable Swagger UI across all environments (including Render Production)
+app.UseSwagger();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "ClearToWork AI API v1");
+    c.RoutePrefix = "swagger";
+});
+
+// 6. Automatic Database Creation & Seeding on Startup
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
@@ -77,7 +120,7 @@ using (var scope = app.Services.CreateScope())
     await DbInitializer.SeedAsync(context);
 }
 
-// 6. DEDICATED INTERACTIVE DATABASE EXPLORER UI AT /db
+// 7. DEDICATED INTERACTIVE DATABASE EXPLORER UI AT /db
 app.MapGet("/db", () => Results.Content("""
 <!DOCTYPE html>
 <html lang='en'>
@@ -109,6 +152,7 @@ app.MapGet("/db", () => Results.Content("""
       </div>
       <div>
         <span class='badge bg-success fs-6 me-2'>DB Status: ACTIVE</span>
+        <a href='/swagger' class='btn btn-outline-warning btn-sm me-2' target='_blank'>📜 Open Swagger UI</a>
         <button onclick='loadAllData()' class='btn btn-outline-info btn-sm'>🔄 Refresh Database Data</button>
       </div>
     </div>
@@ -211,7 +255,7 @@ app.MapGet("/db", () => Results.Content("""
 </html>
 """, "text/html")).ExcludeFromDescription();
 
-// 7. Internal API Endpoints for /db Queries
+// 8. Internal API Endpoints for /db Queries
 app.MapGet("/api/db/query/permits", async (AppDbContext db) =>
 {
     var list = await db.Permits.Take(50).ToListAsync();
@@ -240,7 +284,7 @@ app.MapGet("/api/db/query/equipment", async (AppDbContext db) =>
     return Results.Ok(list);
 }).ExcludeFromDescription();
 
-// 8. RapiDoc Explorer at /docs
+// 9. RapiDoc Explorer at /docs
 app.MapGet("/docs", () => Results.Content(@"<!DOCTYPE html>
 <html>
 <head>
@@ -264,8 +308,7 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-// Root redirect to Database Explorer and Health check endpoint
-app.MapGet("/", () => Results.Redirect("/db"));
+// Health check endpoint
 app.MapGet("/health", () => Results.Ok(new { status = "healthy", service = "ClearToWork Backend API", version = "v1" }));
 
 app.Run();

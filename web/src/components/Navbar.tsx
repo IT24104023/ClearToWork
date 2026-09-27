@@ -57,10 +57,23 @@ export const Navbar: React.FC<NavbarProps> = ({
               <span className="text-base sm:text-lg font-extrabold tracking-tight">ClearToWork</span>
               <span className="text-[10px] sm:text-xs bg-slate-950 text-amber-400 px-1.5 py-0.5 rounded font-mono ml-0.5">AI</span>
             </div>
-            <div className="hidden lg:block pl-2 border-l border-slate-300 dark:border-slate-700">
-              <span className="text-xs text-slate-500 dark:text-slate-400 font-medium tracking-wide uppercase">
-                Petrochemical Complex · Multi-Agent Safety Clearance System
-              </span>
+            <div className="hidden lg:flex items-center space-x-2 pl-3 border-l border-slate-300 dark:border-slate-700">
+              <a
+                href="/swagger"
+                target="_blank"
+                rel="noreferrer"
+                className="text-xs bg-amber-500/10 text-amber-500 hover:bg-amber-500/20 border border-amber-500/30 px-2.5 py-1 rounded-lg font-semibold transition"
+              >
+                📜 Swagger API
+              </a>
+              <a
+                href="/db"
+                target="_blank"
+                rel="noreferrer"
+                className="text-xs bg-sky-500/10 text-sky-400 hover:bg-sky-500/20 border border-sky-500/30 px-2.5 py-1 rounded-lg font-semibold transition"
+              >
+                🛡️ Database Explorer
+              </a>
             </div>
           </div>
         </div>
