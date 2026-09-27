@@ -577,3 +577,4 @@ export const PermitsListPage: React.FC = () => {
     </div>
   );
 };
+
