@@ -1,187 +1,392 @@
-# 🛡️ ClearToWork AI — Intelligent Permit-to-Work (PTW) Safety System
+# ClearToWork AI · Industrial Safety Clearance Engine
 
-[![Build & Test](https://github.com/IT24104023/ClearToWork/actions/workflows/ci.yml/badge.svg)](https://github.com/IT24104023/ClearToWork/actions)
-[![.NET 8](https://img.shields.io/badge/.NET-8.0-512BD4?logo=dotnet)](https://dotnet.microsoft.com/)
-[![React](https://img.shields.io/badge/React-18.2-61DAFB?logo=react)](https://react.dev/)
-[![LangGraph](https://img.shields.io/badge/LangGraph-Python_Multi--Agent-FF6C37?logo=python)](https://python.langchain.com/)
-[![Docker](https://img.shields.io/badge/Docker-Multi--Container-2496ED?logo=docker)](https://www.docker.com/)
-[![Render](https://img.shields.io/badge/Render-Deployed-46E3B7?logo=render)](https://render.com/)
+<div align="center">
 
-An enterprise-grade, **AI-orchestrated Permit-to-Work (PTW) safety management system** tailored for high-risk oil & gas offshore/onshore installations. **ClearToWork AI** combines a high-performance **.NET 8 Clean Architecture** backend, a dynamic **React 18 + TypeScript** command center, and a **Python LangGraph multi-agent artificial intelligence network** to automate permit verification, hazard clash detection, workforce qualification checks, and gas detector calibrations.
+![ClearToWork AI Banner](web/public/team-photo.jpg)
 
----
+**Autonomous 5-Agent Permit-to-Work (PTW) Verification, SIMOPS Spatial Conflict Engine, and Fail-Closed Clearance for High-Hazard Petrochemical Plants.**
 
-## 🌐 Live Application & API Deployment Links
+[![ASP.NET Core 8](https://img.shields.io/badge/.NET-8.0-512BD4?logo=dotnet&logoColor=white)](https://dotnet.microsoft.com/)
+[![React 19](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)](https://react.dev/)
+[![LangGraph](https://img.shields.io/badge/LangGraph-Multi--Agent-FF6F00?logo=python&logoColor=white)](https://langchain-ai.github.io/langgraph/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.110+-009688?logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
+[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
+[![Render](https://img.shields.io/badge/Render-Deployed-46E3B7?logo=render&logoColor=black)](https://render.com/)
+[![i18n Trilingual](https://img.shields.io/badge/i18n-EN%20|%20SI%20|%20TA-amber)](https://github.com/IT24104023/ClearToWork-Main)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-| Environment / Service | Deployment URL | Description / Documentation |
-| :--- | :--- | :--- |
-| 🖥️ **Live Web Application** | [https://cleartowork-frontend.onrender.com](https://cleartowork-frontend.onrender.com) | React 18 + Redux Command Center UI |
-| ⚡ **REST API (Backend)** | [https://cleartowork-backend.onrender.com/swagger](https://cleartowork-backend.onrender.com/swagger) | ASP.NET Core 8 OpenAPI / Swagger Documentation |
-| 🤖 **AI Orchestrator Engine** | [https://cleartowork-agent.onrender.com/docs](https://cleartowork-agent.onrender.com/docs) | Python FastAPI + LangGraph Agent Docs |
-| 📦 **GitHub Repository** | [https://github.com/IT24104023/ClearToWork](https://github.com/IT24104023/ClearToWork) | Official Team Codebase |
+</div>
 
 ---
 
-## 👥 SLIIT SE3090 Team Allocation & Contributions
+## 🌐 Live Cloud Deployments (Render)
 
-| Student ID | Team Member | Module & Domain Specialty | Core Features Delivered |
+| Service | Environment | Live URL | Description |
 | :--- | :--- | :--- | :--- |
-| **IT24104023** | **Mohammed Zakee** | **Permits & Planning** | PTW State Machine, JWT Auth, PDF Exporter, Planning Agent Node, Rate Limiting |
-| **IT24104198** | **Dinithi** | **Workforce & Competency** | Worker Credential Tracking, Competency Scorer, Fatigue Limits, Competency Agent Node |
-| **IT24104054** | **Chemini** | **Hazard Zones & SIMOPS** | Spatial Clash Matrix, GeoJSON Boundary Validator, SIMOPS Agent Node, Evacuation Routes |
-| **IT24103874** | **Oshini** | **Equipment & Gas Calibration** | Gas Telemetry Analyzer, LOTO Lock Verification, SCBA Pressure Checker, Validation Agent Node |
+| **Frontend Web Portal** | Production | [cleartowork-frontend.onrender.com](https://cleartowork-frontend.onrender.com) | 3D Interactive React 19 Client with Trilingual & Light/Dark Support |
+| **Backend REST API** | Production | [cleartowork-backend.onrender.com/swagger](https://cleartowork-backend.onrender.com/swagger) | ASP.NET Core 8 API Gateway with Interactive Swagger OpenAPI |
+| **Multi-Agent Engine** | Production | [cleartowork-agent.onrender.com/health](https://cleartowork-agent.onrender.com/health) | Python LangGraph 5-Agent Deterministic Verification Pipeline |
 
 ---
 
-## 📸 System Screenshots & Command Center Preview
+## 📖 Executive Summary & Problem Domain
 
-### 1. Unified Safety Dashboard & Live Telemetry
-![Dashboard Preview](docs/images/dashboard_preview.png)
+In high-hazard facilities such as oil refineries, petrochemical processing complexes, and offshore fabrication yards, catastrophic incidents (uncontrolled fires, toxic gas leaks, and vapor cloud explosions) routinely occur due to **three primary failure modes in legacy manual/paper Permit-to-Work (PTW) workflows**:
 
-### 2. Multi-Agent AI QChat Command Center
-![Agent Command Center](docs/images/agent_command_center.png)
+1. **SIMOPS Spatial Clashes**: Simultaneous incompatible activities occurring in adjacent physical plant zones (e.g., hot welding occurring 15m away from volatile solvent tank purging) without mutual cross-referencing on paper permits.
+2. **Uncalibrated & Expired Safety Assets**: Expired 90-day multi-gas monitors, uninspected fire extinguishers, or missing physical Lock-Out/Tag-Out (LOTO) isolation points passing physical inspections without automated verification.
+3. **Unqualified Crews**: Workers with expired trade certifications (welding, confined space, scaffolding) assigned to high-risk areas due to spreadsheet blindspots.
 
-### 3. GitHub Multi-Branch Contribution History
-![GitHub Commit View](docs/images/github_commits_view.png)
+### The ClearToWork AI Solution
+**ClearToWork AI** replaces fragmented paper permits with a **Deterministic, 5-Agent Directed Acyclic Graph (DAG)** built on **LangGraph**. ClearToWork AI enforces a strict **Fail-Closed Safety Policy**: if any safety rule, qualification, calibration tag, or SIMOPS distance envelope is violated, the clearance is immediately marked as `REFUSED_SAFE_FAILURE` with an automated synthesized remediation fix.
 
 ---
 
-## 🏗️ System Architecture & Multi-Agent Workflow
+## ⚡ Key Highlights & Core Capabilities
+
+- **3D Animated Landing Experience**: Built with interactive physics-based particle canvas, specular glare tilt cards, pixel grid swap animations, and floating multi-card navigation headers.
+- **Trilingual Localization (i18n)**: Instant switching between **English (EN)**, **Sinhala (සිංහල - SI)**, and **Tamil (தமிழ் - TA)** across all pages, forms, agent telemetry, and technical documents.
+- **Dynamic Light & Dark Modes**: Clean, theme-adaptive styling with smooth transitions between industrial dark mode (`#020617` / `#030712`) and high-contrast light mode (`#f8fafc` / `#ffffff`).
+- **Real-Time QChat Agent Command Center**: Live interactive simulation terminal where safety officers can execute custom permit scenarios, view step-by-step LangGraph node executions, and inspect fail-safe remediation plans.
+- **Meteorological Safeguards**: Direct live integration with the **Open-Meteo API** to enforce strict **35.0 km/h wind gust ceilings** for elevated hot work/cranes and precipitation cutoffs for solvent work.
+- **Cryptographic RBAC Matrix**: Multi-role token security (Contractor Supervisor, HSE Safety Officer, Area Supervisor, System Administrator).
+
+---
+
+## 👥 Student Component Ownership & Architectural Division
+
+Aligned with enterprise microservice standards and academic grading specifications:
+
+```
+┌──────────────────────────────────────────────────────────────────────────────────┐
+│                             ClearToWork AI System                                │
+├─────────────────────────┬──────────────────────────┬─────────────────────────────┤
+│ Student Component       │ Microservice Domain      │ Agentic AI Contribution     │
+├─────────────────────────┼──────────────────────────┼─────────────────────────────┤
+│ Student 1 (Member 1)    │ Workforce & Competencies │ Personnel & Competency Node │
+│ Student 2 (Member 2)    │ Equipment & LOTO Points  │ Resource & Isolation Node   │
+│ Student 3 (Member 3)    │ Permit Drafting & JWT    │ Planning & Coordinator Node │
+│ Student 4 (Member 4)    │ SIMOPS Zones & Weather   │ Site & Hazard Control Node  │
+│ Shared Engineering      │ DB Admin, QChat & UI     │ Validation & Guardrail Node │
+└─────────────────────────┴──────────────────────────┴─────────────────────────────┘
+```
+
+### Detailed Student Breakdown
+
+#### 👷 Student 1: Workforce, Competency & Certification Management
+- **Domain**: Worker profiles, digital badge scanning, trade qualification tracking (Welder, Confined Space Entry, Rigger, Scaffolder).
+- **Core Agent**: **Personnel & Competency Agent** (`agents/nodes/competency_agent.py`).
+- **Autonomous Features**: 30-day credential expiry forecasting, trade mismatch detection, and automated synthesis of certified replacement crew members.
+- **Key Endpoints**: `GET /api/workforce/workers`, `GET /api/workforce/certificates`, `POST /api/workforce/workers`.
+
+#### 🧯 Student 2: Safety Equipment & LOTO Isolation Management
+- **Domain**: Safety asset registry (multi-gas detectors, dry chemical extinguishers, explosion-proof blowers, harnesses), 90-day calibration intervals, Lock-Out / Tag-Out (LOTO) isolation points.
+- **Core Agent**: **Resource & Isolation Agent** (`agents/nodes/equipment_agent.py`).
+- **Autonomous Features**: Overdue calibration flagging, uncalibrated equipment refusal, isolation point validation.
+- **Key Endpoints**: `GET /api/equipment`, `GET /api/equipment/isolations`, `POST /api/equipment/assets`.
+
+#### 📋 Student 3: Permit Lifecycle, Authentication & Digital Sign-Off
+- **Domain**: Cryptographic JWT authentication, role claims, permit drafting state machine (Draft → Submitted → AiReview → PendingApproval → Approved / Refused → Active → Closed).
+- **Core Agent**: **Planning & Coordination Agent** (`agents/nodes/planning_agent.py`).
+- **Autonomous Features**: Objective decomposition, hazard duration envelope clamping, mandatory fire watch assignment.
+- **Key Endpoints**: `POST /api/auth/login`, `POST /api/auth/register`, `GET /api/permits`, `POST /api/permits`, `POST /api/permits/{id}/submit-ai`.
+
+#### 🌦️ Student 4: Hazard Zones, Environmental SIMOPS & Meteorology
+- **Domain**: Geospatial plant zones (Cracking Unit, Solvent Tank Farm, Flare Header), radius boundaries, spatial-temporal clash matrix, live Open-Meteo meteorological integration.
+- **Core Agent**: **Site Conditions & Hazard Control Agent** (`agents/nodes/hazard_agent.py`).
+- **Autonomous Features**: Real-time hot work vs. solvent conflict detection within 50m radius, live wind gust checks (≥35 km/h cutoff), and rainfall precipitation warnings.
+- **Key Endpoints**: `GET /api/hazard-rules/zones`, `GET /api/hazard-rules/conflicts`, `GET /api/hazard-rules/weather`.
+
+#### 🛡️ Shared Architecture: Validation, Security, Database Admin & QChat
+- **Core Agent**: **Validation & Safety Guardrail Agent** (`agents/nodes/validation_agent.py`).
+- **Autonomous Features**: Fail-closed final consensus synthesis, multi-agent remediation packages, ADR technical docs, database seeding and schema management.
+
+---
+
+## 🏛️ System Architecture (4-Tier Integrated Pipeline)
 
 ```mermaid
 graph TD
-    subgraph Client Layer
-        UI["React 18 + Vite Frontend\n(Redux Toolkit + i18n Trilingual)"]
+    subgraph Tier 1: Presentation Layer
+        UI["React 19 + Vite Web Client<br/>(Tailwind CSS + Redux Toolkit)"]
+        i18n["Trilingual i18n<br/>(EN / SI / TA)"]
+        Theme["Dark / Light Theme Engine"]
     end
 
-    subgraph Core API Layer [.NET 8 Clean Architecture]
-        API["ClearToWork.Api\n(Controllers & JWT Auth)"]
-        APP["ClearToWork.Application\n(Interfaces & DTOs)"]
-        INF["ClearToWork.Infrastructure\n(EF Core & Services)"]
-        DOM["ClearToWork.Domain\n(Entities & Rules)"]
+    subgraph Tier 2: Application Layer
+        API["ASP.NET Core 8 Web API Gateway"]
+        Auth["JWT Authentication & RBAC Matrix"]
+        Rules["Deterministic Safety Engine"]
+        WeatherClient["Open-Meteo Weather Client"]
     end
 
-    subgraph AI Orchestration Layer [Python 3.11 + LangGraph]
-        SERVER["FastAPI Agent Server"]
-        PLANNING["Planning Coordinator Node\n(Zakee)"]
-        COMPETENCY["Competency Assessment Node\n(Dinithi)"]
-        HAZARD["Site Conditions Hazard Node\n(Chemini)"]
-        VALIDATION["Resource Validation Node\n(Oshini)"]
+    subgraph Tier 3: Relational Persistence
+        DB[("Entity Framework Core 8<br/>SQLite / PostgreSQL")]
     end
 
-    UI <-->|HTTPS / REST API| API
-    API --> APP --> INF --> DOM
-    API <-->|JSON RPC / Shared Secret| SERVER
-    SERVER --> PLANNING
-    SERVER --> COMPETENCY
-    SERVER --> HAZARD
-    SERVER --> VALIDATION
+    subgraph Tier 4: Multi-Agent AI Subsystem
+        FastAPI["FastAPI Orchestrator (:8000)"]
+        LG["LangGraph StateGraph Engine"]
+        A1["1. Planning & Coordination Agent"]
+        A2["2. Personnel & Competency Agent"]
+        A3["3. Resource & Isolation Agent"]
+        A4["4. Site Conditions & SIMOPS Agent"]
+        A5["5. Validation & Safety Guardrail Agent"]
+    end
+
+    UI -->|HTTPS / JSON REST| API
+    API -->|EF Core Queries & Transactions| DB
+    API -->|Internal HTTP + Shared Secret| FastAPI
+    API -->|Live Hourly Forecasts| WeatherClient
+    FastAPI --> LG
+    LG --> A1 --> A2 --> A3 --> A4 --> A5
 ```
 
 ---
 
-## 📂 Repository Directory Structure
+## 🤖 LangGraph Multi-Agent Workflow
 
-```text
-ClearToWork AI/
-├── 📁 .github/
-│   └── 📁 workflows/
-│       └── ci.yml                 # GitHub Actions CI Build & Test Pipeline
-├── 📁 agents/                     # Python 3.11 LangGraph Multi-Agent Engine
-│   ├── 📁 nodes/                  # AI Agent Nodes (Planning, Competency, Hazard, Validation)
-│   ├── 📁 tools/                  # OpenAPI & Tool Bindings
-│   ├── server.py                  # FastAPI Agent Server
-│   └── Dockerfile                 # Agent Docker Container Manifest
-├── 📁 backend/                    # ASP.NET Core 8 Clean Architecture Solution
-│   ├── ClearToWork.sln            # Visual Studio / .NET Solution File
-│   ├── 📁 src/
-│   │   ├── 📁 ClearToWork.Api/           # Controllers, Middleware, Auth & Swagger
-│   │   ├── 📁 ClearToWork.Application/   # Interfaces, Contracts & DTO Models
-│   │   ├── 📁 ClearToWork.Domain/        # Domain Entities, Enums & Rule Validators
-│   │   └── 📁 ClearToWork.Infrastructure/ # EF Core, JWT Auth & Service Implementations
-│   └── 📁 tests/
-│       └── 📁 ClearToWork.Tests/         # Comprehensive XUnit Unit Test Suites
-├── 📁 web/                        # React 18 + TypeScript + Vite Web Application
-│   ├── 📁 src/
-│   │   ├── 📁 components/         # Reusable UI & Modal Components
-│   │   ├── 📁 pages/              # Module Dashboard Pages
-│   │   ├── 📁 store/              # Redux Toolkit API Store
-│   │   └── 📁 i18n/               # Trilingual Translation Dictionary
-│   ├── index.html                 # HTML Root Template
-│   └── vite.config.ts             # Vite Build Configuration
-├── 📁 docs/                       # Enterprise Documentation & Image Previews
-│   └── 📁 images/                 # Screenshot Previews & Screenshots
-├── docker-compose.yml             # Full-Stack Multi-Container Orchestration
-├── render.yaml                    # Cloud Production Deployment Blueprint
-└── README.md                      # Primary Enterprise Documentation
+```mermaid
+stateDiagram-v2
+    [*] --> PlanningAgent: Permit Submitted
+    PlanningAgent --> CompetencyAgent: Objective & Time Envelope Checked
+    CompetencyAgent --> EquipmentAgent: Worker Badges & Trade Certs Audited
+    EquipmentAgent --> HazardSIMOPSAgent: 90-Day Gas Calibrations & LOTO Verified
+    HazardSIMOPSAgent --> ValidationGuardrail: SIMOPS Clashes & 35km/h Wind Evaluated
+
+    state ValidationGuardrail {
+        [*] --> CheckViolations
+        CheckViolations --> Approved: Zero Safety Violations
+        CheckViolations --> RefusedSafeFailure: Violation Detected (Fail-Closed)
+    }
+
+    Approved --> [*]: Status = PendingApproval (HSE Sign-Off)
+    RefusedSafeFailure --> [*]: Status = RefusedSafeFailure + Remediation Package
 ```
 
 ---
 
-## 🚀 Key Functional Modules
+## 🔑 Demo Credentials & Role-Based Access Control (RBAC)
 
-### 📋 1. Permits & Planning (Mohammed Zakee — IT24104023)
-- **Permit Lifecycle State Machine**: Draft $\rightarrow$ Pending Approval $\rightarrow$ Active $\rightarrow$ Suspended $\rightarrow$ Closed.
-- **JWT Authentication & Security**: Sliding-window token refresh middleware, role-based access control (Admin, Issuing Authority, Performing Authority, Safety Officer).
-- **PDF Export Engine**: Automated generation of printable PTW certificates with QR verification codes.
-- **AI Planning Coordinator Node**: Parses natural language permit requests and suggests required isolation certificates (ICCs).
+The system is pre-seeded with authoritative demo personas for evaluation and live viva demonstration:
 
-### 👷 2. Workforce & Competency (Dinithi — IT24104198)
-- **Credential Expiry Forecasting**: Automated 30-day warning window for OPITO, BOSIET, CompEx, and Offshore Medical certifications.
-- **Competency Matrix Scorer**: Weighted scoring algorithm matching trade roles (e.g. Rig Electrician, Scaffold Inspector) against active qualifications.
-- **Fatigue Management**: OSHA/OGUK 12-hour shift limit compliance tracker with mandatory rest recommendations.
-- **AI Competency Node**: Validates worker eligibility in real-time prior to permit activation.
-
-### ⚠️ 3. Hazard Zones & SIMOPS (Chemini — IT24104054)
-- **SIMOPS Spatial Clash Matrix**: Detects hazardous simultaneous operations (e.g., Hot Work Grinding vs. Diesel Bunkering within 15 meters).
-- **GeoJSON Boundary Validator**: Ensures valid polygon coordinates for plant exclusion zones and blast buffers.
-- **Wind Vector Safety Engine**: Dynamically calculates spark dispersion boundaries based on live anemometer data.
-- **AI Hazard Node**: Scans plant GIS coordinates and flags spatial/temporal conflicts.
-
-### ⛽ 4. Equipment & Gas Calibration (Oshini — IT24103874)
-- **Atmospheric Gas Reading Analyzer**: Evaluates multi-gas telemetry ($H_2S$, $LEL$, $CO$, $O_2$) against OSHA 1910.146 thresholds with 4-tier alarm escalation.
-- **OSHA 1910.147 LOTO Verification**: Enforces "One Person, One Lock, One Key" rules, detects orphaned locks, and checks zero-energy isolation.
-- **SCBA & Equipment Calibration**: Tracks daily bump tests and cylinder pressure threshold checks.
-- **AI Resource Validation Node**: Confirms gas detector readiness before approving hot work or confined space entry.
+| Role | Email Address | Password | Permissions & Operational Scope |
+| :--- | :--- | :--- | :--- |
+| **HSE Safety Officer** | `safety@cleartowork.com` | `Password123!` | Authoritative clearance sign-off, rulebook modifications, safe failure audits, QChat admin |
+| **Contractor Supervisor** | `supervisor@contractor.com` | `Password123!` | Permit drafting, worker assignment, equipment checkout, permit activation |
+| **Area Supervisor** | `areasup@cleartowork.com` | `Password123!` | Zone spatial boundaries, SIMOPS conflict monitoring, emergency halts |
+| **System Administrator** | `admin@cleartowork.com` | `Password123!` | Full RBAC management, database schema recreation, benchmark seeding |
 
 ---
 
-## 🛠️ Local Development & Installation Guide
+## 🗄️ Database Architecture, Persistence & Access Guide
+
+ClearToWork AI uses **Entity Framework Core 8** with SQLite (locally) and PostgreSQL (in production). Every operational, security, user, and agent trace is permanently persisted with referential integrity.
+
+### 📌 What Information Is Stored in the Database?
+
+| Data Category | Relational Entity / Table | Persisted Information |
+| :--- | :--- | :--- |
+| **User Accounts & Authentication** | `Users` | BCrypt password hashes, full names, email addresses, roles, contact numbers, department, bio, preset avatar URLs, permissions matrix, and registration timestamps. |
+| **Audit Logs & Security Trails** | `AuditEntries` | Immutable chronological logs of all logins, permit submissions, agent clearance runs, approvals, and administrator schema resets with UTC timestamps and user IDs. |
+| **Permit Applications & Approvals** | `PermitRequests`, `PermitWorkers`, `PermitAssets`, `Approvals` | Complete permit dossiers, requested time windows, assigned workers, allocated equipment, clearance decisions (`Approved` / `RefusedSafeFailure`), and safety officer digital sign-offs. |
+| **Photos & Evidence Media** | `EvidencePhotos` | Pre-work photo URLs, hot work containment snapshots, LOTO tag verification photos, calibration certificate images, and photo capture timestamps. |
+| **Multi-Agent Evaluation Runs** | `AgentWorkflowRuns` | Step-by-step LangGraph node execution records, tool call latencies, intermediate payloads, identified violations, and AI-synthesized remediation actions. |
+| **Workforce & Competencies** | `Contractors`, `Workers`, `WorkerCertificates`, `CertificateTypes` | Contractor entities, worker profiles, trade certifications, license issue/expiry dates, and digital badge numbers. |
+| **Equipment & Calibration** | `Assets`, `InspectionRecords`, `CalibrationRecords`, `IsolationPoints` | Safety equipment serials, 90-day multi-gas calibration records, monthly fire extinguisher inspections, and mechanical/electrical LOTO isolation points. |
+| **Hazard Spatial Mapping** | `Sites`, `Zones`, `ZoneAdjacencies`, `HazardTypes`, `HazardRules` | Plant layout zones, GIS coordinates, adjacent zone matrices, SIMOPS clash rules, and environmental threshold limits (wind/gusts). |
+
+---
+
+### 🔍 How to Access and Inspect the Database
+
+You can inspect, query, and manage the database using three methods:
+
+#### Method 1: Web Admin Portal GUI (Built-in)
+1. Log in to the frontend as the **System Administrator** (`admin@cleartowork.com` / `Password123!`).
+2. Navigate to **Database Admin** in the sidebar or go directly to `http://localhost:5173/admin/database`.
+3. View real-time record counts across all relational tables, database file size, and execute **One-Click Re-Seed** or **Schema Recreate**.
+
+#### Method 2: Interactive Swagger OpenAPI Explorer
+1. Launch the backend API.
+2. Open your browser and navigate to:
+   - **Local**: [http://localhost:5000/swagger](http://localhost:5000/swagger)
+   - **Production**: [https://cleartowork-backend.onrender.com/swagger](https://cleartowork-backend.onrender.com/swagger)
+3. Authenticate with your JWT token via the `Authorize` button.
+4. Directly execute queries against `Users`, `Permits`, `Workforce`, `Equipment`, `HazardRules`, `Admin`, and `QChat` endpoints.
+
+#### Method 3: Direct SQLite File Access (Local Development)
+The SQLite database is located at:
+```
+backend/src/ClearToWork.Api/cleartowork.db
+```
+To query the database directly:
+- **GUI**: Open `cleartowork.db` in [DB Browser for SQLite](https://sqlitebrowser.org/) or the **SQLite Viewer** extension in VS Code.
+- **CLI**:
+  ```bash
+  sqlite3 backend/src/ClearToWork.Api/cleartowork.db
+  # View all tables:
+  .tables
+  # Inspect user accounts:
+  SELECT Id, Email, FullName, Role, CreatedAt FROM Users;
+  # Inspect audit logs:
+  SELECT Id, Action, EntityName, Timestamp FROM AuditEntries ORDER BY Timestamp DESC LIMIT 10;
+  ```
+
+---
+
+## 🚀 Quick Start Guide (Local Setup)
 
 ### Prerequisites
-- [.NET 8 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
-- [Node.js 18+](https://nodejs.org/)
-- [Python 3.11+](https://www.python.org/)
-- [Docker Desktop](https://www.docker.com/) (Optional for containerized run)
-
-### Running with Docker Compose (Recommended)
-```bash
-# Clone repository
-git clone https://github.com/IT24104023/ClearToWork.git
-cd ClearToWork
-
-# Start full multi-container stack (Backend, Frontend, AI Agents)
-docker-compose up --build
-```
-- **Web App**: `http://localhost:3000`
-- **Backend Swagger**: `http://localhost:5000/swagger`
-- **Agent Server**: `http://localhost:8000/docs`
+- [.NET 8.0 SDK](https://dotnet.microsoft.com/download/dotnet/8.0)
+- [Node.js 18+](https://nodejs.org/) & `npm`
+- [Python 3.10+](https://www.python.org/)
+- [Docker Desktop](https://www.docker.com/) *(optional for containerized setup)*
 
 ---
 
-## 🧪 Testing & Verification
+### Option A: One-Click Startup (Recommended for Windows)
 
+Run the included PowerShell launch script from the project root:
+
+```powershell
+.\run-local.ps1
+```
+
+Or execute the batch file:
+```cmd
+run-local.bat
+```
+
+*This automatically launches the Python Multi-Agent Service (`:8000`), the ASP.NET Core Backend (`:5000`), and the React Frontend (`:5173`) in independent processes.*
+
+---
+
+### Option B: Manual Step-by-Step Launch
+
+#### 1. Python Multi-Agent Engine
 ```bash
-# Run .NET Backend & Domain Unit Tests
-dotnet test backend/ClearToWork.sln
-
-# Run Python Agent Service Tests
+# From project root:
 cd agents
-pytest
+python -m venv venv
+# Windows:
+.\venv\Scripts\activate
+# Linux/macOS:
+source venv/bin/activate
+
+pip install -r requirements.txt
+python -m uvicorn server:app --host 127.0.0.1 --port 8000 --reload
+```
+
+#### 2. ASP.NET Core Backend API
+```bash
+# In a new terminal from project root:
+cd backend/src/ClearToWork.Api
+dotnet restore
+dotnet run --launch-profile http
+```
+*Swagger UI will be accessible at: `http://localhost:5000/swagger`*
+
+#### 3. React Frontend Client
+```bash
+# In a new terminal from project root:
+cd web
+npm install
+npm run dev -- --host 127.0.0.1 --port 5173
+```
+*Web App will be accessible at: `http://localhost:5173`*
+
+---
+
+### Option C: Containerized Deployment (Docker Compose)
+
+```bash
+docker compose up --build
 ```
 
 ---
 
-## 📄 License & Academic Attribution
-Developed as part of the **SLIIT SE3090 Integrated Full-Stack AI Application** course (2026).  
-© 2026 ClearToWork AI Team — All rights reserved.
+## 📦 Project Repository Structure
+
+```
+ClearToWork AI/
+├── agents/                           # Python LangGraph Multi-Agent Engine
+│   ├── graph.py                      # StateGraph definition & edge conditions
+│   ├── models.py                     # Strongly-typed AgentWorkflowState models
+│   ├── server.py                     # FastAPI REST API & webhook listener
+│   ├── Dockerfile                    # Container definition for Python agents
+│   ├── requirements.txt              # LangGraph, FastAPI, Pydantic, Uvicorn
+│   ├── nodes/                        # 5 Specialized Agent Nodes
+│   │   ├── planning_agent.py         # Node 1: Objective & Duration Envelope
+│   │   ├── competency_agent.py       # Node 2: Badges & Trade Certificates
+│   │   ├── equipment_agent.py        # Node 3: Gas Calibration & LOTO
+│   │   ├── hazard_agent.py           # Node 4: SIMOPS & Open-Meteo Weather
+│   │   └── validation_agent.py       # Node 5: Fail-Closed Guardrail & Fixes
+│   └── tools/                        # Deterministic agent execution tools
+│       ├── permit_tools.py
+│       ├── workforce_tools.py
+│       ├── equipment_tools.py
+│       └── hazard_tools.py
+│
+├── backend/                          # ASP.NET Core 8 Web API Gateway
+│   ├── Dockerfile                    # Multi-stage .NET 8 build container
+│   └── src/
+│       ├── ClearToWork.Api/          # Controllers, JWT Middleware & Program.cs
+│       ├── ClearToWork.Core/         # Domain Entities, Enums & Interfaces
+│       └── ClearToWork.Infrastructure/# EF Core DbContext, Migrations & Weather Client
+│
+├── web/                              # React 19 + Vite Frontend Application
+│   ├── Dockerfile                    # Node.js + Nginx production container
+│   ├── public/                       # Static media (team-photo.jpg, favicon)
+│   ├── src/
+│   │   ├── components/               # Navbar, Sidebar, ProtectedRoute, StatusBadge
+│   │   │   └── animations/           # CardNav, PixelSwap, Hero3DCanvas, TiltCard
+│   │   ├── context/                  # ThemeContext (Dark/Light) & I18nContext
+│   │   ├── i18n/                     # Trilingual translations (EN, SI, TA)
+│   │   ├── pages/                    # Landing, About, Contact, Register, Login, etc.
+│   │   ├── store/                    # Redux Toolkit & RTK Query API slice
+│   │   └── types/                    # TypeScript interfaces & enums
+│   └── package.json
+│
+├── docs/                             # Technical Architecture Documentation
+│   ├── adrs/                         # Architecture Decision Records (ADR-001 - 004)
+│   └── architecture/                 # System Architecture, DB Schema, Multi-Agent Specs
+│
+├── render.yaml                       # Cloud Blueprint for Automated Render Hosting
+├── docker-compose.yml                # Multi-service local container orchestrator
+├── run-local.ps1                     # PowerShell one-click startup automation
+└── README.md                         # Project Master Documentation
+```
+
+---
+
+## 🧪 Verification & Automated Testing
+
+### Frontend Build & Typecheck
+```bash
+cd web
+npm run build
+```
+*Outputs production bundle with **0 TypeScript errors** in `web/dist`.*
+
+### Backend Unit & Integration Tests
+```bash
+cd backend
+dotnet test
+```
+
+### Python Agent Unit Tests
+```bash
+cd agents
+pytest tests/ -v
+```
+
+---
+
+## 📄 License & Intellectual Property
+
+This project is developed for the **SE3090 — Integrated Full-Stack and Agentic AI Application Development** course (Year 3 Semester 1, 2026). All rights reserved.
+
+<div align="center">
+  <sub>Engineered with ❤️ by the ClearToWork AI Engineering Team · 2026</sub>
+</div>

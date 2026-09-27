@@ -808,3 +808,4 @@ export const WorkforcePage: React.FC = () => {
     </div>
   );
 };
+
