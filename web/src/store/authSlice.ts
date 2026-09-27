@@ -1,35 +1,20 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
+import type { PayloadAction } from '@reduxjs/toolkit';
+import type { UserSession } from '../types';
 
-export interface User {
-  id: string;
-  fullName: string;
-  name?: string;
-  email: string;
-  role: string;
-  contractorId: string | null;
-  badgeNumber?: string;
-}
-
-export interface AuthState {
-  user: User | null;
+interface AuthState {
+  user: UserSession | null;
   token: string | null;
   isAuthenticated: boolean;
 }
 
-const initialUser: User = {
-  id: 'usr-001',
-  fullName: 'Mohammed Zakee',
-  name: 'Mohammed Zakee',
-  email: 'IT24104023@my.sliit.lk',
-  role: 'Lead Safety Officer',
-  contractorId: 'CTR-OFFSHORE-01',
-  badgeNumber: 'BADGE-9901',
-};
+const savedToken = localStorage.getItem('ctw_token');
+const savedUser = localStorage.getItem('ctw_user');
 
 const initialState: AuthState = {
-  user: initialUser,
-  token: 'dev-session-token-clear-to-work-2026',
-  isAuthenticated: true,
+  token: savedToken,
+  user: savedUser ? JSON.parse(savedUser) : null,
+  isAuthenticated: !!savedToken,
 };
 
 export const authSlice = createSlice({
@@ -38,16 +23,20 @@ export const authSlice = createSlice({
   reducers: {
     setCredentials: (
       state,
-      action: PayloadAction<{ user: User; token: string }>
+      action: PayloadAction<{ user: UserSession; token: string }>
     ) => {
       state.user = action.payload.user;
       state.token = action.payload.token;
       state.isAuthenticated = true;
+      localStorage.setItem('ctw_token', action.payload.token);
+      localStorage.setItem('ctw_user', JSON.stringify(action.payload.user));
     },
     logout: (state) => {
       state.user = null;
       state.token = null;
       state.isAuthenticated = false;
+      localStorage.removeItem('ctw_token');
+      localStorage.removeItem('ctw_user');
     },
   },
 });
