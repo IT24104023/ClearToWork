@@ -9,10 +9,15 @@ import { ShieldAlert, LogOut, Sun, Moon, Globe, UserCheck, Menu, X } from 'lucid
 import type { Language } from '../i18n/translations';
 
 interface NavbarProps {
+  /** Callback to toggle mobile sidebar visibility */
   onToggleMobileSidebar?: () => void;
+  /** Current open state of mobile sidebar */
   isMobileSidebarOpen?: boolean;
 }
 
+/**
+ * Top navigation bar providing brand title, direct links to Swagger/DB Explorer, theme switcher, language selector, and authentication user controls.
+ */
 export const Navbar: React.FC<NavbarProps> = ({
   onToggleMobileSidebar,
   isMobileSidebarOpen = false,
