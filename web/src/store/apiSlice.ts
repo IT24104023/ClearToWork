@@ -38,6 +38,10 @@ import type {
   AddZoneAdjacencyRequest,
 } from '../types';
 
+/**
+ * RTK Query API Slice for ClearToWork AI industrial permit-to-work system.
+ * Manages caching, invalidation, and automated HTTP requests for Permits, Workforce, Equipment, Hazards, and AI Agent evaluation.
+ */
 export const apiSlice = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({
