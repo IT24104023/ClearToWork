@@ -5,9 +5,13 @@ import type { RootState } from '../store';
 import type { UserRole } from '../types';
 
 interface ProtectedRouteProps {
+  /** Optional array of allowed user roles for role-based access control (RBAC) */
   allowedRoles?: UserRole[];
 }
 
+/**
+ * Route guard component that checks user authentication and role permissions before rendering protected layout.
+ */
 export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ allowedRoles }) => {
   const { user, isAuthenticated } = useSelector((state: RootState) => state.auth);
 

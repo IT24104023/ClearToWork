@@ -2,9 +2,13 @@ import React from 'react';
 import type { PermitStatus } from '../types';
 
 interface StatusBadgeProps {
+  /** Permit status string or enum value */
   status: PermitStatus | string;
 }
 
+/**
+ * Renders color-coded status badge with custom icons and labels for permit lifecycle states.
+ */
 export const StatusBadge: React.FC<StatusBadgeProps> = ({ status }) => {
   const getBadgeStyle = () => {
     switch (status) {
