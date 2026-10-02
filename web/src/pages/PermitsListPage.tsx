@@ -467,7 +467,7 @@ export const PermitsListPage: React.FC = () => {
           <div className="p-8 text-center text-rose-500 flex flex-col items-center gap-2">
             <AlertCircle className="w-6 h-6" />
             <span className="text-sm font-semibold">Failed to connect to ClearToWork Backend API.</span>
-            <span className="text-xs text-slate-400">Ensure the ASP.NET Core service is active on port 5000.</span>
+            <span className="text-xs text-slate-400">Please check backend service status at cleartowork-backend-h0pr.onrender.com or click Refresh.</span>
           </div>
         ) : filteredPermits.length === 0 ? (
           <div className="p-12 text-center text-slate-500 dark:text-slate-400 flex flex-col items-center gap-2">
