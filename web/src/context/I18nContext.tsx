@@ -3,13 +3,19 @@ import { translations } from '../i18n/translations';
 import type { Language, Translations } from '../i18n/translations';
 
 interface I18nContextType {
+  /** Active language code ('en', 'si', 'ta') */
   language: Language;
+  /** Function to switch active language */
   setLanguage: (lang: Language) => void;
+  /** Translation lookup function */
   t: (key: keyof Translations) => string;
 }
 
 const I18nContext = createContext<I18nContextType | undefined>(undefined);
 
+/**
+ * React context provider managing multi-language localization (English, Sinhala, Tamil) with localStorage persistence.
+ */
 export const I18nProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [language, setLanguageState] = useState<Language>(() => {
     const saved = localStorage.getItem('cleartowork_lang');
