@@ -3,13 +3,19 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 export type Theme = 'dark' | 'light';
 
 interface ThemeContextType {
+  /** Active theme mode ('dark' or 'light') */
   theme: Theme;
+  /** Toggles theme mode between dark and light */
   toggleTheme: () => void;
+  /** Sets explicit theme mode */
   setTheme: (theme: Theme) => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
+/**
+ * React context provider managing global dark/light UI theme switching with HTML class toggling and localStorage persistence.
+ */
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [theme, setThemeState] = useState<Theme>(() => {
     const saved = localStorage.getItem('cleartowork_theme');
