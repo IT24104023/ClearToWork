@@ -204,7 +204,7 @@ export const QChatAgentCommandCenter: React.FC = () => {
         });
         if (!resp.ok) throw new Error();
       } catch {
-        resp = await fetch('http://127.0.0.1:8000/simulate-query', {
+        resp = await fetch('https://cleartowork-agent-h0pr.onrender.com/simulate-query', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: payload,
