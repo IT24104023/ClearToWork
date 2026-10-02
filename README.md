@@ -19,13 +19,22 @@
 
 ---
 
-## 🌐 Live Cloud Deployments (Render)
+## 🌐 Live Cloud Deployments & Production Endpoints (Render)
 
-| Service | Environment | Live URL | Description |
+| Component / Interface | Environment | Live Production URL | Description |
 | :--- | :--- | :--- | :--- |
-| **Frontend Web Portal** | Production | [cleartowork-frontend.onrender.com](https://cleartowork-frontend.onrender.com) | 3D Interactive React 19 Client with Trilingual & Light/Dark Support |
-| **Backend REST API** | Production | [cleartowork-backend.onrender.com/swagger](https://cleartowork-backend.onrender.com/swagger) | ASP.NET Core 8 API Gateway with Interactive Swagger OpenAPI |
-| **Multi-Agent Engine** | Production | [cleartowork-agent.onrender.com/health](https://cleartowork-agent.onrender.com/health) | Python LangGraph 5-Agent Deterministic Verification Pipeline |
+| **🌐 Frontend Web Portal** | Production | [https://cleartowork-frontend-h0pr.onrender.com](https://cleartowork-frontend-h0pr.onrender.com) | 3D Interactive React 19 Client with Trilingual (EN/SI/TA) & Light/Dark Theme |
+| **⚙️ Backend API Gateway** | Production | [https://cleartowork-backend-h0pr.onrender.com](https://cleartowork-backend-h0pr.onrender.com) | Root Gateway Hub connecting all API Services & System Status |
+| **📜 Swagger UI Explorer** | Production | [https://cleartowork-backend-h0pr.onrender.com/swagger](https://cleartowork-backend-h0pr.onrender.com/swagger) | Interactive ASP.NET Core OpenAPI Documentation & Live Endpoint Testing |
+| **🛡️ Live Database Explorer** | Production | [https://cleartowork-backend-h0pr.onrender.com/db](https://cleartowork-backend-h0pr.onrender.com/db) | EF Core Relational Database Viewer for Permits, Workforce, Hazards & Equipment |
+| **📖 RapiDoc Specs** | Production | [https://cleartowork-backend-h0pr.onrender.com/docs](https://cleartowork-backend-h0pr.onrender.com/docs) | Interactive API Specifications & Endpoint Explorer |
+| **💚 System Health Check** | Production | [https://cleartowork-backend-h0pr.onrender.com/health](https://cleartowork-backend-h0pr.onrender.com/health) | API Gateway Real-Time Service Health Monitoring Endpoint |
+| **🤖 LangGraph Agent Service** | Production | [https://cleartowork-agent-h0pr.onrender.com](https://cleartowork-agent-h0pr.onrender.com) | Python LangGraph 5-Agent Deterministic Verification Pipeline |
+| **👷 Workforce REST API** | Production | [https://cleartowork-backend-h0pr.onrender.com/api/Workforce](https://cleartowork-backend-h0pr.onrender.com/api/Workforce) | Worker Competencies, Badges, and Certification Query Endpoint |
+| **📋 Permits REST API** | Production | [https://cleartowork-backend-h0pr.onrender.com/api/Permits](https://cleartowork-backend-h0pr.onrender.com/api/Permits) | Permit Lifecycle, AI Clearance, and Sign-Off Management |
+| **⚠️ Hazard Zones REST API** | Production | [https://cleartowork-backend-h0pr.onrender.com/api/HazardZone](https://cleartowork-backend-h0pr.onrender.com/api/HazardZone) | SIMOPS Spatial Clash Detection and Weather Safeguards |
+| **⛽ Equipment REST API** | Production | [https://cleartowork-backend-h0pr.onrender.com/api/Equipment](https://cleartowork-backend-h0pr.onrender.com/api/Equipment) | Asset Calibration Schedules and LOTO Isolation Points |
+| **🐙 GitHub Repository** | Source | [https://github.com/IT24104023/ClearToWork.git](https://github.com/IT24104023/ClearToWork.git) | Source Repository (`main`, `Zakee`, `Chemini`, `Dinithi`, `Oshini`) |
 
 ---
 
