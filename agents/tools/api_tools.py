@@ -3,7 +3,7 @@ import time
 import httpx
 from typing import Dict, Any, List
 
-API_BASE_URL = os.getenv("API_BASE_URL", "http://localhost:5000/api")
+API_BASE_URL = os.getenv("API_BASE_URL", "https://cleartowork-backend-h0pr.onrender.com/api")
 AGENT_SECRET = os.getenv("AGENT_SHARED_SECRET", "ClearToWork_Internal_Agent_Key_2026")
 
 def _get_headers() -> Dict[str, str]:
