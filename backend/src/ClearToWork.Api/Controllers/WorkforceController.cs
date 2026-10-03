@@ -25,6 +25,7 @@ public class WorkforceController : ControllerBase
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public async Task<ActionResult<List<WorkerDto>>> GetWorkers([FromQuery] string? trade, [FromQuery] bool? activeOnly = true)
     {
         var workers = await _workforceService.GetAllWorkersAsync(trade, activeOnly);
@@ -32,6 +33,7 @@ public class WorkforceController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
+    [AllowAnonymous]
     public async Task<ActionResult<WorkerDto>> GetWorker(Guid id)
     {
         var worker = await _workforceService.GetWorkerByIdAsync(id);

@@ -31,6 +31,7 @@ public class PermitsController : ControllerBase
 
     /// <summary>Returns all permit types (Id, Code, Name) for the New Permit form selector.</summary>
     [HttpGet("types")]
+    [AllowAnonymous]
     public async Task<IActionResult> GetPermitTypes()
     {
         var types = await _context.PermitTypes
@@ -40,6 +41,7 @@ public class PermitsController : ControllerBase
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public async Task<ActionResult<List<PermitDetailsDto>>> GetPermits(
         [FromQuery] string? status, [FromQuery] Guid? contractorId, [FromQuery] Guid? zoneId)
     {
@@ -48,6 +50,7 @@ public class PermitsController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
+    [AllowAnonymous]
     public async Task<ActionResult<PermitDetailsDto>> GetPermitById(Guid id)
     {
         var permit = await _permitService.GetPermitByIdAsync(id);
