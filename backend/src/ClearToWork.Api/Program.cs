@@ -284,6 +284,9 @@ app.MapGet("/api/db/query/equipment", async (AppDbContext db) =>
     return Results.Ok(list);
 }).ExcludeFromDescription();
 
+// Route Alias for Hazard Rules & Zones
+app.MapGet("/api/HazardRules", (HttpContext ctx) => ctx.Response.Redirect("/api/HazardZone/zones", permanent: false));
+
 // 9. RapiDoc Explorer at /docs
 app.MapGet("/docs", () => Results.Content(@"<!DOCTYPE html>
 <html>
