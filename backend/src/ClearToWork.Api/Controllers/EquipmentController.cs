@@ -25,6 +25,7 @@ public class EquipmentController : ControllerBase
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public async Task<ActionResult<List<AssetDto>>> GetEquipment([FromQuery] string? category, [FromQuery] string? status)
     {
         var assets = await _equipmentService.GetAllAssetsAsync(category, status);
@@ -32,6 +33,7 @@ public class EquipmentController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
+    [AllowAnonymous]
     public async Task<ActionResult<AssetDto>> GetEquipmentById(Guid id)
     {
         var asset = await _equipmentService.GetAssetByIdAsync(id);

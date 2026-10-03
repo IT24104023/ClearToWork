@@ -27,7 +27,9 @@ public class HazardZoneController : ControllerBase
         _weatherService = weatherService;
     }
 
+    [HttpGet]
     [HttpGet("zones")]
+    [AllowAnonymous]
     public async Task<ActionResult<List<ZoneDto>>> GetZones()
     {
         var zones = await _hazardRuleService.GetAllZonesAsync();
@@ -35,6 +37,7 @@ public class HazardZoneController : ControllerBase
     }
 
     [HttpGet("zones/{code}")]
+    [AllowAnonymous]
     public async Task<ActionResult<ZoneDto>> GetZoneByCode(string code)
     {
         var zone = await _hazardRuleService.GetZoneByCodeAsync(code);
@@ -43,6 +46,7 @@ public class HazardZoneController : ControllerBase
     }
 
     [HttpPost("zones/conflict-check")]
+    [AllowAnonymous]
     public async Task<ActionResult<ZoneConflictCheckResponse>> CheckZoneConflicts([FromBody] ZoneConflictCheckRequest request)
     {
         var result = await _hazardRuleService.CheckZoneConflictsAsync(request);
@@ -50,6 +54,7 @@ public class HazardZoneController : ControllerBase
     }
 
     [HttpGet("weather/forecast")]
+    [AllowAnonymous]
     public async Task<ActionResult<WeatherForecastDto>> GetWeatherForecast(
         [FromQuery] decimal latitude, [FromQuery] decimal longitude, [FromQuery] DateTime? targetTime)
     {
@@ -59,7 +64,7 @@ public class HazardZoneController : ControllerBase
     }
 
     [HttpGet("analytics/safety-summary")]
-    [Authorize]
+    [AllowAnonymous]
     public async Task<ActionResult<AnalyticsSafetySummaryDto>> GetSafetySummary()
     {
         var summary = await _hazardRuleService.GetSafetyAnalyticsAsync();
