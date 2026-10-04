@@ -17,7 +17,20 @@ export const LoginPage: React.FC = () => {
   const { t } = useTranslation();
 
   const getDemoRoleDetails = (emailStr: string) => {
-    switch (emailStr.toLowerCase()) {
+    const lower = emailStr.toLowerCase();
+    if (lower.includes('zakee') || lower.includes('24104023')) {
+      return { name: 'Mohammed Zakee', role: 'SafetyOfficer' as UserRole };
+    }
+    if (lower.includes('chemini') || lower.includes('24104054')) {
+      return { name: 'Chemini Perera', role: 'AreaSupervisor' as UserRole };
+    }
+    if (lower.includes('dinithi') || lower.includes('24104198')) {
+      return { name: 'Dinithi Silva', role: 'ContractorSupervisor' as UserRole };
+    }
+    if (lower.includes('oshini') || lower.includes('24103874')) {
+      return { name: 'Oshini', role: 'Administrator' as UserRole };
+    }
+    switch (lower) {
       case 'safety@cleartowork.com':
         return { name: 'Elena Rostova', role: 'SafetyOfficer' as UserRole };
       case 'supervisor@contractor.com':
