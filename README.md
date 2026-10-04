@@ -34,6 +34,8 @@
 | **📋 Permits REST API** | Production | [https://cleartowork-backend-h0pr.onrender.com/api/Permits](https://cleartowork-backend-h0pr.onrender.com/api/Permits) | Permit Lifecycle, AI Clearance, and Sign-Off Management |
 | **⚠️ Hazard Zones REST API** | Production | [https://cleartowork-backend-h0pr.onrender.com/api/HazardZone](https://cleartowork-backend-h0pr.onrender.com/api/HazardZone) | SIMOPS Spatial Clash Detection and Weather Safeguards |
 | **⛽ Equipment REST API** | Production | [https://cleartowork-backend-h0pr.onrender.com/api/Equipment](https://cleartowork-backend-h0pr.onrender.com/api/Equipment) | Asset Calibration Schedules and LOTO Isolation Points |
+| **📱 Android Release APK** | Mobile | [Direct APK Download](https://github.com/IT24104023/ClearToWork/releases/download/v1.0.0-apk/app-release.apk) | Standalone Runnable Android Release APK (Flutter, QR Scanner, Gas Monitor, GPS) |
+| **📦 GitHub Releases** | Release | [https://github.com/IT24104023/ClearToWork/releases/tag/v1.0.0-apk](https://github.com/IT24104023/ClearToWork/releases/tag/v1.0.0-apk) | Official APK Release Asset & Installation Guidelines |
 | **🐙 GitHub Repository** | Source | [https://github.com/IT24104023/ClearToWork.git](https://github.com/IT24104023/ClearToWork.git) | Source Repository (`main`, `Zakee`, `Chemini`, `Dinithi`, `Oshini`) |
 
 ---
