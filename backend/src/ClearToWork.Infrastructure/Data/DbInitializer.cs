@@ -128,7 +128,29 @@ public static class DbInitializer
             IsActive = true
         };
 
-        context.Workers.AddRange(worker1, worker2);
+        var worker3 = new Worker
+        {
+            Id = Guid.NewGuid(),
+            BadgeNumber = "W-103",
+            FirstName = "Dinithi",
+            LastName = "Silva",
+            Trade = "Site Compliance Supervisor",
+            ContractorId = contractor.Id,
+            IsActive = true
+        };
+
+        var worker4 = new Worker
+        {
+            Id = Guid.NewGuid(),
+            BadgeNumber = "W-104",
+            FirstName = "Oshini",
+            LastName = "Dev",
+            Trade = "System & Equipment Administrator",
+            ContractorId = contractor.Id,
+            IsActive = true
+        };
+
+        context.Workers.AddRange(worker1, worker2, worker3, worker4);
 
         // Seed Assets
         var gasMonitor = new Asset

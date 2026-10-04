@@ -44,7 +44,7 @@ namespace ClearToWork.Infrastructure.Services
             warning = string.Empty;
             if (barReading < MinimumOperationalBar)
             {
-                warning = $"SCBA Cylinder pressure {barReading:F1} bar is below the {MinimumOperationalBar} bar minimum duty threshold for hazardous area entry.";
+                warning = $"SCBA Cylinder pressure {barReading:F1} bar is below 270 bar minimum duty threshold for hazardous area entry.";
                 return false;
             }
             return true;
