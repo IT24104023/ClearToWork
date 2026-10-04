@@ -5,6 +5,9 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build-apk:
     name: Build Flutter Android Release APK
@@ -45,3 +48,20 @@ jobs:
       with:
         name: cleartowork-safety-app-release
         path: mobile/build/app/outputs/flutter-apk/app-release.apk
+
+    - name: Publish Direct Download Release
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: v1.0.0-apk
+        name: "ClearToWork AI Mobile APK v1.0.0"
+        body: |
+          ### ClearToWork AI — Android Release APK
+          Production Android release APK built for SE3090 Assignment 1 evaluation.
+          - Shared ASP.NET Core REST API Integration
+          - 5-Agent LangGraph AI Clearance Telemetry
+          - Digital Worker Badge & LOTO QR Scanner
+          - Device GPS Geofence Verification
+          - Real-Time Atmospheric Gas Monitor Logger
+        files: mobile/build/app/outputs/flutter-apk/app-release.apk
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
