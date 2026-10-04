@@ -92,17 +92,30 @@ class AuthProvider extends ChangeNotifier {
       // Graceful fallback for demo role evaluation button
     }
 
-    // Demo user fallback
+    // Demo user fallback with automatic student team identification
     String roleName = 'ContractorSupervisor';
     String name = 'David Miller';
 
-    if (email.contains('safety')) {
+    final lower = email.toLowerCase();
+    if (lower.contains('zakee') || lower.contains('24104023')) {
+      roleName = 'SafetyOfficer';
+      name = 'Mohammed Zakee';
+    } else if (lower.contains('chemini') || lower.contains('24104054')) {
+      roleName = 'AreaSupervisor';
+      name = 'Chemini Perera';
+    } else if (lower.contains('dinithi') || lower.contains('24104198')) {
+      roleName = 'ContractorSupervisor';
+      name = 'Dinithi Silva';
+    } else if (lower.contains('oshini') || lower.contains('24103874')) {
+      roleName = 'Administrator';
+      name = 'Oshini';
+    } else if (lower.contains('safety')) {
       roleName = 'SafetyOfficer';
       name = 'Elena Rostova';
-    } else if (email.contains('admin')) {
+    } else if (lower.contains('admin')) {
       roleName = 'Administrator';
       name = 'System Administrator';
-    } else if (email.contains('area')) {
+    } else if (lower.contains('area')) {
       roleName = 'AreaSupervisor';
       name = 'James Whitfield';
     }

@@ -3,6 +3,7 @@ import '../models/permit_model.dart';
 import '../services/api_service.dart';
 import '../widgets/status_badge_widget.dart';
 import 'permit_detail_screen.dart';
+import 'create_permit_screen.dart';
 
 /// Permits List Screen displaying active permit requests consumed from the shared ASP.NET Core API.
 class PermitListScreen extends StatefulWidget {
@@ -41,6 +42,19 @@ class _PermitListScreenState extends State<PermitListScreen> {
             onPressed: _loadPermits,
           )
         ],
+      ),
+      floatingActionButton: FloatingActionButton.extended(
+        backgroundColor: const Color(0xFFF59E0B),
+        icon: const Icon(Icons.add, color: Color(0xFF0F172A)),
+        label: const Text('New Permit', style: TextStyle(color: Color(0xFF0F172A), fontWeight: FontWeight.bold)),
+        onPressed: () async {
+          final created = await Navigator.of(context).push(
+            MaterialPageRoute(builder: (_) => const CreatePermitScreen()),
+          );
+          if (created == true) {
+            _loadPermits();
+          }
+        },
       ),
       body: Column(
         children: [

@@ -4,6 +4,7 @@ import '../services/auth_service.dart';
 import 'permit_list_screen.dart';
 import 'qr_scanner_screen.dart';
 import 'gas_monitor_screen.dart';
+import 'create_permit_screen.dart';
 
 /// Main Mobile Operational Dashboard for ClearToWork AI.
 class DashboardScreen extends StatelessWidget {
@@ -117,17 +118,34 @@ class DashboardScreen extends StatelessWidget {
                 ),
               ],
             ),
-            const SizedBox(height: 12),
-
-            _buildActionCard(
-              context,
-              title: 'Safety Permits Register',
-              subtitle: 'View Active Permits, AI LangGraph Traces & Approvals',
-              icon: Icons.assignment_turned_in,
-              color: const Color(0xFF10B981),
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(builder: (_) => const PermitListScreen()));
-              },
+            Row(
+              children: [
+                Expanded(
+                  child: _buildActionCard(
+                    context,
+                    title: 'Permits Register',
+                    subtitle: 'View Active & Approvals',
+                    icon: Icons.assignment_turned_in,
+                    color: const Color(0xFF10B981),
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(builder: (_) => const PermitListScreen()));
+                    },
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: _buildActionCard(
+                    context,
+                    title: 'New Permit Request',
+                    subtitle: 'On-Site GPS & AI Submit',
+                    icon: Icons.note_add_outlined,
+                    color: const Color(0xFFF59E0B),
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(builder: (_) => const CreatePermitScreen()));
+                    },
+                  ),
+                ),
+              ],
             ),
 
             const SizedBox(height: 24),

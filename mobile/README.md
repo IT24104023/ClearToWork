@@ -7,10 +7,12 @@ Mobile Field Operations application for **ClearToWork AI Industrial Permit-to-Wo
 ## 📱 Features & Assignment Specification Alignment
 
 * **Shared ASP.NET Core REST API Integration**: Consumes `/api/Auth`, `/api/Permits`, `/api/Workforce`, `/api/Equipment`, and `/api/HazardZone`.
-* **JWT Authentication & Demo Role Quick Select**: Persistent login state with SharedPreferences and one-click role switching for **HSE Safety Officer**, **Contractor Supervisor**, **Area Supervisor**, and **System Administrator**.
-* **Device Features (Camera & QR Scanner)**:
+* **Cross-Platform End-to-End Workflow**: On-site field supervisors can create new permits from mobile with form validation, submit to the ASP.NET Core backend, trigger 5-agent LangGraph evaluation, and synchronize with the laptop React dashboard in real time.
+* **JWT Authentication & Demo Role Quick Select**: Persistent login state with SharedPreferences and one-click role switching for **HSE Safety Officer**, **Contractor Supervisor**, **Area Supervisor**, and **System Administrator**, with automatic recognition of all 4 team members (`Mohammed Zakee`, `Chemini Perera`, `Dinithi Silva`, `Oshini Dev`).
+* **Device Features (Camera, QR Scanner & GPS)**:
   * **Digital Worker Badge QR Scanner**: Scans worker badges to audit OPITO/CompEx certifications on-site.
   * **LOTO Lockout Tag Scanner**: Scans physical lock tags and verifies zero-energy isolation.
+  * **GPS Geolocation Verification**: Verifies physical device location within hazardous industrial site boundaries before allowing permit creation.
 * **Gas Telemetry Logger**: Allows field technicians to log H2S (ppm), LEL (%), and O2 (%) atmospheric readings with instant threshold violation alerts.
 * **LangGraph 5-Agent Telemetry**: View 5-agent LangGraph workflow execution step traces and trigger real-time AI clearance checks directly from the mobile app.
 
@@ -22,7 +24,7 @@ Mobile Field Operations application for **ClearToWork AI Industrial Permit-to-Wo
 | :--- | :--- | :--- |
 | **Student 1 (Mohammed Zakee)** | Worker Profile & Digital Badge QR Scanner | `lib/screens/qr_scanner_screen.dart` |
 | **Student 2 (Chemini Perera)** | Gas Reading Logger & Atmospheric Telemetry | `lib/screens/gas_monitor_screen.dart` |
-| **Student 3 (Dinithi Silva)** | Permits Register & On-Site Digital Authorization | `lib/screens/permit_list_screen.dart` |
+| **Student 3 (Dinithi Silva)** | Permits Register & On-Site Permit Request Form | `lib/screens/permit_list_screen.dart`, `lib/screens/create_permit_screen.dart` |
 | **Student 4 (Oshini)** | Equipment Readiness & AI Agent Clearance Status | `lib/screens/permit_detail_screen.dart` |
 
 ---
