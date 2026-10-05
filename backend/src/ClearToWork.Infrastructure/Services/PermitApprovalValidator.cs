@@ -120,7 +120,7 @@ public class PermitApprovalValidator : IPermitApprovalValidator, IPermitValidato
             .Include(p => p.PermitType)
             .Include(p => p.AssignedWorkers).ThenInclude(pw => pw.Worker).ThenInclude(w => w!.Certificates).ThenInclude(c => c.CertificateType)
             .Include(p => p.AssignedAssets).ThenInclude(pa => pa.Asset).ThenInclude(a => a!.InspectionRecords)
-            .Include(p => p.EvidencePhotos)
+            .Include(p => p.Photos)
             .Include(p => p.Approvals)
             .Include(p => p.AgentWorkflowRun)
             .FirstOrDefaultAsync(p => p.Id == permitId, cancellationToken);

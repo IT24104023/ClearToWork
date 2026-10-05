@@ -49,7 +49,7 @@ public class PermitLifecycleService : IPermitLifecycleService
             .Include(p => p.AssignedWorkers).ThenInclude(pw => pw.Worker).ThenInclude(w => w!.Certificates).ThenInclude(c => c.CertificateType)
             .Include(p => p.AssignedAssets).ThenInclude(pa => pa.Asset).ThenInclude(a => a!.CalibrationRecords)
             .Include(p => p.AssignedAssets).ThenInclude(pa => pa.Asset).ThenInclude(a => a!.InspectionRecords)
-            .Include(p => p.EvidencePhotos)
+            .Include(p => p.Photos)
             .Include(p => p.Approvals)
             .Include(p => p.AgentWorkflowRun)
             .AsQueryable();
@@ -65,9 +65,11 @@ public class PermitLifecycleService : IPermitLifecycleService
         }
 
         var permits = await query.OrderByDescending(p => p.CreatedAt).ToListAsync();
-        var zones = await _context.Zones.ToDictionaryAsync(z => z.Id, z => z.Name);
-        var zoneCodes = await _context.Zones.ToDictionaryAsync(z => z.Id, z => z.Code);
-        var users = await _context.Users.ToDictionaryAsync(u => u.Id, u => u.FullName);
+        var zonesList = await _context.Zones.AsNoTracking().ToListAsync();
+        var zones = zonesList.GroupBy(z => z.Id).ToDictionary(g => g.Key, g => g.First().Name);
+        var zoneCodes = zonesList.GroupBy(z => z.Id).ToDictionary(g => g.Key, g => g.First().Code);
+        var usersList = await _context.Users.AsNoTracking().ToListAsync();
+        var users = usersList.GroupBy(u => u.Id).ToDictionary(g => g.Key, g => g.First().FullName);
 
         return permits.Select(p => MapToDetailsDto(p, zones, zoneCodes, users)).ToList();
     }
@@ -80,16 +82,18 @@ public class PermitLifecycleService : IPermitLifecycleService
             .Include(p => p.AssignedWorkers).ThenInclude(pw => pw.Worker).ThenInclude(w => w!.Certificates).ThenInclude(c => c.CertificateType)
             .Include(p => p.AssignedAssets).ThenInclude(pa => pa.Asset).ThenInclude(a => a!.CalibrationRecords)
             .Include(p => p.AssignedAssets).ThenInclude(pa => pa.Asset).ThenInclude(a => a!.InspectionRecords)
-            .Include(p => p.EvidencePhotos)
+            .Include(p => p.Photos)
             .Include(p => p.Approvals)
             .Include(p => p.AgentWorkflowRun)
             .FirstOrDefaultAsync(p => p.Id == id);
 
         if (permit == null) return null;
 
-        var zones = await _context.Zones.ToDictionaryAsync(z => z.Id, z => z.Name);
-        var zoneCodes = await _context.Zones.ToDictionaryAsync(z => z.Id, z => z.Code);
-        var users = await _context.Users.ToDictionaryAsync(u => u.Id, u => u.FullName);
+        var zonesList = await _context.Zones.AsNoTracking().ToListAsync();
+        var zones = zonesList.GroupBy(z => z.Id).ToDictionary(g => g.Key, g => g.First().Name);
+        var zoneCodes = zonesList.GroupBy(z => z.Id).ToDictionary(g => g.Key, g => g.First().Code);
+        var usersList = await _context.Users.AsNoTracking().ToListAsync();
+        var users = usersList.GroupBy(u => u.Id).ToDictionary(g => g.Key, g => g.First().FullName);
 
         return MapToDetailsDto(permit, zones, zoneCodes, users);
     }
@@ -157,7 +161,7 @@ public class PermitLifecycleService : IPermitLifecycleService
         var permit = await _context.PermitRequests
             .Include(p => p.AssignedWorkers)
             .Include(p => p.AssignedAssets)
-            .Include(p => p.EvidencePhotos)
+            .Include(p => p.Photos)
             .FirstOrDefaultAsync(p => p.Id == permitId);
 
         if (permit == null) return null;
@@ -224,7 +228,7 @@ public class PermitLifecycleService : IPermitLifecycleService
         var permit = await _context.PermitRequests
             .Include(p => p.AssignedWorkers)
             .Include(p => p.AssignedAssets)
-            .Include(p => p.EvidencePhotos)
+            .Include(p => p.Photos)
             .Include(p => p.Approvals)
             .Include(p => p.AgentWorkflowRun)
             .FirstOrDefaultAsync(p => p.Id == permitId);
