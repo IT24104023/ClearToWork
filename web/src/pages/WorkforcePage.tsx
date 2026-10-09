@@ -516,14 +516,19 @@ export const WorkforcePage: React.FC = () => {
   const canManageWorkers =
     currentUser?.role === 'Administrator' ||
     currentUser?.role === 'AreaSupervisor' ||
-    currentUser?.role === 'ContractorSupervisor';
+    currentUser?.role === 'ContractorSupervisor' ||
+    currentUser?.role === 'SafetyOfficer' ||
+    (currentUser?.role as any) === 'Supervisor';
   const canDeleteWorkers =
-    currentUser?.role === 'Administrator' || currentUser?.role === 'AreaSupervisor';
+    currentUser?.role === 'Administrator' ||
+    currentUser?.role === 'AreaSupervisor' ||
+    currentUser?.role === 'SafetyOfficer';
   const canManageCerts =
     currentUser?.role === 'Administrator' ||
     currentUser?.role === 'AreaSupervisor' ||
     currentUser?.role === 'SafetyOfficer' ||
-    currentUser?.role === 'ContractorSupervisor';
+    currentUser?.role === 'ContractorSupervisor' ||
+    (currentUser?.role as any) === 'Supervisor';
   const canDeleteCerts =
     currentUser?.role === 'Administrator' ||
     currentUser?.role === 'AreaSupervisor' ||

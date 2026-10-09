@@ -42,7 +42,7 @@ public class WorkforceController : ControllerBase
     }
 
     [HttpPost]
-    [Authorize(Roles = "Administrator,AreaSupervisor,ContractorSupervisor")]
+    [Authorize(Roles = "Administrator,AreaSupervisor,ContractorSupervisor,SafetyOfficer,Supervisor")]
     public async Task<ActionResult<WorkerDto>> CreateWorker([FromBody] CreateWorkerRequest request)
     {
         var created = await _workforceService.CreateWorkerAsync(
@@ -51,7 +51,7 @@ public class WorkforceController : ControllerBase
     }
 
     [HttpPut("{id:guid}")]
-    [Authorize(Roles = "Administrator,AreaSupervisor,ContractorSupervisor")]
+    [Authorize(Roles = "Administrator,AreaSupervisor,ContractorSupervisor,SafetyOfficer,Supervisor")]
     public async Task<ActionResult<WorkerDto>> UpdateWorker(Guid id, [FromBody] UpdateWorkerRequest request)
     {
         var updated = await _workforceService.UpdateWorkerAsync(id, request);
@@ -60,7 +60,7 @@ public class WorkforceController : ControllerBase
     }
 
     [HttpDelete("{id:guid}")]
-    [Authorize(Roles = "Administrator,AreaSupervisor")]
+    [Authorize(Roles = "Administrator,AreaSupervisor,ContractorSupervisor,SafetyOfficer,Supervisor")]
     public async Task<IActionResult> DeleteWorker(Guid id)
     {
         var success = await _workforceService.DeleteWorkerAsync(id);
