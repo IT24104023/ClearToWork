@@ -67,21 +67,33 @@ public record UpdateAssetRequest(
     Guid? CurrentZoneId
 );
 
-public record CreateInspectionRequest(
-    DateTime InspectionDate,
-    DateTime NextInspectionDate,
-    string InspectorName,
-    bool Passed,
-    string? Notes
-);
+public class CreateInspectionRequest
+{
+    public DateTime? InspectionDate { get; set; }
+    public DateTime? NextInspectionDate { get; set; }
+    public string InspectorName { get; set; } = string.Empty;
+    public bool? Passed { get; set; }
+    public bool? IsPassed { get; set; }
+    public string? Notes { get; set; }
 
-public record CreateCalibrationRequest(
-    DateTime CalibrationDate,
-    DateTime NextCalibrationDate,
-    string CalibratedBy,
-    string CertificateNumber,
-    bool PassStatus
-);
+    public bool EffectivePassed => IsPassed ?? Passed ?? true;
+    public DateTime EffectiveInspectionDate => InspectionDate ?? DateTime.UtcNow;
+    public DateTime EffectiveNextInspectionDate => NextInspectionDate ?? DateTime.UtcNow.AddMonths(6);
+}
+
+public class CreateCalibrationRequest
+{
+    public DateTime? CalibrationDate { get; set; }
+    public DateTime? NextCalibrationDate { get; set; }
+    public string CalibratedBy { get; set; } = string.Empty;
+    public string CertificateNumber { get; set; } = string.Empty;
+    public bool? PassStatus { get; set; }
+    public bool? IsPassed { get; set; }
+
+    public bool EffectivePassStatus => IsPassed ?? PassStatus ?? true;
+    public DateTime EffectiveCalibrationDate => CalibrationDate ?? DateTime.UtcNow;
+    public DateTime EffectiveNextCalibrationDate => NextCalibrationDate ?? DateTime.UtcNow.AddMonths(12);
+}
 
 public record CreateIsolationPointRequest(
     Guid ZoneId,

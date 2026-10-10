@@ -196,6 +196,8 @@ export interface UpdateAssetRequest {
 export interface CreateInspectionRequest {
   inspectorName: string;
   isPassed: boolean;
+  passed?: boolean;
+  inspectionDate?: string;
   notes?: string;
   nextInspectionDate?: string;
 }
@@ -204,6 +206,8 @@ export interface CreateCalibrationRequest {
   calibratedBy: string;
   certificateNumber: string;
   isPassed: boolean;
+  passStatus?: boolean;
+  passed?: boolean;
   calibrationDate?: string;
   nextCalibrationDate?: string;
 }
