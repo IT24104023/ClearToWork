@@ -223,6 +223,34 @@ public static class DbInitializer
             await context.SaveChangesAsync();
         }
 
+        // ─── 4b. Seed Initial Isolation Points (LOTO) ────────────────────────
+        if (!await context.IsolationPoints.AnyAsync() && zoneA != null)
+        {
+            var isoPoint1 = new IsolationPoint
+            {
+                Id = Guid.NewGuid(),
+                ZoneId = zoneA.Id,
+                TagIdentifier = "ISO-CDU-VLV-01",
+                Description = "Crude Distillation Primary Fuel Gas Shutoff Valve",
+                Type = IsolationType.Mechanical,
+                State = IsolationState.LockedOut,
+                LockedAt = DateTime.UtcNow.AddDays(-1)
+            };
+
+            var isoPoint2 = new IsolationPoint
+            {
+                Id = Guid.NewGuid(),
+                ZoneId = zoneA.Id,
+                TagIdentifier = "ISO-SWGR-BKR-14",
+                Description = "High Voltage Bus Feed Circuit Breaker Rack-Out",
+                Type = IsolationType.Electrical,
+                State = IsolationState.Open
+            };
+
+            context.IsolationPoints.AddRange(isoPoint1, isoPoint2);
+            await context.SaveChangesAsync();
+        }
+
         // ─── 5. Seed Initial Sample Permit ───────────────────────────────────
         if (!await context.PermitRequests.AnyAsync() && zoneA != null && hotWorkType != null)
         {
