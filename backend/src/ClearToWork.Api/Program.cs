@@ -131,39 +131,78 @@ app.MapGet("/db", () => Results.Content("""
   <link href='https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css' rel='stylesheet'>
   <style>
     body { background-color: #0f172a; color: #f8fafc; font-family: system-ui, -apple-system, sans-serif; }
-    .card { background-color: #1e293b; border: 1px solid #334155; color: #f8fafc; }
+    .card { background-color: #1e293b; border: 1px solid #334155; color: #f8fafc; border-radius: 16px; }
     .table { color: #f8fafc; }
     .table-dark { background-color: #0f172a; }
     .badge-permit { background-color: #3b82f6; }
     .badge-worker { background-color: #10b981; }
     .badge-hazard { background-color: #ef4444; }
     .badge-equip { background-color: #f59e0b; }
-    pre { background: #090d16; color: #38bdf8; padding: 15px; border-radius: 8px; max-height: 400px; overflow-y: auto; }
-    .nav-tabs .nav-link { color: #94a3b8; border: none; }
+    pre { background: #090d16; color: #38bdf8; padding: 15px; border-radius: 8px; max-height: 480px; overflow-y: auto; }
+    .nav-tabs { border-bottom: 2px solid #334155; }
+    .nav-tabs .nav-link { color: #94a3b8; border: none; font-weight: 600; padding: 10px 18px; border-radius: 8px 8px 0 0; }
+    .nav-tabs .nav-link:hover { color: #38bdf8; }
     .nav-tabs .nav-link.active { color: #38bdf8; background: #1e293b; border-bottom: 3px solid #38bdf8; }
+    .stat-card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; }
   </style>
 </head>
-<body class='p-4'>
+<body class='p-3 p-md-4'>
   <div class='container-fluid'>
-    <div class='d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom border-secondary'>
+    <!-- Header -->
+    <div class='d-flex flex-wrap justify-content-between align-items-center mb-3 pb-3 border-bottom border-secondary gap-3'>
       <div>
         <h2 class='fw-bold text-info m-0'>🛡️ ClearToWork AI — Live Database Explorer</h2>
-        <p class='text-secondary m-0'>Direct EF Core Relational Database & Entity Viewer</p>
+        <p class='text-secondary m-0'>Direct EF Core Relational Database & Real-Time Entity Viewer</p>
       </div>
-      <div>
-        <span class='badge bg-success fs-6 me-2'>DB Status: ACTIVE</span>
-        <a href='/swagger' class='btn btn-outline-warning btn-sm me-2' target='_blank'>📜 Open Swagger UI</a>
+      <div class='d-flex align-items-center gap-2 flex-wrap'>
+        <span class='badge bg-success fs-6 px-3 py-2'>DB Status: ACTIVE</span>
+        <a href='/swagger' class='btn btn-outline-warning btn-sm' target='_blank'>📜 Open Swagger UI</a>
         <button onclick='loadAllData()' class='btn btn-outline-info btn-sm'>🔄 Refresh Database Data</button>
       </div>
     </div>
 
-    <!-- Quick Table Selector Tabs -->
+    <!-- Live Statistics Counter Bar -->
+    <div class='row g-2 mb-4 text-center'>
+      <div class='col-6 col-md'>
+        <div class='p-3 stat-card'>
+          <div class='text-secondary small fw-bold'>📋 PERMITS</div>
+          <div class='fs-3 fw-bold text-primary' id='statPermits'>...</div>
+        </div>
+      </div>
+      <div class='col-6 col-md'>
+        <div class='p-3 stat-card'>
+          <div class='text-secondary small fw-bold'>👷 WORKFORCE</div>
+          <div class='fs-3 fw-bold text-success' id='statWorkforce'>...</div>
+        </div>
+      </div>
+      <div class='col-6 col-md'>
+        <div class='p-3 stat-card'>
+          <div class='text-secondary small fw-bold'>⚠️ HAZARD ZONES</div>
+          <div class='fs-3 fw-bold text-danger' id='statHazards'>...</div>
+        </div>
+      </div>
+      <div class='col-6 col-md'>
+        <div class='p-3 stat-card'>
+          <div class='text-secondary small fw-bold'>⛽ EQUIPMENT</div>
+          <div class='fs-3 fw-bold text-warning' id='statEquipment'>...</div>
+        </div>
+      </div>
+      <div class='col-6 col-md'>
+        <div class='p-3 stat-card'>
+          <div class='text-secondary small fw-bold'>🔒 LOTO POINTS</div>
+          <div class='fs-3 fw-bold text-info' id='statIsolation'>...</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Table Selector Tabs -->
     <ul class='nav nav-tabs mb-4' id='dbTabs' role='tablist'>
-      <li class='nav-item'><button class='nav-link active fw-bold' onclick="showTable('permits')">📋 Permits Table</button></li>
-      <li class='nav-item'><button class='nav-link fw-bold' onclick="showTable('workforce')">👷 Workforce Table</button></li>
-      <li class='nav-item'><button class='nav-link fw-bold' onclick="showTable('hazards')">⚠️ Hazard Zones Table</button></li>
-      <li class='nav-item'><button class='nav-link fw-bold' onclick="showTable('equipment')">⛽ Equipment Table</button></li>
-      <li class='nav-item'><button class='nav-link fw-bold' onclick="showTable('raw')">💻 Raw JSON Payload</button></li>
+      <li class='nav-item'><button class='nav-link active' data-tab='permits' onclick="showTable('permits')">📋 Permits Table</button></li>
+      <li class='nav-item'><button class='nav-link' data-tab='workforce' onclick="showTable('workforce')">👷 Workforce Table</button></li>
+      <li class='nav-item'><button class='nav-link' data-tab='hazards' onclick="showTable('hazards')">⚠️ Hazard Zones Table</button></li>
+      <li class='nav-item'><button class='nav-link' data-tab='equipment' onclick="showTable('equipment')">⛽ Equipment Table</button></li>
+      <li class='nav-item'><button class='nav-link' data-tab='isolation' onclick="showTable('isolation')">🔒 LOTO Isolation Table</button></li>
+      <li class='nav-item'><button class='nav-link' data-tab='raw' onclick="showTable('raw')">💻 Raw JSON Payload</button></li>
     </ul>
 
     <!-- Main Display Card -->
@@ -179,15 +218,24 @@ app.MapGet("/db", () => Results.Content("""
     let currentData = {};
 
     async function loadAllData() {
-      document.getElementById('tableContainer').innerHTML = "<div class='spinner-border text-info' role='status'></div> Loading database...";
+      document.getElementById('tableContainer').innerHTML = "<div class='text-center p-4'><div class='spinner-border text-info' role='status'></div><p class='mt-2 text-secondary'>Querying EF Core database entities...</p></div>";
       try {
-        const [permits, workforce, hazards, equipment] = await Promise.all([
+        const [permits, workforce, hazards, equipment, isolation] = await Promise.all([
           fetch('/api/db/query/permits').then(r => r.json()).catch(() => []),
           fetch('/api/db/query/workforce').then(r => r.json()).catch(() => []),
           fetch('/api/db/query/hazards').then(r => r.json()).catch(() => []),
-          fetch('/api/db/query/equipment').then(r => r.json()).catch(() => [])
+          fetch('/api/db/query/equipment').then(r => r.json()).catch(() => []),
+          fetch('/api/db/query/isolation').then(r => r.json()).catch(() => [])
         ]);
-        currentData = { permits, workforce, hazards, equipment };
+        currentData = { permits, workforce, hazards, equipment, isolation };
+
+        // Update statistics counters
+        document.getElementById('statPermits').innerText = permits.length;
+        document.getElementById('statWorkforce').innerText = workforce.length;
+        document.getElementById('statHazards').innerText = hazards.length;
+        document.getElementById('statEquipment').innerText = equipment.length;
+        document.getElementById('statIsolation').innerText = isolation.length;
+
         showTable('permits');
       } catch (err) {
         document.getElementById('tableContainer').innerHTML = "<div class='alert alert-danger'>Error loading database: " + err + "</div>";
@@ -195,16 +243,30 @@ app.MapGet("/db", () => Results.Content("""
     }
 
     function showTable(tableName) {
+      document.querySelectorAll('#dbTabs .nav-link').forEach(btn => btn.classList.remove('active'));
+      const activeBtn = document.querySelector(`#dbTabs button[data-tab='${tableName}']`);
+      if (activeBtn) activeBtn.classList.add('active');
+
       const container = document.getElementById('tableContainer');
       const title = document.getElementById('tableTitle');
 
       if (tableName === 'permits') {
         title.innerHTML = "📋 Permits Database Table (PermitRequests)";
         const rows = currentData.permits || [];
-        if (!rows.length) { container.innerHTML = "<p class='text-muted'>No permit records found.</p>"; return; }
-        let html = "<table class='table table-dark table-striped table-hover align-middle'><thead><tr><th>ID / Number</th><th>Title</th><th>Status</th><th>Zone</th><th>Issuing Authority</th></tr></thead><tbody>";
+        if (!rows.length) { container.innerHTML = "<p class='text-muted p-3'>No permit records found in database.</p>"; return; }
+        let html = "<table class='table table-dark table-striped table-hover align-middle mb-0'><thead><tr><th>Permit Number</th><th>Title</th><th>Type</th><th>Status</th><th>Zone</th><th>Issuing Authority</th><th>Schedule</th></tr></thead><tbody>";
         rows.forEach(r => {
-          html += `<tr><td><code>${r.id || r.permitNumber || 'PTW-2026'}</code></td><td class='fw-bold'>${r.title || 'Hot Work Inspection'}</td><td><span class='badge badge-permit'>${r.status || 'Active'}</span></td><td>${r.zoneCode || 'Zone A1'}</td><td>${r.issuingAuthority || 'M. Zakee'}</td></tr>`;
+          const statusBadge = r.status === 'Active' ? 'bg-success' : r.status === 'Approved' ? 'bg-primary' : r.status === 'PendingApproval' ? 'bg-warning text-dark' : 'bg-secondary';
+          const schedule = (r.startTime ? new Date(r.startTime).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '08:00') + ' - ' + (r.endTime ? new Date(r.endTime).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '16:00');
+          html += `<tr>
+            <td><code class='text-info fw-bold'>${r.permitNumber || r.id || 'PTW-2026'}</code></td>
+            <td class='fw-bold'>${r.title || 'Work Permit'}</td>
+            <td><span class='badge bg-dark border border-secondary'>${r.permitType || 'Hot Work'}</span></td>
+            <td><span class='badge ${statusBadge}'>${r.status || 'Active'}</span></td>
+            <td><code class='text-warning'>${r.zoneCode || 'ZONE-A1'}</code></td>
+            <td>${r.issuingAuthority || 'M. Zakee'}</td>
+            <td class='text-secondary small font-monospace'>${schedule}</td>
+          </tr>`;
         });
         html += "</tbody></table>";
         container.innerHTML = html;
@@ -212,38 +274,93 @@ app.MapGet("/db", () => Results.Content("""
       else if (tableName === 'workforce') {
         title.innerHTML = "👷 Workforce & Competency Table (Workers & WorkerCertificates)";
         const rows = currentData.workforce || [];
-        if (!rows.length) { container.innerHTML = "<p class='text-muted'>No worker records found.</p>"; return; }
-        let html = "<table class='table table-dark table-striped table-hover align-middle'><thead><tr><th>Badge No</th><th>Full Name</th><th>Trade Role</th><th>Certifications</th><th>Offshore Fit</th></tr></thead><tbody>";
+        if (!rows.length) { container.innerHTML = "<p class='text-muted p-3'>No worker records found in database.</p>"; return; }
+        let html = "<table class='table table-dark table-striped table-hover align-middle mb-0'><thead><tr><th>Badge No</th><th>Full Name</th><th>Trade Role</th><th>Contractor Employer</th><th>Active Certifications</th><th>Status</th></tr></thead><tbody>";
         rows.forEach(r => {
-          html += `<tr><td><code>${r.badgeNumber || 'W-104'}</code></td><td class='fw-bold'>${r.fullName || r.name || 'Worker'}</td><td>${r.tradeRole || 'Electrician'}</td><td><span class='badge badge-worker'>${r.certifications || 'OPITO, BOSIET'}</span></td><td><span class='badge bg-success'>YES</span></td></tr>`;
+          html += `<tr>
+            <td><code class='text-warning fw-bold'>${r.badgeNumber || 'W-100'}</code></td>
+            <td class='fw-bold'>${r.fullName || 'Worker Name'}</td>
+            <td>${r.tradeRole || 'Technician'}</td>
+            <td class='text-secondary'>${r.contractor || 'Global Energy Corp'}</td>
+            <td><span class='badge badge-worker text-dark fw-semibold'>${r.certifications || 'Verified'}</span></td>
+            <td><span class='badge ${r.isActive !== false ? 'bg-success' : 'bg-danger'}'>${r.isActive !== false ? 'ACTIVE' : 'INACTIVE'}</span></td>
+          </tr>`;
         });
         html += "</tbody></table>";
         container.innerHTML = html;
       }
       else if (tableName === 'hazards') {
-        title.innerHTML = "⚠️ Hazard Zones & SIMOPS Table (Zones & IncompatibilityRules)";
+        title.innerHTML = "⚠️ Hazard Zones & Plant Sites Table (Zones & Sites)";
         const rows = currentData.hazards || [];
-        if (!rows.length) { container.innerHTML = "<p class='text-muted'>No zone records found.</p>"; return; }
-        let html = "<table class='table table-dark table-striped table-hover align-middle'><thead><tr><th>Zone Code</th><th>Name</th><th>Severity Level</th><th>Hot Work Spark Radius</th></tr></thead><tbody>";
+        if (!rows.length) { container.innerHTML = "<p class='text-muted p-3'>No hazard zone records found in database.</p>"; return; }
+        let html = "<table class='table table-dark table-striped table-hover align-middle mb-0'><thead><tr><th>Zone Code</th><th>Zone Name</th><th>Parent Facility / Site</th><th>Safety Radius</th><th>QR Code Payload</th><th>Status</th></tr></thead><tbody>";
         rows.forEach(r => {
-          html += `<tr><td><code>${r.code || 'ZONE-A1'}</code></td><td class='fw-bold'>${r.name || 'Process Deck'}</td><td><span class='badge badge-hazard'>${r.severity || 'CRITICAL'}</span></td><td>15 meters</td></tr>`;
+          html += `<tr>
+            <td><code class='text-danger fw-bold'>${r.code || 'ZONE-A1'}</code></td>
+            <td class='fw-bold'>${r.name || 'Plant Area'}</td>
+            <td class='text-secondary'>${r.site || 'Refinery Complex'}</td>
+            <td><span class='badge bg-dark border border-danger text-danger'>${r.radiusMeters || 50}m radius</span></td>
+            <td><code class='text-info small'>${r.qrCodePayload || 'QR-ZONE'}</code></td>
+            <td><span class='badge ${r.isActive !== false ? 'bg-success' : 'bg-secondary'}'>${r.isActive !== false ? 'OPERATIONAL' : 'INACTIVE'}</span></td>
+          </tr>`;
         });
         html += "</tbody></table>";
         container.innerHTML = html;
       }
       else if (tableName === 'equipment') {
-        title.innerHTML = "⛽ Equipment & Gas Telemetry Table (Assets & CalibrationRecords)";
+        title.innerHTML = "⛽ Equipment & Safety Assets Table (Assets & Inspection/Calibration)";
         const rows = currentData.equipment || [];
-        if (!rows.length) { container.innerHTML = "<p class='text-muted'>No asset records found.</p>"; return; }
-        let html = "<table class='table table-dark table-striped table-hover align-middle'><thead><tr><th>Serial No</th><th>Asset Type</th><th>Calibration Status</th><th>LOTO Isolation</th></tr></thead><tbody>";
+        if (!rows.length) { container.innerHTML = "<p class='text-muted p-3'>No equipment records found in database.</p>"; return; }
+        let html = "<table class='table table-dark table-striped table-hover align-middle mb-0'><thead><tr><th>Asset Tag</th><th>Serial No</th><th>Equipment Name</th><th>Category</th><th>Operational Status</th><th>Inspection Check</th><th>Calibration Status</th></tr></thead><tbody>";
         rows.forEach(r => {
-          html += `<tr><td><code>${r.serialNumber || 'SN-998'}</code></td><td class='fw-bold'>${r.assetType || 'Dräger H2S Detector'}</td><td><span class='badge badge-equip'>PASSED BUMP TEST</span></td><td><span class='badge bg-info'>LOCKED</span></td></tr>`;
+          const isGas = (r.category || '').toLowerCase().includes('gas');
+          const inspBadge = r.isInspectionValid
+            ? "<span class='badge bg-success'>IN-DATE (PASSED)</span>"
+            : "<span class='badge bg-danger'>OVERDUE / REQUIRED</span>";
+          const calBadge = isGas
+            ? (r.isCalibrationValid ? "<span class='badge bg-success'>CERTIFIED</span>" : "<span class='badge bg-warning text-dark'>OVERDUE</span>")
+            : "<span class='badge bg-secondary'>N/A (NON-GAS)</span>";
+          const statusBadge = r.status === 'Available' ? 'bg-success' : r.status === 'OutOfService' ? 'bg-danger' : 'bg-warning text-dark';
+
+          html += `<tr>
+            <td><code class='text-warning fw-bold'>${r.assetTag || 'TAG-001'}</code></td>
+            <td><code>${r.serialNo || 'SN-UNKNOWN'}</code></td>
+            <td class='fw-bold'>${r.name || 'Asset'}</td>
+            <td><span class='badge bg-dark border border-secondary'>${r.category || 'General'}</span></td>
+            <td><span class='badge ${statusBadge}'>${r.status || 'Available'}</span></td>
+            <td>${inspBadge}</td>
+            <td>${calBadge}</td>
+          </tr>`;
+        });
+        html += "</tbody></table>";
+        container.innerHTML = html;
+      }
+      else if (tableName === 'isolation') {
+        title.innerHTML = "🔒 Lockout / Tagout (LOTO) Isolation Points Table (IsolationPoints)";
+        const rows = currentData.isolation || [];
+        if (!rows.length) { container.innerHTML = "<p class='text-muted p-3'>No isolation points found in database.</p>"; return; }
+        let html = "<table class='table table-dark table-striped table-hover align-middle mb-0'><thead><tr><th>Isolation Tag</th><th>Point Description</th><th>Type</th><th>LOTO State</th><th>Locked Authority</th><th>Locked At</th></tr></thead><tbody>";
+        rows.forEach(r => {
+          const stateBadge = r.state === 'LockedOut'
+            ? "<span class='badge bg-warning text-dark fw-bold'>🔒 LOCKED OUT</span>"
+            : r.state === 'TaggedOut'
+            ? "<span class='badge bg-primary fw-bold'>🏷️ TAGGED OUT</span>"
+            : "<span class='badge bg-success fw-bold'>🟢 OPEN / CLEAR</span>";
+
+          html += `<tr>
+            <td><code class='text-info fw-bold'>${r.tagIdentifier || 'ISO-01'}</code></td>
+            <td class='fw-bold'>${r.description || 'Isolation Point'}</td>
+            <td><span class='badge bg-dark border border-info'>${r.type || 'Mechanical'}</span></td>
+            <td>${stateBadge}</td>
+            <td class='text-secondary small'>${r.lockedBy || 'Unassigned'}</td>
+            <td class='text-secondary small font-monospace'>${r.lockedAt ? new Date(r.lockedAt).toLocaleString() : 'N/A'}</td>
+          </tr>`;
         });
         html += "</tbody></table>";
         container.innerHTML = html;
       }
       else if (tableName === 'raw') {
-        title.innerHTML = "💻 Raw Database JSON Payload";
+        title.innerHTML = "💻 Complete EF Core Database JSON Payload";
         container.innerHTML = "<pre>" + JSON.stringify(currentData, null, 2) + "</pre>";
       }
     }
@@ -258,29 +375,104 @@ app.MapGet("/db", () => Results.Content("""
 // 8. Internal API Endpoints for /db Queries
 app.MapGet("/api/db/query/permits", async (AppDbContext db) =>
 {
-    var list = await db.Permits.Take(50).ToListAsync();
-    if (!list.Any()) return Results.Ok(new[] { new { id = "PTW-2026-001", title = "Hot Work Welding Deck A", status = "Active", zoneCode = "ZONE-A1", issuingAuthority = "Mohammed Zakee" } });
+    var list = await db.PermitRequests
+        .AsNoTracking()
+        .Include(p => p.PermitType)
+        .Select(p => new
+        {
+            permitNumber = p.PermitNumber,
+            title = p.Title,
+            permitType = p.PermitType != null ? p.PermitType.Name : "Hot Work Permit",
+            status = p.Status.ToString(),
+            zoneCode = p.ZoneCode,
+            issuingAuthority = p.IssuingAuthority,
+            startTime = p.ScheduledStartTime,
+            endTime = p.ScheduledEndTime
+        })
+        .Take(50)
+        .ToListAsync();
     return Results.Ok(list);
 }).ExcludeFromDescription();
 
 app.MapGet("/api/db/query/workforce", async (AppDbContext db) =>
 {
-    var list = await db.Workers.Take(50).ToListAsync();
-    if (!list.Any()) return Results.Ok(new[] { new { badgeNumber = "W-101", fullName = "Dinithi Silva", tradeRole = "Rig Electrician", certifications = "OPITO, BOSIET, CompEx" } });
+    var list = await db.Workers
+        .AsNoTracking()
+        .Include(w => w.Contractor)
+        .Include(w => w.Certificates)
+        .Select(w => new
+        {
+            badgeNumber = w.BadgeNumber,
+            fullName = w.FirstName + " " + w.LastName,
+            tradeRole = w.Trade,
+            contractor = w.Contractor != null ? w.Contractor.CompanyName : "Global Energy Maintenance Corp",
+            certifications = w.Certificates.Any() 
+                ? string.Join(", ", w.Certificates.Select(c => c.CertificateName)) 
+                : "Standard HSE Induction",
+            isActive = w.IsActive
+        })
+        .Take(50)
+        .ToListAsync();
     return Results.Ok(list);
 }).ExcludeFromDescription();
 
 app.MapGet("/api/db/query/hazards", async (AppDbContext db) =>
 {
-    var list = await db.Zones.Take(50).ToListAsync();
-    if (!list.Any()) return Results.Ok(new[] { new { code = "ZONE-A1", name = "Offshore Hydrocarbon Process Area", severity = "CRITICAL" } });
+    var list = await db.Zones
+        .AsNoTracking()
+        .Include(z => z.Site)
+        .Select(z => new
+        {
+            code = z.Code,
+            name = z.Name,
+            site = z.Site != null ? z.Site.Name : "Industrial Refinery Complex",
+            radiusMeters = z.RadiusMeters,
+            qrCodePayload = z.QrCodePayload,
+            isActive = z.IsActive
+        })
+        .Take(50)
+        .ToListAsync();
     return Results.Ok(list);
 }).ExcludeFromDescription();
 
 app.MapGet("/api/db/query/equipment", async (AppDbContext db) =>
 {
-    var list = await db.Assets.Take(50).ToListAsync();
-    if (!list.Any()) return Results.Ok(new[] { new { serialNumber = "DG-5000-X", assetType = "Dräger Multi-Gas Detector", calibrationStatus = "Passed Bump Test" } });
+    var list = await db.Assets
+        .AsNoTracking()
+        .Include(a => a.InspectionRecords)
+        .Include(a => a.CalibrationRecords)
+        .Select(a => new
+        {
+            assetTag = a.AssetTag,
+            serialNo = a.SerialNo,
+            name = a.Name,
+            category = a.Category.ToString(),
+            status = a.Status.ToString(),
+            isInspectionValid = a.InspectionRecords.Any() && a.InspectionRecords.OrderByDescending(i => i.InspectionDate).First().Passed,
+            isCalibrationValid = a.CalibrationRecords.Any() && a.CalibrationRecords.OrderByDescending(c => c.CalibrationDate).First().PassStatus,
+            nextInspection = a.InspectionRecords.OrderByDescending(i => i.InspectionDate).Select(i => (DateTime?)i.NextInspectionDate).FirstOrDefault(),
+            nextCalibration = a.CalibrationRecords.OrderByDescending(c => c.CalibrationDate).Select(c => (DateTime?)c.NextCalibrationDate).FirstOrDefault()
+        })
+        .Take(50)
+        .ToListAsync();
+    return Results.Ok(list);
+}).ExcludeFromDescription();
+
+app.MapGet("/api/db/query/isolation", async (AppDbContext db) =>
+{
+    var list = await db.IsolationPoints
+        .AsNoTracking()
+        .Select(iso => new
+        {
+            tagIdentifier = iso.TagIdentifier,
+            description = iso.Description,
+            type = iso.Type.ToString(),
+            state = iso.State.ToString(),
+            lockedBy = iso.LockedByUserId ?? "System Administrator",
+            lockedAt = iso.LockedAt
+        })
+        .Take(50)
+        .ToListAsync();
     return Results.Ok(list);
 }).ExcludeFromDescription();
 
