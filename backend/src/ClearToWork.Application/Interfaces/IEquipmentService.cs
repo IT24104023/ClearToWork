@@ -19,6 +19,7 @@ public interface IEquipmentService
     Task<bool> AddInspectionRecordAsync(Guid assetId, CreateInspectionRequest request);
     Task<bool> AddCalibrationRecordAsync(Guid assetId, CreateCalibrationRequest request);
     Task<EquipmentReadinessResponse> CheckReadinessAsync(EquipmentReadinessRequest request);
+    Task<EquipmentReadinessResponse> CheckReadinessByTagsAsync(List<string> assetTags);
     Task<bool> ReserveEquipmentTransactionAsync(Guid permitId, List<Guid> assetIds, DateTime from, DateTime until);
     Task<List<IsolationPointDto>> GetIsolationPointsForZoneAsync(Guid zoneId);
     Task<IsolationPointDto> CreateIsolationPointAsync(CreateIsolationPointRequest request);

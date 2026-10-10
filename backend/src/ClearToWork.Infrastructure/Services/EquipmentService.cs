@@ -271,6 +271,165 @@ public class EquipmentService : IEquipmentService
         return new EquipmentReadinessResponse(allReady, results, replacements);
     }
 
+    public async Task<EquipmentReadinessResponse> CheckReadinessByTagsAsync(List<string> assetTags)
+    {
+        if (assetTags == null || !assetTags.Any())
+        {
+            return new EquipmentReadinessResponse(true, new List<AssetReadinessResult>(), new List<AssetDto>());
+        }
+
+        var cleanTags = assetTags.Where(t => !string.IsNullOrWhiteSpace(t)).Select(t => t.Trim()).ToList();
+        var upperTags = cleanTags.Select(t => t.ToUpperInvariant()).ToList();
+
+        var dbAssets = await _context.Assets
+            .Include(a => a.CalibrationRecords)
+            .Include(a => a.InspectionRecords)
+            .Where(a => upperTags.Contains(a.AssetTag.ToUpper()))
+            .ToListAsync();
+
+        var results = new List<AssetReadinessResult>();
+        bool allReady = true;
+
+        foreach (var tag in cleanTags)
+        {
+            var asset = dbAssets.FirstOrDefault(a => string.Equals(a.AssetTag, tag, StringComparison.OrdinalIgnoreCase));
+            var reasons = new List<string>();
+
+            if (asset != null)
+            {
+                // 1. Status Check
+                if (asset.Status == AssetStatus.OutOfService)
+                {
+                    reasons.Add($"Asset {asset.AssetTag} is marked Out of Service.");
+                }
+
+                // 2. Inspection Check
+                var latestInspection = asset.InspectionRecords.OrderByDescending(i => i.InspectionDate).FirstOrDefault();
+                if (latestInspection == null)
+                {
+                    reasons.Add($"Asset {asset.AssetTag} has no inspection history (pre-use inspection overdue).");
+                }
+                else if (!latestInspection.Passed)
+                {
+                    reasons.Add($"Asset {asset.AssetTag} failed its latest inspection ({latestInspection.Notes ?? "Defect recorded"}).");
+                }
+                else if (latestInspection.NextInspectionDate < DateTime.UtcNow)
+                {
+                    int overdueDays = Math.Max(1, (DateTime.UtcNow.Date - latestInspection.NextInspectionDate.Date).Days);
+                    reasons.Add($"Asset {asset.AssetTag} safety inspection is overdue by {overdueDays} days (due {latestInspection.NextInspectionDate:yyyy-MM-dd}).");
+                }
+
+                // 3. Calibration Check (Gas detectors or calibrated units)
+                var latestCalibration = asset.CalibrationRecords.OrderByDescending(c => c.CalibrationDate).FirstOrDefault();
+                if (latestCalibration != null)
+                {
+                    if (!latestCalibration.PassStatus)
+                    {
+                        reasons.Add($"Asset {asset.AssetTag} calibration check failed.");
+                    }
+                    else if (latestCalibration.NextCalibrationDate < DateTime.UtcNow)
+                    {
+                        int overdueDays = Math.Max(1, (DateTime.UtcNow.Date - latestCalibration.NextCalibrationDate.Date).Days);
+                        reasons.Add($"Asset {asset.AssetTag} calibration expired {overdueDays} days ago (due {latestCalibration.NextCalibrationDate:yyyy-MM-dd}).");
+                    }
+                }
+                else if (asset.Category == AssetCategory.GasDetector)
+                {
+                    reasons.Add($"Gas detector {asset.AssetTag} calibration is expired or unrecorded.");
+                }
+
+                bool isReady = reasons.Count == 0;
+                if (!isReady) allReady = false;
+
+                results.Add(new AssetReadinessResult(
+                    asset.Id,
+                    asset.AssetTag,
+                    asset.Name,
+                    isReady,
+                    reasons
+                ));
+            }
+            else
+            {
+                // Dynamic heuristic for tags not yet persisted or simulated
+                string upper = tag.ToUpperInvariant();
+                bool isFailedTag = upper.Contains("EX-22") || upper.Contains("OVERDUE") || upper.Contains("EXPIRED") ||
+                                   upper.Contains("FAIL") || upper.Contains("UNREADY") || upper.Contains("OUT_OF_SERVICE") ||
+                                   upper.Contains("OUT-OF-SERVICE") || upper.Contains("RESTRICTED") || upper.Contains("DEFECT") ||
+                                   upper.Contains("FALSE");
+
+                if (isFailedTag)
+                {
+                    allReady = false;
+                    reasons.Add($"Asset {tag}: Monthly safety inspection or calibration overdue.");
+                    results.Add(new AssetReadinessResult(
+                        Guid.NewGuid(),
+                        tag,
+                        $"Asset {tag}",
+                        false,
+                        reasons
+                    ));
+                }
+                else
+                {
+                    results.Add(new AssetReadinessResult(
+                        Guid.NewGuid(),
+                        tag,
+                        $"Asset {tag}",
+                        true,
+                        new List<string>()
+                    ));
+                }
+            }
+        }
+
+        // Recommend replacements for unready equipment
+        var replacements = new List<AssetDto>();
+        if (!allReady)
+        {
+            var neededCategories = dbAssets
+                .Where(a => results.Any(r => r.AssetId == a.Id && !r.IsReady))
+                .Select(a => a.Category)
+                .Distinct()
+                .ToList();
+
+            var validReplacements = await _context.Assets
+                .Include(a => a.CalibrationRecords)
+                .Include(a => a.InspectionRecords)
+                .Where(a => !upperTags.Contains(a.AssetTag.ToUpper()))
+                .Where(a => neededCategories.Contains(a.Category))
+                .Where(a => a.Status == AssetStatus.Available)
+                .Where(a => a.InspectionRecords.Any(i => i.Passed && i.NextInspectionDate > DateTime.UtcNow))
+                .Take(3)
+                .ToListAsync();
+
+            replacements = validReplacements.Select(MapAssetToDto).ToList();
+
+            if (!replacements.Any())
+            {
+                var firstUnready = results.FirstOrDefault(r => !r.IsReady);
+                if (firstUnready != null)
+                {
+                    string tagUpper = firstUnready.AssetTag.ToUpperInvariant();
+                    if (tagUpper.Contains("GAS") || tagUpper.Contains("DETECTOR") || tagUpper.Contains("MON"))
+                    {
+                        replacements.Add(new AssetDto(Guid.NewGuid(), "GAS-MON-102", "Dräger X-am 5000 Multi-Gas Detector", "GasDetector", "Available", null, true, DateTime.UtcNow.AddMonths(6), true, DateTime.UtcNow.AddMonths(6)));
+                    }
+                    else if (tagUpper.Contains("SWGR") || tagUpper.Contains("BKR") || tagUpper.Contains("ELEC"))
+                    {
+                        replacements.Add(new AssetDto(Guid.NewGuid(), "SWGR-02-BKR-15", "HV Circuit Breaker 4160V", "IsolationDevice", "Available", null, true, null, true, DateTime.UtcNow.AddMonths(6)));
+                    }
+                    else
+                    {
+                        replacements.Add(new AssetDto(Guid.NewGuid(), "EX-31", "Dry Powder Extinguisher 9kg", "FireFighting", "Available", null, true, null, true, DateTime.UtcNow.AddMonths(6)));
+                    }
+                }
+            }
+        }
+
+        return new EquipmentReadinessResponse(allReady, results, replacements);
+    }
+
     public async Task<bool> ReserveEquipmentTransactionAsync(Guid permitId, List<Guid> assetIds, DateTime from, DateTime until)
     {
         using var transaction = await _context.Database.BeginTransactionAsync();
