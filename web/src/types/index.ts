@@ -1,4 +1,4 @@
-export type UserRole = 'ContractorSupervisor' | 'AreaSupervisor' | 'SafetyOfficer' | 'Administrator';
+export type UserRole = 'ContractorSupervisor' | 'AreaSupervisor' | 'SafetyOfficer' | 'Administrator' | 'Admin';
 
 export interface UserSession {
   id: string;
@@ -214,24 +214,36 @@ export interface CreateCalibrationRequest {
 
 export interface IsolationPoint {
   id: string;
-  code: string;
-  name: string;
+  code?: string;
+  tagIdentifier?: string;
+  name?: string;
+  description?: string;
+  type?: string;
   zoneId: string;
   zoneName?: string;
-  currentState: 'Open' | 'LockedOut' | 'TaggedOut';
+  currentState?: 'Open' | 'LockedOut' | 'TaggedOut' | string;
+  state?: string;
   lastInspectedAt?: string;
+  lockedAt?: string;
+  lockedByUserId?: string;
   notes?: string;
 }
 
 export interface CreateIsolationPointRequest {
-  code: string;
-  name: string;
+  code?: string;
+  tagIdentifier?: string;
+  name?: string;
+  description?: string;
+  type?: string;
+  state?: string;
   zoneId: string;
   notes?: string;
 }
 
 export interface UpdateIsolationPointStateRequest {
-  state: 'Open' | 'LockedOut' | 'TaggedOut';
+  state: 'Open' | 'LockedOut' | 'TaggedOut' | string;
+  currentState?: 'Open' | 'LockedOut' | 'TaggedOut' | string;
+  lockedByUserId?: string;
   notes?: string;
 }
 

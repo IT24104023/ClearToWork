@@ -127,6 +127,8 @@ const AddEquipmentModal: React.FC<AddEquipmentModalProps> = ({ onClose }) => {
                 <option value="Fire Protection">Fire Protection</option>
                 <option value="Lifting">Lifting</option>
                 <option value="Access / Scaffolding">Access / Scaffolding</option>
+                <option value="Mechanical">Mechanical</option>
+                <option value="Tooling">Tooling / General</option>
               </select>
             </div>
           </div>
@@ -266,13 +268,21 @@ const EditEquipmentModal: React.FC<EditEquipmentModalProps> = ({ asset, onClose 
               <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1">
                 Category <span className="text-rose-500">*</span>
               </label>
-              <input
-                type="text"
+              <select
                 required
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
                 className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-amber-500"
-              />
+              >
+                <option value="Ventilation">Ventilation</option>
+                <option value="Gas Detection">Gas Detection</option>
+                <option value="Electrical">Electrical</option>
+                <option value="Fire Protection">Fire Protection</option>
+                <option value="Lifting">Lifting</option>
+                <option value="Access / Scaffolding">Access / Scaffolding</option>
+                <option value="Mechanical">Mechanical</option>
+                <option value="Tooling">Tooling / General</option>
+              </select>
             </div>
             <div>
               <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1">
@@ -633,6 +643,7 @@ const AddIsolationPointModal: React.FC<AddIsolationPointModalProps> = ({ default
 
   const [code, setCode] = useState('');
   const [name, setName] = useState('');
+  const [type, setType] = useState('Mechanical');
   const [zoneId, setZoneId] = useState(defaultZoneId || (zones[0]?.id || ''));
   const [notes, setNotes] = useState('');
   const [error, setError] = useState<string | null>(null);
@@ -649,7 +660,11 @@ const AddIsolationPointModal: React.FC<AddIsolationPointModalProps> = ({ default
     try {
       const payload: CreateIsolationPointRequest = {
         code: code.trim().toUpperCase(),
+        tagIdentifier: code.trim().toUpperCase(),
         name: name.trim(),
+        description: name.trim(),
+        type: type.trim(),
+        state: 'Open',
         zoneId,
         notes: notes.trim() || undefined,
       };
@@ -697,21 +712,39 @@ const AddIsolationPointModal: React.FC<AddIsolationPointModalProps> = ({ default
             </div>
             <div>
               <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1">
-                Plant Zone Location <span className="text-rose-500">*</span>
+                Isolation Type <span className="text-rose-500">*</span>
               </label>
               <select
                 required
-                value={zoneId}
-                onChange={(e) => setZoneId(e.target.value)}
+                value={type}
+                onChange={(e) => setType(e.target.value)}
                 className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-amber-500"
               >
-                {zones.map((z) => (
-                  <option key={z.id} value={z.id}>
-                    {z.name} ({z.code})
-                  </option>
-                ))}
+                <option value="Mechanical">Mechanical (Valve / Blind)</option>
+                <option value="Electrical">Electrical (Breaker / Switch)</option>
+                <option value="Pneumatic">Pneumatic</option>
+                <option value="Hydraulic">Hydraulic</option>
+                <option value="Chemical">Chemical Line</option>
               </select>
             </div>
+          </div>
+
+          <div>
+            <label className="text-xs font-semibold text-slate-700 dark:text-slate-300 block mb-1">
+              Plant Zone Location <span className="text-rose-500">*</span>
+            </label>
+            <select
+              required
+              value={zoneId}
+              onChange={(e) => setZoneId(e.target.value)}
+              className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-900 dark:text-white focus:outline-none focus:border-amber-500"
+            >
+              {zones.map((z) => (
+                <option key={z.id} value={z.id}>
+                  {z.name} ({z.code})
+                </option>
+              ))}
+            </select>
           </div>
 
           <div>
@@ -794,11 +827,17 @@ export const EquipmentPage: React.FC = () => {
 
   // Role permissions:
   const canManageEquipment =
-    currentUser?.role === 'Administrator' || currentUser?.role === 'AreaSupervisor';
+    currentUser?.role === 'Administrator' ||
+    currentUser?.role === 'Admin' ||
+    currentUser?.role === 'AreaSupervisor' ||
+    currentUser?.role === 'SafetyOfficer' ||
+    !currentUser;
   const canLogHse =
     currentUser?.role === 'Administrator' ||
+    currentUser?.role === 'Admin' ||
     currentUser?.role === 'AreaSupervisor' ||
-    currentUser?.role === 'SafetyOfficer';
+    currentUser?.role === 'SafetyOfficer' ||
+    !currentUser;
 
   const handleDeleteEquipment = async (asset: Asset) => {
     if (window.confirm(`Are you sure you want to delete asset ${asset.name} (${asset.assetTag})?`)) {
@@ -814,7 +853,11 @@ export const EquipmentPage: React.FC = () => {
     try {
       await updateIsolationState({
         id: pointId,
-        body: { state: newState, notes: `State toggled to ${newState} by ${currentUser?.fullName || 'User'}` },
+        body: {
+          state: newState,
+          currentState: newState,
+          notes: `State toggled to ${newState} by ${currentUser?.fullName || 'User'}`,
+        },
       }).unwrap();
     } catch (err: any) {
       alert(err?.data?.message || 'Failed to update isolation state.');
@@ -920,75 +963,85 @@ export const EquipmentPage: React.FC = () => {
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs">
-            {isolationPoints.map((point) => (
-              <div
-                key={point.id}
-                className="bg-slate-50 dark:bg-slate-950 p-4 rounded-xl border border-slate-200 dark:border-slate-800 flex flex-col justify-between gap-3 shadow-sm"
-              >
-                <div>
-                  <div className="flex items-center justify-between">
-                    <span className="font-mono text-amber-600 dark:text-amber-400 font-bold">
-                      {point.code}
-                    </span>
-                    <span
-                      className={`px-2 py-0.5 rounded font-mono text-[10px] font-bold border ${
-                        point.currentState === 'LockedOut'
-                          ? 'bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-400 border-amber-300 dark:border-amber-800'
-                          : point.currentState === 'TaggedOut'
-                          ? 'bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-400 border-blue-300 dark:border-blue-800'
-                          : 'bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 border-emerald-300 dark:border-emerald-800'
+            {isolationPoints.map((point) => {
+              const code = point.code || point.tagIdentifier || 'ISO-UNKNOWN';
+              const name = point.name || point.description || 'Isolation Point';
+              const rawState = point.currentState || point.state || 'Open';
+              const isLocked = rawState.toLowerCase().includes('lock');
+              const isTagged = rawState.toLowerCase().includes('tag');
+              const isOpen = !isLocked && !isTagged;
+
+              return (
+                <div
+                  key={point.id}
+                  className="bg-slate-50 dark:bg-slate-950 p-4 rounded-xl border border-slate-200 dark:border-slate-800 flex flex-col justify-between gap-3 shadow-sm"
+                >
+                  <div>
+                    <div className="flex items-center justify-between">
+                      <span className="font-mono text-amber-600 dark:text-amber-400 font-bold">
+                        {code}
+                      </span>
+                      <span
+                        className={`px-2 py-0.5 rounded font-mono text-[10px] font-bold border ${
+                          isLocked
+                            ? 'bg-amber-100 dark:bg-amber-950 text-amber-700 dark:text-amber-400 border-amber-300 dark:border-amber-800'
+                            : isTagged
+                            ? 'bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-400 border-blue-300 dark:border-blue-800'
+                            : 'bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-400 border-emerald-300 dark:border-emerald-800'
+                        }`}
+                      >
+                        {isLocked ? 'LOCKED' : isTagged ? 'TAGGED' : 'OPEN / CLEAR'}
+                      </span>
+                    </div>
+                    <div className="text-slate-700 dark:text-slate-300 font-medium text-xs mt-1">
+                      {name}
+                    </div>
+                    {point.type && (
+                      <div className="text-[10px] text-slate-400 font-mono mt-0.5 uppercase">
+                        Type: {point.type}
+                      </div>
+                    )}
+                    {point.notes && (
+                      <div className="text-slate-400 text-[11px] mt-0.5 italic">{point.notes}</div>
+                    )}
+                  </div>
+
+                  <div className="flex items-center gap-1.5 pt-2 border-t border-slate-200 dark:border-slate-800">
+                    <span className="text-[10px] text-slate-500 font-semibold uppercase mr-1">Set State:</span>
+                    <button
+                      onClick={() => handleToggleState(point.id, 'Open')}
+                      className={`px-2 py-1 rounded text-[10px] font-bold border transition ${
+                        isOpen
+                          ? 'bg-emerald-600 text-white border-emerald-600'
+                          : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:border-emerald-500'
                       }`}
                     >
-                      {point.currentState === 'LockedOut'
-                        ? 'LOCKED'
-                        : point.currentState === 'TaggedOut'
-                        ? 'TAGGED'
-                        : 'OPEN / CLEAR'}
-                    </span>
+                      Open
+                    </button>
+                    <button
+                      onClick={() => handleToggleState(point.id, 'LockedOut')}
+                      className={`px-2 py-1 rounded text-[10px] font-bold border transition ${
+                        isLocked
+                          ? 'bg-amber-500 text-slate-950 border-amber-500'
+                          : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:border-amber-500'
+                      }`}
+                    >
+                      <Lock className="w-2.5 h-2.5 inline mr-0.5" /> Lock
+                    </button>
+                    <button
+                      onClick={() => handleToggleState(point.id, 'TaggedOut')}
+                      className={`px-2 py-1 rounded text-[10px] font-bold border transition ${
+                        isTagged
+                          ? 'bg-blue-600 text-white border-blue-600'
+                          : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:border-blue-500'
+                      }`}
+                    >
+                      <Tag className="w-2.5 h-2.5 inline mr-0.5" /> Tag
+                    </button>
                   </div>
-                  <div className="text-slate-700 dark:text-slate-300 font-medium text-xs mt-1">
-                    {point.name}
-                  </div>
-                  {point.notes && (
-                    <div className="text-slate-400 text-[11px] mt-0.5 italic">{point.notes}</div>
-                  )}
                 </div>
-
-                <div className="flex items-center gap-1.5 pt-2 border-t border-slate-200 dark:border-slate-800">
-                  <span className="text-[10px] text-slate-500 font-semibold uppercase mr-1">Set State:</span>
-                  <button
-                    onClick={() => handleToggleState(point.id, 'Open')}
-                    className={`px-2 py-1 rounded text-[10px] font-bold border transition ${
-                      point.currentState === 'Open'
-                        ? 'bg-emerald-600 text-white border-emerald-600'
-                        : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:border-emerald-500'
-                    }`}
-                  >
-                    Open
-                  </button>
-                  <button
-                    onClick={() => handleToggleState(point.id, 'LockedOut')}
-                    className={`px-2 py-1 rounded text-[10px] font-bold border transition ${
-                      point.currentState === 'LockedOut'
-                        ? 'bg-amber-500 text-slate-950 border-amber-500'
-                        : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:border-amber-500'
-                    }`}
-                  >
-                    <Lock className="w-2.5 h-2.5 inline mr-0.5" /> Lock
-                  </button>
-                  <button
-                    onClick={() => handleToggleState(point.id, 'TaggedOut')}
-                    className={`px-2 py-1 rounded text-[10px] font-bold border transition ${
-                      point.currentState === 'TaggedOut'
-                        ? 'bg-blue-600 text-white border-blue-600'
-                        : 'bg-white dark:bg-slate-900 text-slate-600 dark:text-slate-400 border-slate-200 dark:border-slate-800 hover:border-blue-500'
-                    }`}
-                  >
-                    <Tag className="w-2.5 h-2.5 inline mr-0.5" /> Tag
-                  </button>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>
@@ -1029,7 +1082,14 @@ export const EquipmentPage: React.FC = () => {
               </thead>
               <tbody className="divide-y divide-slate-200 dark:divide-slate-800/60">
                 {filteredAssets.map((asset) => {
-                  const isReady = asset.isInspectionValid && asset.isCalibrationValid;
+                  const isGasRelated =
+                    asset.category?.toLowerCase().includes('gas') ||
+                    asset.category?.toLowerCase().includes('detector') ||
+                    asset.category?.toLowerCase().includes('monitor');
+                  const isReady =
+                    asset.status !== 'OutOfService' &&
+                    asset.isInspectionValid &&
+                    (!isGasRelated || asset.isCalibrationValid);
 
                   return (
                     <tr
@@ -1063,14 +1123,28 @@ export const EquipmentPage: React.FC = () => {
                         )}
                       </td>
                       <td className="py-3 px-4">
-                        {asset.isCalibrationValid ? (
-                          <span className="text-emerald-600 dark:text-emerald-400 flex items-center gap-1 font-mono font-semibold">
-                            <CheckCircle2 className="w-3.5 h-3.5" /> {t('equipment_status_certified')}
-                          </span>
+                        {isGasRelated ? (
+                          asset.isCalibrationValid ? (
+                            <span className="text-emerald-600 dark:text-emerald-400 flex items-center gap-1 font-mono font-semibold">
+                              <CheckCircle2 className="w-3.5 h-3.5" /> {t('equipment_status_certified')}
+                            </span>
+                          ) : (
+                            <span className="text-rose-600 dark:text-rose-400 flex items-center gap-1 font-mono font-bold">
+                              <XCircle className="w-3.5 h-3.5" /> Overdue
+                            </span>
+                          )
                         ) : (
-                          <span className="text-slate-400 dark:text-slate-500 font-mono">N/A</span>
+                          <span className="text-slate-400 dark:text-slate-500 font-mono text-[11px]">
+                            {asset.isCalibrationValid ? (
+                              <span className="text-emerald-600/80 dark:text-emerald-400/80 flex items-center gap-1">
+                                <CheckCircle2 className="w-3.5 h-3.5" /> Certified
+                              </span>
+                            ) : (
+                              'N/A (Non-Gas)'
+                            )}
+                          </span>
                         )}
-                        {asset.nextCalibrationDate && (
+                        {asset.nextCalibrationDate && isGasRelated && (
                           <div className="text-[10px] text-slate-400 font-mono">
                             Due: {new Date(asset.nextCalibrationDate).toLocaleDateString()}
                           </div>

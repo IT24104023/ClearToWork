@@ -31,7 +31,7 @@ public class AuthService : IAuthService
             "safety@cleartowork.com" => ("SafetyOfficer", "Elena Rostova"),
             "supervisor@contractor.com" => ("Supervisor", "David Miller"),
             "areasup@cleartowork.com" => ("AreaSupervisor", "James Whitfield"),
-            "admin@cleartowork.com" => ("Admin", "System Administrator"),
+            "admin@cleartowork.com" => ("Administrator", "System Administrator"),
             _ => ("SafetyOfficer", "Mohammed Zakee")
         };
 
@@ -40,13 +40,17 @@ public class AuthService : IAuthService
         var issuer = _configuration["Jwt:Issuer"] ?? "ClearToWorkAPI";
         var audience = _configuration["Jwt:Audience"] ?? "ClearToWorkClients";
 
-        var claims = new[]
+        var claimsList = new List<Claim>
         {
             new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
             new Claim(ClaimTypes.Name, fullName),
             new Claim(ClaimTypes.Email, request.Email),
             new Claim(ClaimTypes.Role, role)
         };
+        if (role == "Administrator") claimsList.Add(new Claim(ClaimTypes.Role, "Admin"));
+        if (role == "Admin") claimsList.Add(new Claim(ClaimTypes.Role, "Administrator"));
+
+        var claims = claimsList.ToArray();
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);

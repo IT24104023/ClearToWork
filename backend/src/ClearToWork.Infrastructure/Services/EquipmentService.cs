@@ -54,7 +54,12 @@ public class EquipmentService : IEquipmentService
 
     public async Task<AssetDto> CreateAssetAsync(CreateAssetRequest request)
     {
-        Enum.TryParse<AssetCategory>(request.Category, true, out var catEnum);
+        var catEnum = ParseCategory(request.Category);
+        var statEnum = AssetStatus.Available;
+        if (!string.IsNullOrWhiteSpace(request.Status) && Enum.TryParse<AssetStatus>(request.Status, true, out var parsedStat))
+        {
+            statEnum = parsedStat;
+        }
 
         var asset = new Asset
         {
@@ -62,8 +67,8 @@ public class EquipmentService : IEquipmentService
             AssetTag = request.AssetTag.Trim().ToUpperInvariant(),
             Name = request.Name.Trim(),
             Category = catEnum,
-            Status = AssetStatus.Available,
-            CurrentZoneId = request.CurrentZoneId
+            Status = statEnum,
+            CurrentZoneId = request.CurrentZoneId ?? request.ZoneId
         };
 
         _context.Assets.Add(asset);
@@ -80,18 +85,28 @@ public class EquipmentService : IEquipmentService
 
         if (asset == null) return null;
 
-        if (Enum.TryParse<AssetCategory>(request.Category, true, out var catEnum))
+        if (!string.IsNullOrWhiteSpace(request.Category))
         {
-            asset.Category = catEnum;
+            asset.Category = ParseCategory(request.Category);
         }
 
-        if (Enum.TryParse<AssetStatus>(request.Status, true, out var statEnum))
+        if (!string.IsNullOrWhiteSpace(request.Status))
         {
-            asset.Status = statEnum;
+            if (Enum.TryParse<AssetStatus>(request.Status, true, out var statEnum))
+            {
+                asset.Status = statEnum;
+            }
         }
 
-        asset.Name = request.Name.Trim();
-        asset.CurrentZoneId = request.CurrentZoneId;
+        if (!string.IsNullOrWhiteSpace(request.Name))
+        {
+            asset.Name = request.Name.Trim();
+        }
+
+        if (request.CurrentZoneId.HasValue || request.ZoneId.HasValue)
+        {
+            asset.CurrentZoneId = request.CurrentZoneId ?? request.ZoneId;
+        }
 
         await _context.SaveChangesAsync();
         return await GetAssetByIdAsync(asset.Id);
@@ -483,46 +498,51 @@ public class EquipmentService : IEquipmentService
             .Where(p => p.ZoneId == zoneId)
             .ToListAsync();
 
-        return points.Select(p => new IsolationPointDto(
-            p.Id,
-            p.ZoneId,
-            p.TagIdentifier,
-            p.Description,
-            p.Type.ToString(),
-            p.State.ToString(),
-            p.LockedByUserId,
-            p.LockedAt
-        )).ToList();
+        return points.Select(MapIsolationPointToDto).ToList();
     }
 
     public async Task<IsolationPointDto> CreateIsolationPointAsync(CreateIsolationPointRequest request)
     {
-        Enum.TryParse<IsolationType>(request.Type, true, out var typeEnum);
-        Enum.TryParse<IsolationState>(request.State, true, out var stateEnum);
+        var typeStr = request.EffectiveType;
+        if (!Enum.TryParse<IsolationType>(typeStr, true, out var typeEnum))
+        {
+            typeEnum = IsolationType.Mechanical;
+        }
+
+        var stateStr = request.EffectiveState;
+        if (stateStr.Equals("LockedOut", StringComparison.OrdinalIgnoreCase) || stateStr.Equals("Locked", StringComparison.OrdinalIgnoreCase))
+        {
+            stateStr = "LockedOut";
+        }
+        else if (stateStr.Equals("TaggedOut", StringComparison.OrdinalIgnoreCase) || stateStr.Equals("Tagged", StringComparison.OrdinalIgnoreCase))
+        {
+            stateStr = "TaggedOut";
+        }
+        else
+        {
+            stateStr = "Open";
+        }
+
+        if (!Enum.TryParse<IsolationState>(stateStr, true, out var stateEnum))
+        {
+            stateEnum = IsolationState.Open;
+        }
 
         var point = new IsolationPoint
         {
             Id = Guid.NewGuid(),
             ZoneId = request.ZoneId,
-            TagIdentifier = request.TagIdentifier.Trim(),
-            Description = request.Description.Trim(),
+            TagIdentifier = request.EffectiveTag,
+            Description = request.EffectiveDescription,
             Type = typeEnum,
-            State = stateEnum
+            State = stateEnum,
+            LockedAt = stateEnum != IsolationState.Open ? DateTime.UtcNow : null
         };
 
         _context.IsolationPoints.Add(point);
         await _context.SaveChangesAsync();
 
-        return new IsolationPointDto(
-            point.Id,
-            point.ZoneId,
-            point.TagIdentifier,
-            point.Description,
-            point.Type.ToString(),
-            point.State.ToString(),
-            point.LockedByUserId,
-            point.LockedAt
-        );
+        return MapIsolationPointToDto(point);
     }
 
     public async Task<IsolationPointDto?> UpdateIsolationPointStateAsync(Guid id, UpdateIsolationPointStateRequest request)
@@ -530,7 +550,21 @@ public class EquipmentService : IEquipmentService
         var point = await _context.IsolationPoints.FindAsync(id);
         if (point == null) return null;
 
-        if (Enum.TryParse<IsolationState>(request.State, true, out var stateEnum))
+        var stateStr = request.EffectiveState;
+        if (stateStr.Equals("LockedOut", StringComparison.OrdinalIgnoreCase) || stateStr.Equals("Locked", StringComparison.OrdinalIgnoreCase))
+        {
+            stateStr = "LockedOut";
+        }
+        else if (stateStr.Equals("TaggedOut", StringComparison.OrdinalIgnoreCase) || stateStr.Equals("Tagged", StringComparison.OrdinalIgnoreCase))
+        {
+            stateStr = "TaggedOut";
+        }
+        else
+        {
+            stateStr = "Open";
+        }
+
+        if (Enum.TryParse<IsolationState>(stateStr, true, out var stateEnum))
         {
             point.State = stateEnum;
             point.LockedByUserId = request.LockedByUserId;
@@ -538,17 +572,46 @@ public class EquipmentService : IEquipmentService
         }
 
         await _context.SaveChangesAsync();
+        return MapIsolationPointToDto(point);
+    }
 
-        return new IsolationPointDto(
-            point.Id,
-            point.ZoneId,
-            point.TagIdentifier,
-            point.Description,
-            point.Type.ToString(),
-            point.State.ToString(),
-            point.LockedByUserId,
-            point.LockedAt
-        );
+    private static IsolationPointDto MapIsolationPointToDto(IsolationPoint point)
+    {
+        string currentState = point.State switch
+        {
+            IsolationState.LockedOut => "LockedOut",
+            IsolationState.TaggedOut => "TaggedOut",
+            IsolationState.Isolated => "LockedOut",
+            _ => "Open"
+        };
+
+        return new IsolationPointDto
+        {
+            Id = point.Id,
+            ZoneId = point.ZoneId,
+            TagIdentifier = point.TagIdentifier,
+            Description = point.Description,
+            Type = point.Type.ToString(),
+            State = point.State.ToString(),
+            CurrentState = currentState,
+            LockedByUserId = point.LockedByUserId,
+            LockedAt = point.LockedAt
+        };
+    }
+
+    private static AssetCategory ParseCategory(string? category)
+    {
+        if (string.IsNullOrWhiteSpace(category)) return AssetCategory.General;
+        var clean = category.Trim().ToLowerInvariant().Replace(" ", "").Replace("/", "").Replace("-", "");
+        if (clean.Contains("gasdetect") || clean.Contains("gas")) return AssetCategory.GasDetector;
+        if (clean.Contains("monitor")) return AssetCategory.GasMonitor;
+        if (clean.Contains("scba") || clean.Contains("breath")) return AssetCategory.SCBA;
+        if (clean.Contains("isolat") || clean.Contains("loto") || clean.Contains("breaker")) return AssetCategory.IsolationDevice;
+        if (clean.Contains("fire") || clean.Contains("extinguish")) return AssetCategory.FireExtinguisher;
+        if (clean.Contains("elec")) return AssetCategory.ElectricalTool;
+        if (clean.Contains("lift") || clean.Contains("crane") || clean.Contains("machin") || clean.Contains("heavy")) return AssetCategory.HeavyMachinery;
+        if (Enum.TryParse<AssetCategory>(category, true, out var parsed)) return parsed;
+        return AssetCategory.General;
     }
 
     private static AssetDto MapAssetToDto(Asset a)
@@ -556,7 +619,10 @@ public class EquipmentService : IEquipmentService
         var latestCal = a.CalibrationRecords.OrderByDescending(c => c.CalibrationDate).FirstOrDefault();
         var latestInsp = a.InspectionRecords.OrderByDescending(i => i.InspectionDate).FirstOrDefault();
 
-        bool calValid = latestCal != null && latestCal.PassStatus && latestCal.NextCalibrationDate > DateTime.UtcNow;
+        bool isCalibratable = a.Category == AssetCategory.GasDetector || a.Category == AssetCategory.GasMonitor;
+        bool calValid = isCalibratable 
+            ? (latestCal != null && latestCal.PassStatus && latestCal.NextCalibrationDate > DateTime.UtcNow)
+            : true;
         bool inspValid = latestInsp != null && latestInsp.Passed && latestInsp.NextInspectionDate > DateTime.UtcNow;
 
         return new AssetDto(
