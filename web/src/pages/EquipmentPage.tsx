@@ -362,6 +362,8 @@ const LogInspectionModal: React.FC<LogInspectionModalProps> = ({ asset, onClose 
       const payload: CreateInspectionRequest = {
         inspectorName: inspectorName.trim(),
         isPassed,
+        passed: isPassed,
+        inspectionDate: new Date().toISOString(),
         notes: notes.trim() || undefined,
         nextInspectionDate: nextInspectionDate ? new Date(nextInspectionDate).toISOString() : undefined,
       };
@@ -505,6 +507,9 @@ const LogCalibrationModal: React.FC<LogCalibrationModalProps> = ({ asset, onClos
         calibratedBy: calibratedBy.trim(),
         certificateNumber: certificateNumber.trim().toUpperCase(),
         isPassed,
+        passStatus: isPassed,
+        passed: isPassed,
+        calibrationDate: new Date().toISOString(),
         nextCalibrationDate: nextCalibrationDate ? new Date(nextCalibrationDate).toISOString() : undefined,
       };
       await addCalibration({ id: asset.id, body: payload }).unwrap();
