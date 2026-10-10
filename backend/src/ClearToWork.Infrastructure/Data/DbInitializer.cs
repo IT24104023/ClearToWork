@@ -221,6 +221,89 @@ public static class DbInitializer
 
             context.Assets.AddRange(gasMonitor, isolationBreaker);
             await context.SaveChangesAsync();
+
+            // Seed Initial Calibration & Inspection Records
+            var calGas = new CalibrationRecord
+            {
+                Id = Guid.NewGuid(),
+                AssetId = gasMonitor.Id,
+                CalibratedBy = "Dräger Safety Accredited Metrology Lab",
+                CertificateNumber = "CAL-DRAGER-2026-9901",
+                CalibrationDate = DateTime.UtcNow.AddDays(-10),
+                NextCalibrationDate = DateTime.UtcNow.AddMonths(6),
+                PassStatus = true
+            };
+
+            var inspGas = new InspectionRecord
+            {
+                Id = Guid.NewGuid(),
+                AssetId = gasMonitor.Id,
+                InspectorName = "Chemini Perera (HSE Gas Safety Specialist)",
+                InspectionDate = DateTime.UtcNow.AddDays(-2),
+                NextInspectionDate = DateTime.UtcNow.AddMonths(3),
+                Passed = true,
+                Notes = "LEL, O2, H2S, CO bump test verified OK. Sensor response within 10s. Clean flame arrestor."
+            };
+
+            var inspBreaker = new InspectionRecord
+            {
+                Id = Guid.NewGuid(),
+                AssetId = isolationBreaker.Id,
+                InspectorName = "Mohammed Zakee (Lead Isolation Tech)",
+                InspectionDate = DateTime.UtcNow.AddDays(-5),
+                NextInspectionDate = DateTime.UtcNow.AddMonths(6),
+                Passed = true,
+                Notes = "Visual check and mechanical interlock operational. Insulating barriers verified."
+            };
+
+            context.CalibrationRecords.Add(calGas);
+            context.InspectionRecords.AddRange(inspGas, inspBreaker);
+            await context.SaveChangesAsync();
+        }
+        else if (await context.Assets.AnyAsync())
+        {
+            var existingGas = await context.Assets.FirstOrDefaultAsync(a => a.AssetTag == "GAS-MON-401");
+            if (existingGas != null && !await context.CalibrationRecords.AnyAsync(c => c.AssetId == existingGas.Id))
+            {
+                context.CalibrationRecords.Add(new CalibrationRecord
+                {
+                    Id = Guid.NewGuid(),
+                    AssetId = existingGas.Id,
+                    CalibratedBy = "Dräger Safety Accredited Metrology Lab",
+                    CertificateNumber = "CAL-DRAGER-2026-9901",
+                    CalibrationDate = DateTime.UtcNow.AddDays(-10),
+                    NextCalibrationDate = DateTime.UtcNow.AddMonths(6),
+                    PassStatus = true
+                });
+            }
+            if (existingGas != null && !await context.InspectionRecords.AnyAsync(i => i.AssetId == existingGas.Id))
+            {
+                context.InspectionRecords.Add(new InspectionRecord
+                {
+                    Id = Guid.NewGuid(),
+                    AssetId = existingGas.Id,
+                    InspectorName = "Chemini Perera (HSE Gas Safety Specialist)",
+                    InspectionDate = DateTime.UtcNow.AddDays(-2),
+                    NextInspectionDate = DateTime.UtcNow.AddMonths(3),
+                    Passed = true,
+                    Notes = "LEL, O2, H2S, CO bump test verified OK. Sensor response within 10s."
+                });
+            }
+            var existingBreaker = await context.Assets.FirstOrDefaultAsync(a => a.AssetTag == "SWGR-02-BKR-14");
+            if (existingBreaker != null && !await context.InspectionRecords.AnyAsync(i => i.AssetId == existingBreaker.Id))
+            {
+                context.InspectionRecords.Add(new InspectionRecord
+                {
+                    Id = Guid.NewGuid(),
+                    AssetId = existingBreaker.Id,
+                    InspectorName = "Mohammed Zakee (Lead Isolation Tech)",
+                    InspectionDate = DateTime.UtcNow.AddDays(-5),
+                    NextInspectionDate = DateTime.UtcNow.AddMonths(6),
+                    Passed = true,
+                    Notes = "Visual check and mechanical interlock operational."
+                });
+            }
+            await context.SaveChangesAsync();
         }
 
         // ─── 4b. Seed Initial Isolation Points (LOTO) ────────────────────────
