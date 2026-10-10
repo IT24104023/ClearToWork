@@ -278,20 +278,49 @@ export const QChatAgentCommandCenter: React.FC = () => {
         clearRuns: !data.is_safe_failure ? prev.clearRuns + 1 : prev.clearRuns,
       }));
     } catch {
-      // Deterministic complete fallback showcasing all Student agents
+      // Dynamic complete simulation fallback evaluating user inputs
+      const isOverdueAsset = assetTag.toUpperCase().includes('EX-22') || assetTag.toLowerCase().includes('overdue');
+      const isExpiredWorker = workerId.includes('1182') || workerId.toLowerCase().includes('expired');
+      const hasSimopsClash = selectedZone === 'ZONE_B3' && selectedHazard === 'HOT_WORK';
+
+      const hardFailures: string[] = [];
+      const fix: Record<string, string> = {};
+
+      if (isExpiredWorker) {
+        hardFailures.push(`Worker ${workerId}: Certificate Expired (3 days ago).`);
+        fix.suggestedWorkerBadge = 'W-1204 (Sarah Connor, Valid to 2027)';
+      }
+      if (isOverdueAsset) {
+        hardFailures.push(`Asset ${assetTag}: Monthly safety inspection overdue by 9 days.`);
+        fix.suggestedAssetTag = 'EX-31 (Inspected & In-Date)';
+      }
+      if (hasSimopsClash) {
+        hardFailures.push(`SIMOPS Clash: Active conflicting operation in adjacent zone.`);
+        fix.suggestedTimeWindow = '12:30–15:00';
+      }
+
+      const isSafeFailure = hardFailures.length > 0;
+      const verdict = isSafeFailure ? 'REFUSED_SAFE_FAILURE' : 'CLEARED';
+
+      const validationTrace = [
+        `1. Student 1 (Competency Audit): ${isExpiredWorker ? `FAIL (Expired certificate for ${workerId})` : `PASS (Worker ${workerId} trade certified)`}`,
+        `2. Student 2 (Equipment & Isolation): ${isOverdueAsset ? `FAIL (Overdue inspection on ${assetTag})` : `PASS (Asset ${assetTag} calibration & inspection in-date)`}`,
+        `3. Student 4 (SIMOPS & Site Conditions): ${hasSimopsClash ? 'FAIL (Adjacent zone solvent collision)' : 'PASS (No adjacent zone clash detected)'}`,
+        '4. Student 4 (Weather Tool Envelope): PASS (Wind Speed 14.2 km/h <= 35 km/h cap, available: true)',
+        `5. Final Deterministic Clearance Gate: ${verdict} (${hardFailures.length} Hard Violations)`,
+      ];
+
       setChatMessages((prev) => [
         ...prev,
         {
           sender: 'agent',
-          text: `⚠️ [SIMULATION EVALUATION] Multi-Agent Clearance Complete:\n• Welder ${workerId}: Certificate Expired (3 days ago).\n• Asset ${assetTag}: Monthly inspection overdue by 9 days.\n• SIMOPS Clash: Adjacent Zone B4 solvent painting active until 12:00.`,
-          verdict: 'REFUSED_SAFE_FAILURE',
-          isSafeFailure: true,
+          text: isSafeFailure
+            ? `⚠️ [SIMULATION EVALUATION] Multi-Agent Clearance Refusal:\n${hardFailures.map((f) => `• ${f}`).join('\n')}`
+            : `✅ [SIMULATION EVALUATION] Multi-Agent Clearance Approved:\n• Worker ${workerId}: Qualifications verified.\n• Asset ${assetTag}: Certified and ready.\n• Site & Weather: Safe operating envelope.`,
+          verdict,
+          isSafeFailure,
           durationMs: 312,
-          hardFailures: [
-            `Welder ${workerId}: Certificate Expired (3 days ago).`,
-            `Asset ${assetTag}: Monthly inspection overdue by 9 days.`,
-            'SIMOPS Clash: Adjacent Zone B4 active solvent painting.',
-          ],
+          hardFailures,
           planSteps: [
             `1. Safety Envelope: Enforce ${selectedHazard} parameters (Max 8h window, Fire Watch mandated).`,
             '2. Competency Audit: Verify worker trade qualifications and in-date certifications for all personnel.',
@@ -307,18 +336,8 @@ export const QChatAgentCommandCenter: React.FC = () => {
             isSafeForHotWork: true,
             summary: 'Wind Speed: 14.2 km/h, Gusts: 18.0 km/h, Rain: None (available: true)',
           },
-          validationTrace: [
-            `1. Student 1 (Competency Audit): FAIL (Welder ${workerId} cert expired 3 days ago)`,
-            `2. Student 2 (Equipment & Isolation): FAIL (Asset ${assetTag} inspection overdue by 9 days)`,
-            '3. Student 4 (SIMOPS & Site Conditions): FAIL (Adjacent Zone B4 solvent painting collision)',
-            '4. Student 4 (Weather Tool Envelope): PASS (Wind Speed 14.2 km/h, Gusts 18.0 km/h <= 35.0 km/h cap, available: true)',
-            '5. Final Deterministic Clearance Gate: REFUSED_SAFE_FAILURE (3 Hard Violations)',
-          ],
-          fix: {
-            suggestedWorkerBadge: 'W-1204 (Sarah Connor, Valid to 2027)',
-            suggestedAssetTag: 'EX-31 (Inspected & In-Date)',
-            suggestedTimeWindow: '12:30–15:00',
-          },
+          validationTrace,
+          fix: isSafeFailure ? fix : undefined,
         },
       ]);
     } finally {
