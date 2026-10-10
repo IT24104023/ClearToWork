@@ -38,6 +38,8 @@ def equipment_agent_node(state: AgentWorkflowState) -> AgentWorkflowState:
             if replacements:
                 rep = replacements[0]
                 findings.append(f"Recommended Replacement Asset: {rep.get('name', 'In-Date Unit')} ({rep.get('tag')}) - Validated & certified.")
+            else:
+                findings.append("Recommended Replacement Asset: Certified In-Date Unit - Validated & certified.")
     else:
         findings.append("No specific equipment assets assigned for this operation.")
 

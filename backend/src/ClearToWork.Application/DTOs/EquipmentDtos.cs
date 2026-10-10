@@ -42,6 +42,12 @@ public record EquipmentReadinessResponse(
     List<AssetDto> RecommendedReplacements
 );
 
+public class CheckEquipmentTagsRequest
+{
+    public List<string> AssetTags { get; set; } = new();
+}
+
+
 public record IsolationPointDto(
     Guid Id,
     Guid ZoneId,

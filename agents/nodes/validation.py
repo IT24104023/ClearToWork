@@ -32,9 +32,15 @@ def validation_agent_node(state: AgentWorkflowState) -> AgentWorkflowState:
 
     # 2. Student 2: Equipment & Isolation Violations
     for f in state.equipment_findings:
-        if "overdue" in f.lower() or "unready" in f.lower() or "failed" in f.lower():
+        if any(k in f.lower() for k in ["overdue", "unready", "failed", "expired", "out of service", "restricted", "defect"]):
             hard_failures.append(f)
-            proposed_fix["suggestedAssetTag"] = "EX-31 (inspection valid)"
+            # Dynamically inherit the recommended replacement from equipment agent
+            rep_finding = next((rf for rf in state.equipment_findings if "Recommended Replacement Asset:" in rf), None)
+            if rep_finding:
+                clean_rep = rep_finding.replace("Recommended Replacement Asset:", "").strip()
+                proposed_fix["suggestedAssetTag"] = clean_rep
+            else:
+                proposed_fix["suggestedAssetTag"] = "Certified In-Date Asset (Pre-use inspected)"
 
     # 3. Student 4: SIMOPS & Site Condition Violations
     for f in state.hazard_findings:
@@ -57,7 +63,7 @@ def validation_agent_node(state: AgentWorkflowState) -> AgentWorkflowState:
 
     # Dynamic trace findings
     comp_has_gap = any("expired" in f.lower() for f in state.competency_findings)
-    equip_has_gap = any("overdue" in f.lower() or "unready" in f.lower() for f in state.equipment_findings)
+    equip_has_gap = any(any(k in f.lower() for k in ["overdue", "unready", "failed", "expired", "out of service", "restricted", "defect"]) for f in state.equipment_findings)
     simops_has_gap = any("simops clash" in f.lower() for f in state.hazard_findings)
     weather_has_gap = any("exceed" in f.lower() for f in state.hazard_findings)
 

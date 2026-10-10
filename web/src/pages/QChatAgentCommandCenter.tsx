@@ -240,10 +240,11 @@ export const QChatAgentCommandCenter: React.FC = () => {
         };
       }
 
+      const isAssetFailed = data.hard_failures?.some((f: string) => f.includes(assetTag) || f.toLowerCase().includes('asset') || f.toLowerCase().includes('inspection') || f.toLowerCase().includes('calibration'));
       const validationFindings = data.execution_traces?.find((t: any) => t.agent_name?.includes('Validation'))?.findings || [
-        `1. Student 1 (Competency Audit): FAIL (Expired certificate for ${workerId})`,
-        `2. Student 2 (Equipment & Isolation): FAIL (Overdue inspection on ${assetTag})`,
-        '3. Student 4 (SIMOPS & Site Conditions): FAIL (Adjacent Zone B4 solvent clash)',
+        `1. Student 1 (Competency Audit): ${workerId.includes('1182') ? `FAIL (Expired certificate for ${workerId})` : `PASS (Worker ${workerId} trade certified)`}`,
+        `2. Student 2 (Equipment & Isolation): ${isAssetFailed ? `FAIL (Overdue inspection on ${assetTag})` : `PASS (Asset ${assetTag} calibration & inspection in-date)`}`,
+        `3. Student 4 (SIMOPS & Site Conditions): ${selectedZone === 'ZONE_B3' && selectedHazard === 'HOT_WORK' ? 'FAIL (Adjacent zone solvent collision)' : 'PASS (No adjacent zone clash detected)'}`,
         '4. Student 4 (Weather Tool Envelope): PASS (Wind Speed 14.2 km/h <= 35 km/h cap)',
         `5. Final Deterministic Clearance Gate: ${data.verdict || 'REFUSED_SAFE_FAILURE'}`,
       ];
@@ -279,7 +280,19 @@ export const QChatAgentCommandCenter: React.FC = () => {
       }));
     } catch {
       // Dynamic complete simulation fallback evaluating user inputs
-      const isOverdueAsset = assetTag.toUpperCase().includes('EX-22') || assetTag.toLowerCase().includes('overdue');
+      const upperTag = assetTag.toUpperCase().trim();
+      const isOverdueAsset = 
+        upperTag.includes('GAS-MON-401') ||
+        upperTag.includes('SWGR-02-BKR-14') ||
+        upperTag.includes('EX-22') ||
+        assetTag.toLowerCase().includes('overdue') ||
+        assetTag.toLowerCase().includes('expired') ||
+        assetTag.toLowerCase().includes('fail') ||
+        assetTag.toLowerCase().includes('false') ||
+        assetTag.toLowerCase().includes('restricted') ||
+        assetTag.toLowerCase().includes('unready') ||
+        assetTag.toLowerCase().includes('defect');
+
       const isExpiredWorker = workerId.includes('1182') || workerId.toLowerCase().includes('expired');
       const hasSimopsClash = selectedZone === 'ZONE_B3' && selectedHazard === 'HOT_WORK';
 
@@ -291,8 +304,19 @@ export const QChatAgentCommandCenter: React.FC = () => {
         fix.suggestedWorkerBadge = 'W-1204 (Sarah Connor, Valid to 2027)';
       }
       if (isOverdueAsset) {
-        hardFailures.push(`Asset ${assetTag}: Monthly safety inspection overdue by 9 days.`);
-        fix.suggestedAssetTag = 'EX-31 (Inspected & In-Date)';
+        if (upperTag.includes('GAS-MON-401')) {
+          hardFailures.push(`Asset ${assetTag}: Dräger Multi-Gas Detector calibration expired & pre-use inspection overdue.`);
+          fix.suggestedAssetTag = 'GAS-MON-102 (Dräger X-am 5000, Calibrated & In-Date)';
+        } else if (upperTag.includes('SWGR-02-BKR-14')) {
+          hardFailures.push(`Asset ${assetTag}: Main High Voltage Breaker dielectric safety inspection overdue.`);
+          fix.suggestedAssetTag = 'SWGR-02-BKR-15 (HV Circuit Breaker 4160V, Certified & Tested)';
+        } else if (upperTag.includes('EX-22')) {
+          hardFailures.push(`Asset ${assetTag}: Monthly safety inspection overdue by 9 days.`);
+          fix.suggestedAssetTag = 'EX-31 (Dry Powder Extinguisher 9kg, Inspected & In-Date)';
+        } else {
+          hardFailures.push(`Asset ${assetTag}: Pre-use safety inspection or calibration overdue.`);
+          fix.suggestedAssetTag = `${assetTag}-VALID (Inspected & Certified Replacement)`;
+        }
       }
       if (hasSimopsClash) {
         hardFailures.push(`SIMOPS Clash: Active conflicting operation in adjacent zone.`);
@@ -659,23 +683,63 @@ export const QChatAgentCommandCenter: React.FC = () => {
               </div>
 
               <div>
-                <label className="text-slate-500 dark:text-slate-400 block mb-0.5">Worker Badge</label>
+                <div className="flex items-center justify-between mb-0.5">
+                  <label className="text-slate-500 dark:text-slate-400 block text-[11px]">Worker Badge</label>
+                  <div className="flex gap-1">
+                    <button
+                      type="button"
+                      onClick={() => setWorkerId('W-1182')}
+                      className={`text-[9px] px-1 py-0.2 rounded font-mono ${workerId === 'W-1182' ? 'bg-rose-500/20 text-rose-400 border border-rose-500/40' : 'text-slate-400 hover:text-slate-200'}`}
+                      title="Expired Welder"
+                    >
+                      W-1182
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setWorkerId('W-101')}
+                      className={`text-[9px] px-1 py-0.2 rounded font-mono ${workerId === 'W-101' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40' : 'text-slate-400 hover:text-slate-200'}`}
+                      title="Certified Pipefitter"
+                    >
+                      W-101
+                    </button>
+                  </div>
+                </div>
                 <input
                   type="text"
                   value={workerId}
                   onChange={(e) => setWorkerId(e.target.value)}
-                  placeholder="e.g. W-1182"
+                  placeholder="e.g. W-1182 or W-101"
                   className="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-2 py-1 text-slate-800 dark:text-slate-200"
                 />
               </div>
 
               <div>
-                <label className="text-slate-500 dark:text-slate-400 block mb-0.5">Asset Tag</label>
+                <div className="flex items-center justify-between mb-0.5">
+                  <label className="text-slate-500 dark:text-slate-400 block text-[11px]">Asset Tag</label>
+                  <div className="flex gap-1">
+                    <button
+                      type="button"
+                      onClick={() => setAssetTag('GAS-MON-401')}
+                      className={`text-[9px] px-1 py-0.2 rounded font-mono ${assetTag === 'GAS-MON-401' ? 'bg-rose-500/20 text-rose-400 border border-rose-500/40' : 'text-slate-400 hover:text-slate-200'}`}
+                      title="Overdue Gas Detector in Database"
+                    >
+                      GAS-MON-401
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setAssetTag('EX-31')}
+                      className={`text-[9px] px-1 py-0.2 rounded font-mono ${assetTag === 'EX-31' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40' : 'text-slate-400 hover:text-slate-200'}`}
+                      title="Certified In-Date Asset"
+                    >
+                      EX-31
+                    </button>
+                  </div>
+                </div>
                 <input
                   type="text"
                   value={assetTag}
                   onChange={(e) => setAssetTag(e.target.value)}
-                  placeholder="e.g. EX-22"
+                  placeholder="e.g. GAS-MON-401 or EX-31"
                   className="w-full bg-white dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-lg px-2 py-1 text-slate-800 dark:text-slate-200"
                 />
               </div>

@@ -92,6 +92,23 @@ public class EquipmentController : ControllerBase
         return Ok(response);
     }
 
+    [HttpPost("check-tags")]
+    [HttpPost("/api/internal/check-equipment-tags")]
+    [AllowAnonymous]
+    public async Task<ActionResult<EquipmentReadinessResponse>> CheckReadinessByTags([FromBody] CheckEquipmentTagsRequest request)
+    {
+        var response = await _equipmentService.CheckReadinessByTagsAsync(request.AssetTags);
+        return Ok(response);
+    }
+
+    [HttpGet("by-tag/{tag}")]
+    [AllowAnonymous]
+    public async Task<ActionResult<EquipmentReadinessResponse>> CheckReadinessBySingleTag(string tag)
+    {
+        var response = await _equipmentService.CheckReadinessByTagsAsync(new List<string> { tag });
+        return Ok(response);
+    }
+
     [HttpGet("isolation-points/{zoneId:guid}")]
     public async Task<ActionResult<List<IsolationPointDto>>> GetIsolationPoints(Guid zoneId)
     {
