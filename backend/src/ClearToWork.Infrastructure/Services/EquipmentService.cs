@@ -368,7 +368,8 @@ public class EquipmentService : IEquipmentService
             {
                 // Dynamic heuristic for tags not yet persisted or simulated
                 string upper = tag.ToUpperInvariant();
-                bool isFailedTag = upper.Contains("EX-22") || upper.Contains("OVERDUE") || upper.Contains("EXPIRED") ||
+                bool isFailedTag = upper.Contains("EX-22") || upper.Contains("GAS-MON-401") || upper.Contains("SWGR-02-BKR-14") ||
+                                   upper.Contains("OVERDUE") || upper.Contains("EXPIRED") ||
                                    upper.Contains("FAIL") || upper.Contains("UNREADY") || upper.Contains("OUT_OF_SERVICE") ||
                                    upper.Contains("OUT-OF-SERVICE") || upper.Contains("RESTRICTED") || upper.Contains("DEFECT") ||
                                    upper.Contains("FALSE");

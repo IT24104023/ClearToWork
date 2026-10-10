@@ -375,104 +375,116 @@ app.MapGet("/db", () => Results.Content("""
 // 8. Internal API Endpoints for /db Queries
 app.MapGet("/api/db/query/permits", async (AppDbContext db) =>
 {
-    var list = await db.PermitRequests
+    var permits = await db.PermitRequests
         .AsNoTracking()
         .Include(p => p.PermitType)
-        .Select(p => new
-        {
-            permitNumber = p.PermitNumber,
-            title = p.Title,
-            permitType = p.PermitType != null ? p.PermitType.Name : "Hot Work Permit",
-            status = p.Status.ToString(),
-            zoneCode = p.ZoneCode,
-            issuingAuthority = p.IssuingAuthority,
-            startTime = p.ScheduledStartTime,
-            endTime = p.ScheduledEndTime
-        })
         .Take(50)
         .ToListAsync();
+
+    var list = permits.Select(p => new
+    {
+        permitNumber = p.PermitNumber,
+        title = p.Title,
+        permitType = p.PermitType?.Name ?? "Hot Work Permit",
+        status = p.Status.ToString(),
+        zoneCode = p.ZoneCode,
+        issuingAuthority = p.IssuingAuthority,
+        startTime = p.ScheduledStartTime,
+        endTime = p.ScheduledEndTime
+    });
     return Results.Ok(list);
 }).ExcludeFromDescription();
 
 app.MapGet("/api/db/query/workforce", async (AppDbContext db) =>
 {
-    var list = await db.Workers
+    var workers = await db.Workers
         .AsNoTracking()
         .Include(w => w.Contractor)
         .Include(w => w.Certificates)
-        .Select(w => new
-        {
-            badgeNumber = w.BadgeNumber,
-            fullName = w.FirstName + " " + w.LastName,
-            tradeRole = w.Trade,
-            contractor = w.Contractor != null ? w.Contractor.CompanyName : "Global Energy Maintenance Corp",
-            certifications = w.Certificates.Any() 
-                ? string.Join(", ", w.Certificates.Select(c => c.CertificateName)) 
-                : "Standard HSE Induction",
-            isActive = w.IsActive
-        })
+            .ThenInclude(c => c.CertificateType)
         .Take(50)
         .ToListAsync();
+
+    var list = workers.Select(w => new
+    {
+        badgeNumber = w.BadgeNumber,
+        fullName = $"{w.FirstName} {w.LastName}".Trim(),
+        tradeRole = w.Trade,
+        contractor = w.Contractor?.CompanyName ?? "Global Energy Maintenance Corp",
+        certifications = w.Certificates.Any() 
+            ? string.Join(", ", w.Certificates.Select(c => c.CertificateType?.Name ?? c.CertificateNumber)) 
+            : "Standard HSE Induction",
+        isActive = w.IsActive
+    });
     return Results.Ok(list);
 }).ExcludeFromDescription();
 
 app.MapGet("/api/db/query/hazards", async (AppDbContext db) =>
 {
-    var list = await db.Zones
+    var zones = await db.Zones
         .AsNoTracking()
         .Include(z => z.Site)
-        .Select(z => new
-        {
-            code = z.Code,
-            name = z.Name,
-            site = z.Site != null ? z.Site.Name : "Industrial Refinery Complex",
-            radiusMeters = z.RadiusMeters,
-            qrCodePayload = z.QrCodePayload,
-            isActive = z.IsActive
-        })
         .Take(50)
         .ToListAsync();
+
+    var list = zones.Select(z => new
+    {
+        code = z.Code,
+        name = z.Name,
+        site = z.Site?.Name ?? "Industrial Refinery Complex",
+        radiusMeters = z.RadiusMeters,
+        qrCodePayload = z.QrCodePayload,
+        isActive = z.IsActive
+    });
     return Results.Ok(list);
 }).ExcludeFromDescription();
 
 app.MapGet("/api/db/query/equipment", async (AppDbContext db) =>
 {
-    var list = await db.Assets
+    var assets = await db.Assets
         .AsNoTracking()
         .Include(a => a.InspectionRecords)
         .Include(a => a.CalibrationRecords)
-        .Select(a => new
+        .Take(50)
+        .ToListAsync();
+
+    var list = assets.Select(a =>
+    {
+        var latestInsp = a.InspectionRecords.OrderByDescending(i => i.InspectionDate).FirstOrDefault();
+        var latestCal = a.CalibrationRecords.OrderByDescending(c => c.CalibrationDate).FirstOrDefault();
+
+        return new
         {
             assetTag = a.AssetTag,
             serialNo = a.SerialNo,
             name = a.Name,
             category = a.Category.ToString(),
             status = a.Status.ToString(),
-            isInspectionValid = a.InspectionRecords.Any() && a.InspectionRecords.OrderByDescending(i => i.InspectionDate).First().Passed,
-            isCalibrationValid = a.CalibrationRecords.Any() && a.CalibrationRecords.OrderByDescending(c => c.CalibrationDate).First().PassStatus,
-            nextInspection = a.InspectionRecords.OrderByDescending(i => i.InspectionDate).Select(i => (DateTime?)i.NextInspectionDate).FirstOrDefault(),
-            nextCalibration = a.CalibrationRecords.OrderByDescending(c => c.CalibrationDate).Select(c => (DateTime?)c.NextCalibrationDate).FirstOrDefault()
-        })
-        .Take(50)
-        .ToListAsync();
+            isInspectionValid = latestInsp?.Passed ?? false,
+            isCalibrationValid = latestCal?.PassStatus ?? false,
+            nextInspection = latestInsp?.NextInspectionDate,
+            nextCalibration = latestCal?.NextCalibrationDate
+        };
+    });
     return Results.Ok(list);
 }).ExcludeFromDescription();
 
 app.MapGet("/api/db/query/isolation", async (AppDbContext db) =>
 {
-    var list = await db.IsolationPoints
+    var points = await db.IsolationPoints
         .AsNoTracking()
-        .Select(iso => new
-        {
-            tagIdentifier = iso.TagIdentifier,
-            description = iso.Description,
-            type = iso.Type.ToString(),
-            state = iso.State.ToString(),
-            lockedBy = iso.LockedByUserId ?? "System Administrator",
-            lockedAt = iso.LockedAt
-        })
         .Take(50)
         .ToListAsync();
+
+    var list = points.Select(iso => new
+    {
+        tagIdentifier = iso.TagIdentifier,
+        description = iso.Description,
+        type = iso.Type.ToString(),
+        state = iso.State.ToString(),
+        lockedBy = iso.LockedByUserId ?? "System Administrator",
+        lockedAt = iso.LockedAt
+    });
     return Results.Ok(list);
 }).ExcludeFromDescription();
 
