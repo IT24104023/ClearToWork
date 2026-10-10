@@ -73,6 +73,7 @@ public class HazardZoneController : ControllerBase
 
     // ─── Student 4: Safety Observations Endpoints ────────────────────────────────
     [HttpGet("observations")]
+    [AllowAnonymous]
     public async Task<ActionResult<List<ObservationDto>>> GetObservations([FromQuery] Guid? zoneId, [FromQuery] string? category)
     {
         var observations = await _hazardRuleService.GetObservationsAsync(zoneId, category);
@@ -80,6 +81,7 @@ public class HazardZoneController : ControllerBase
     }
 
     [HttpGet("observations/{id:guid}")]
+    [AllowAnonymous]
     public async Task<ActionResult<ObservationDto>> GetObservation(Guid id)
     {
         var observation = await _hazardRuleService.GetObservationByIdAsync(id);
@@ -121,6 +123,7 @@ public class HazardZoneController : ControllerBase
 
     // ─── Student 4: Rulebook Hazard Types Endpoints ──────────────────────────────
     [HttpGet("hazard-types")]
+    [AllowAnonymous]
     public async Task<ActionResult<List<HazardTypeDto>>> GetHazardTypes()
     {
         var types = await _hazardRuleService.GetHazardTypesAsync();
@@ -128,6 +131,7 @@ public class HazardZoneController : ControllerBase
     }
 
     [HttpGet("hazard-types/{id:guid}")]
+    [AllowAnonymous]
     public async Task<ActionResult<HazardTypeDto>> GetHazardType(Guid id)
     {
         var type = await _hazardRuleService.GetHazardTypeByIdAsync(id);
@@ -190,6 +194,7 @@ public class HazardZoneController : ControllerBase
 
     // ─── Student 4: SIMOPS Incompatibility Rules Endpoints ───────────────────────
     [HttpGet("incompatibility-rules")]
+    [AllowAnonymous]
     public async Task<ActionResult<List<IncompatibilityRuleDto>>> GetIncompatibilityRules()
     {
         var rules = await _hazardRuleService.GetIncompatibilityRulesAsync();
@@ -224,6 +229,7 @@ public class HazardZoneController : ControllerBase
 
     // ─── Student 4: Zone Adjacencies Endpoints ───────────────────────────────────
     [HttpGet("zone-adjacencies")]
+    [AllowAnonymous]
     public async Task<ActionResult<List<ZoneAdjacencyDto>>> GetZoneAdjacencies()
     {
         var adjacencies = await _hazardRuleService.GetZoneAdjacenciesAsync();
