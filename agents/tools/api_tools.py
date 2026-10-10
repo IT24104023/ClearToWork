@@ -148,8 +148,10 @@ def get_zone_conflicts(zone_code: str, hazard_code: str, start_time: str, end_ti
     except Exception:
         pass
 
-    # Hot work scheduled during morning clashes with active solvent painting in Zone B4
-    if "09:00" in start_time or "10:00" in start_time or "11:00" in start_time:
+    # Hot work in adjacent zone B3 scheduled during morning clashes with active solvent painting in Zone B4
+    is_hot_work = hazard_code == "HOT_WORK"
+    is_adjacent_zone = "B3" in zone_code or "ZONE_B" in zone_code
+    if is_hot_work and is_adjacent_zone and ("09:00" in start_time or "10:00" in start_time or "11:00" in start_time):
         return {
             "hasConflict": True,
             "conflicts": [{

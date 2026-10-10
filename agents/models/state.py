@@ -27,6 +27,7 @@ class AgentWorkflowState(BaseModel):
     assigned_asset_tags: List[str] = Field(default_factory=list)
     plan_steps: List[str] = Field(default_factory=list)
     competency_findings: List[str] = Field(default_factory=list)
+    equipment_findings: List[str] = Field(default_factory=list)
     hazard_findings: List[str] = Field(default_factory=list)
     validation_verdict: str = "PENDING"
     is_safe_failure: bool = False
