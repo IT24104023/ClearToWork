@@ -1,4 +1,4 @@
-﻿# .NET
+# .NET
 bin/
 obj/
 *.user
@@ -54,3 +54,4 @@ Thumbs.db
 *.key
 appsettings.Production.json
 appsettings.Local.json
+scratch/

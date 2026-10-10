@@ -202,7 +202,18 @@ public static class DbInitializer
                 Id = Guid.NewGuid(),
                 AssetTag = "GAS-MON-401",
                 SerialNo = "SN-9981-H2S",
-                Name = "Dräger X-am 5000 Multi-Gas Detector",
+                Name = "Dräger X-am 5000 Multi-Gas Detector (Overdue)",
+                Category = AssetCategory.GasDetector,
+                Status = AssetStatus.Available,
+                ZoneId = zoneA.Id
+            };
+
+            var gasMonitorActive = new Asset
+            {
+                Id = Guid.NewGuid(),
+                AssetTag = "GAS-MON-102",
+                SerialNo = "SN-9982-H2S",
+                Name = "Dräger X-am 5000 Multi-Gas Detector (Certified)",
                 Category = AssetCategory.GasDetector,
                 Status = AssetStatus.Available,
                 ZoneId = zoneA.Id
@@ -219,25 +230,59 @@ public static class DbInitializer
                 ZoneId = zoneA.Id
             };
 
-            context.Assets.AddRange(gasMonitor, isolationBreaker);
+            var isolationBreakerActive = new Asset
+            {
+                Id = Guid.NewGuid(),
+                AssetTag = "SWGR-02-BKR-15",
+                SerialNo = "SN-7721-ELEC",
+                Name = "HV Circuit Breaker 4160V (Certified & In-Date)",
+                Category = AssetCategory.IsolationDevice,
+                Status = AssetStatus.Available,
+                ZoneId = zoneA.Id
+            };
+
+            var blowerFan = new Asset
+            {
+                Id = Guid.NewGuid(),
+                AssetTag = "EX-31",
+                SerialNo = "SN-BLOWER-31",
+                Name = "Explosion-Proof Extraction Blower Fan",
+                Category = AssetCategory.General,
+                Status = AssetStatus.Available,
+                ZoneId = zoneA.Id
+            };
+
+            context.Assets.AddRange(gasMonitor, gasMonitorActive, isolationBreaker, isolationBreakerActive, blowerFan);
             await context.SaveChangesAsync();
 
             // Seed Initial Calibration & Inspection Records
-            var calGas = new CalibrationRecord
+            // 1. GAS-MON-401: Calibration expired 15 days ago (Overdue test case)
+            var calGasExpired = new CalibrationRecord
             {
                 Id = Guid.NewGuid(),
                 AssetId = gasMonitor.Id,
                 CalibratedBy = "Dräger Safety Accredited Metrology Lab",
-                CertificateNumber = "CAL-DRAGER-2026-9901",
+                CertificateNumber = "CAL-DRAGER-2025-9901",
+                CalibrationDate = DateTime.UtcNow.AddMonths(-7),
+                NextCalibrationDate = DateTime.UtcNow.AddDays(-15),
+                PassStatus = true
+            };
+
+            // 2. GAS-MON-102: Valid in-date calibration and inspection (Replacement unit)
+            var calGasActive = new CalibrationRecord
+            {
+                Id = Guid.NewGuid(),
+                AssetId = gasMonitorActive.Id,
+                CalibratedBy = "Dräger Safety Accredited Metrology Lab",
+                CertificateNumber = "CAL-DRAGER-2026-1020",
                 CalibrationDate = DateTime.UtcNow.AddDays(-10),
                 NextCalibrationDate = DateTime.UtcNow.AddMonths(6),
                 PassStatus = true
             };
-
-            var inspGas = new InspectionRecord
+            var inspGasActive = new InspectionRecord
             {
                 Id = Guid.NewGuid(),
-                AssetId = gasMonitor.Id,
+                AssetId = gasMonitorActive.Id,
                 InspectorName = "Chemini Perera (HSE Gas Safety Specialist)",
                 InspectionDate = DateTime.UtcNow.AddDays(-2),
                 NextInspectionDate = DateTime.UtcNow.AddMonths(3),
@@ -245,6 +290,7 @@ public static class DbInitializer
                 Notes = "LEL, O2, H2S, CO bump test verified OK. Sensor response within 10s. Clean flame arrestor."
             };
 
+            // 3. Breakers & Blower
             var inspBreaker = new InspectionRecord
             {
                 Id = Guid.NewGuid(),
@@ -255,54 +301,109 @@ public static class DbInitializer
                 Passed = true,
                 Notes = "Visual check and mechanical interlock operational. Insulating barriers verified."
             };
+            var inspBlower = new InspectionRecord
+            {
+                Id = Guid.NewGuid(),
+                AssetId = blowerFan.Id,
+                InspectorName = "Oshini Silva (Safety Inspector)",
+                InspectionDate = DateTime.UtcNow.AddDays(-3),
+                NextInspectionDate = DateTime.UtcNow.AddMonths(3),
+                Passed = true,
+                Notes = "Motor casing earthing grounded. Spark arrestor mesh verified clean."
+            };
 
-            context.CalibrationRecords.Add(calGas);
-            context.InspectionRecords.AddRange(inspGas, inspBreaker);
+            context.CalibrationRecords.AddRange(calGasExpired, calGasActive);
+            context.InspectionRecords.AddRange(inspGasActive, inspBreaker, inspBlower);
             await context.SaveChangesAsync();
         }
         else if (await context.Assets.AnyAsync())
         {
-            var existingGas = await context.Assets.FirstOrDefaultAsync(a => a.AssetTag == "GAS-MON-401");
-            if (existingGas != null && !await context.CalibrationRecords.AnyAsync(c => c.AssetId == existingGas.Id))
+            // Ensure GAS-MON-401 has expired calibration
+            var existingGas = await context.Assets.Include(a => a.CalibrationRecords).FirstOrDefaultAsync(a => a.AssetTag == "GAS-MON-401");
+            if (existingGas != null)
             {
+                var cal = existingGas.CalibrationRecords.FirstOrDefault();
+                if (cal == null)
+                {
+                    context.CalibrationRecords.Add(new CalibrationRecord
+                    {
+                        Id = Guid.NewGuid(),
+                        AssetId = existingGas.Id,
+                        CalibratedBy = "Dräger Safety Accredited Metrology Lab",
+                        CertificateNumber = "CAL-DRAGER-2025-EXPIRED",
+                        CalibrationDate = DateTime.UtcNow.AddMonths(-7),
+                        NextCalibrationDate = DateTime.UtcNow.AddDays(-15),
+                        PassStatus = true
+                    });
+                }
+                else
+                {
+                    cal.NextCalibrationDate = DateTime.UtcNow.AddDays(-15);
+                }
+            }
+
+            // Ensure GAS-MON-102 exists as in-date replacement
+            if (!await context.Assets.AnyAsync(a => a.AssetTag == "GAS-MON-102"))
+            {
+                var gas102 = new Asset
+                {
+                    Id = Guid.NewGuid(),
+                    AssetTag = "GAS-MON-102",
+                    SerialNo = "SN-9982-H2S",
+                    Name = "Dräger X-am 5000 Multi-Gas Detector (Certified)",
+                    Category = AssetCategory.GasDetector,
+                    Status = AssetStatus.Available,
+                    ZoneId = zoneA?.Id
+                };
+                context.Assets.Add(gas102);
                 context.CalibrationRecords.Add(new CalibrationRecord
                 {
                     Id = Guid.NewGuid(),
-                    AssetId = existingGas.Id,
+                    AssetId = gas102.Id,
                     CalibratedBy = "Dräger Safety Accredited Metrology Lab",
-                    CertificateNumber = "CAL-DRAGER-2026-9901",
+                    CertificateNumber = "CAL-DRAGER-2026-1020",
                     CalibrationDate = DateTime.UtcNow.AddDays(-10),
                     NextCalibrationDate = DateTime.UtcNow.AddMonths(6),
                     PassStatus = true
                 });
-            }
-            if (existingGas != null && !await context.InspectionRecords.AnyAsync(i => i.AssetId == existingGas.Id))
-            {
                 context.InspectionRecords.Add(new InspectionRecord
                 {
                     Id = Guid.NewGuid(),
-                    AssetId = existingGas.Id,
+                    AssetId = gas102.Id,
                     InspectorName = "Chemini Perera (HSE Gas Safety Specialist)",
                     InspectionDate = DateTime.UtcNow.AddDays(-2),
                     NextInspectionDate = DateTime.UtcNow.AddMonths(3),
                     Passed = true,
-                    Notes = "LEL, O2, H2S, CO bump test verified OK. Sensor response within 10s."
+                    Notes = "Pre-use bump check verified OK."
                 });
             }
-            var existingBreaker = await context.Assets.FirstOrDefaultAsync(a => a.AssetTag == "SWGR-02-BKR-14");
-            if (existingBreaker != null && !await context.InspectionRecords.AnyAsync(i => i.AssetId == existingBreaker.Id))
+
+            // Ensure EX-31 exists as active blower
+            if (!await context.Assets.AnyAsync(a => a.AssetTag == "EX-31"))
             {
+                var ex31 = new Asset
+                {
+                    Id = Guid.NewGuid(),
+                    AssetTag = "EX-31",
+                    SerialNo = "SN-BLOWER-31",
+                    Name = "Explosion-Proof Extraction Blower Fan",
+                    Category = AssetCategory.General,
+                    Status = AssetStatus.Available,
+                    ZoneId = zoneA?.Id
+                };
+                context.Assets.Add(ex31);
                 context.InspectionRecords.Add(new InspectionRecord
                 {
                     Id = Guid.NewGuid(),
-                    AssetId = existingBreaker.Id,
-                    InspectorName = "Mohammed Zakee (Lead Isolation Tech)",
-                    InspectionDate = DateTime.UtcNow.AddDays(-5),
-                    NextInspectionDate = DateTime.UtcNow.AddMonths(6),
+                    AssetId = ex31.Id,
+                    InspectorName = "Oshini Silva (Safety Inspector)",
+                    InspectionDate = DateTime.UtcNow.AddDays(-3),
+                    NextInspectionDate = DateTime.UtcNow.AddMonths(3),
                     Passed = true,
-                    Notes = "Visual check and mechanical interlock operational."
+                    Notes = "Motor casing earthing grounded. Spark arrestor mesh verified clean."
                 });
             }
+
             await context.SaveChangesAsync();
         }
 
