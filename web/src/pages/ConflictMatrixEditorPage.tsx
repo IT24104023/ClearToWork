@@ -48,7 +48,7 @@ interface IncompatibilityRuleModalProps {
 const IncompatibilityRuleModal: React.FC<IncompatibilityRuleModalProps> = ({ rule, onClose }) => {
   const [createRule, { isLoading: isCreating }] = useCreateIncompatibilityRuleMutation();
   const [updateRule, { isLoading: isUpdating }] = useUpdateIncompatibilityRuleMutation();
-  const { data: hazardTypes = [] } = useGetHazardTypesQuery();
+  const { data: hazardTypes = [], isLoading: hazardTypesLoading } = useGetHazardTypesQuery();
 
   const isEdit = Boolean(rule);
   const [ruleCode, setRuleCode] = useState(rule?.ruleCode || '');
@@ -151,11 +151,13 @@ const IncompatibilityRuleModal: React.FC<IncompatibilityRuleModalProps> = ({ rul
               </label>
               <select
                 value={primaryHazardId}
-                disabled={isEdit}
+                disabled={isEdit || hazardTypesLoading}
                 onChange={(e) => setPrimaryHazardId(e.target.value)}
                 className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-500/50 disabled:opacity-50"
               >
-                <option value="">Select Primary Hazard</option>
+                <option value="">
+                  {hazardTypesLoading ? 'Loading Hazard Types...' : 'Select Primary Hazard'}
+                </option>
                 {hazardTypes.map((ht) => (
                   <option key={ht.id} value={ht.id}>
                     {ht.code} — {ht.name}
@@ -170,11 +172,13 @@ const IncompatibilityRuleModal: React.FC<IncompatibilityRuleModalProps> = ({ rul
               </label>
               <select
                 value={conflictingHazardId}
-                disabled={isEdit}
+                disabled={isEdit || hazardTypesLoading}
                 onChange={(e) => setConflictingHazardId(e.target.value)}
                 className="w-full bg-slate-50 dark:bg-slate-950 border border-slate-200 dark:border-slate-800 rounded-xl px-3 py-2 text-slate-900 dark:text-slate-100 focus:outline-none focus:ring-2 focus:ring-amber-500/50 disabled:opacity-50"
               >
-                <option value="">Select Conflicting Hazard</option>
+                <option value="">
+                  {hazardTypesLoading ? 'Loading Hazard Types...' : 'Select Conflicting Hazard'}
+                </option>
                 {hazardTypes.map((ht) => (
                   <option key={ht.id} value={ht.id}>
                     {ht.code} — {ht.name}
@@ -183,6 +187,12 @@ const IncompatibilityRuleModal: React.FC<IncompatibilityRuleModalProps> = ({ rul
               </select>
             </div>
           </div>
+
+          {!hazardTypesLoading && hazardTypes.length === 0 && (
+            <p className="text-[11px] text-amber-500">
+              No hazard types registered. Please create hazard types in Rulebook Editor first.
+            </p>
+          )}
 
           <div>
             <label className="block text-slate-600 dark:text-slate-400 font-medium mb-1">
